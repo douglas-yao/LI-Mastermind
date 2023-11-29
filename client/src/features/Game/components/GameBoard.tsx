@@ -3,22 +3,27 @@ import GameCluesRow from './GameClues/GameCluesRow';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-type RandomNumber = number[];
+type RandomNumbers = number[];
 type Guesses = number[][];
 
 export default function GameBoard() {
-  const [solution, setSolution] = useState<RandomNumber>([]);
+  const [solution, setSolution] = useState<RandomNumbers>([]);
   const [guesses, setGuesses] = useState<Guesses>([]);
 
   useEffect(() => {
-    getRandomNumber();
+    generateRandomNumber();
   }, []);
 
-  async function getRandomNumber() {
-    const randomNumber = await axios.get(
-      'http://localhost:3001/game/randomSolution'
-    );
-    setSolution(randomNumber.data);
+  async function generateRandomNumber() {
+    try {
+      const randomNumbers = await axios.get(
+        'http://localhost:3001/game/randomSolution'
+      );
+
+      setSolution(randomNumbers.data);
+    } catch (error) {
+      console.error('Error generating random number:', error);
+    }
   }
 
   function renderBoardRows() {
@@ -34,7 +39,7 @@ export default function GameBoard() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <button onClick={getRandomNumber}>Restart</button>
+      <button onClick={generateRandomNumber}>Restart</button>
       <span>{solution}</span>
       {renderBoardRows()}
     </div>
