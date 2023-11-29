@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 type RandomNumbers = number[];
+type PlayerName = string;
 type Guesses = number[][];
 
 export default function GameBoard() {
   const [solution, setSolution] = useState<RandomNumbers>([]);
+  const [playerName, setPlayerName] = useState<PlayerName>('');
   const [guesses, setGuesses] = useState<Guesses>([]);
 
   useEffect(() => {
@@ -40,7 +42,14 @@ export default function GameBoard() {
   return (
     <div className="flex flex-col items-center gap-4">
       <button onClick={generateRandomNumber}>Restart</button>
-      <span>{solution}</span>
+      <span>Current solution: {solution}</span>
+      <input
+        className="border border-slate-500 rounded-md px-2 py-1"
+        value={playerName}
+        onChange={(e) => setPlayerName(e.target.value)}
+        placeholder="Enter player name"
+        onKeyDown={(e) => (e.key === 'Enter' ? e.target.blur() : null)}
+      />
       {renderBoardRows()}
     </div>
   );
