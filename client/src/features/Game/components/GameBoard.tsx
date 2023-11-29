@@ -9,7 +9,7 @@ export default function GameBoard() {
   const [solution, setSolution] = useState<RandomNumber>([]);
 
   useEffect(() => {
-    generateRandomArray();
+    getRandomNumber();
   }, []);
 
   // Temporary function to generate a random array of 4 numbers, ranging from 0-7
