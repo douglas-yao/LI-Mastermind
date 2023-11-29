@@ -7,8 +7,8 @@ export default function GameCluesRow() {
     <div className="flex gap-7 items-center">
       <div className="flex gap-2">
         {tiles.map((_, i) => (
-          <div>
-            <GameCluesTile key={i} />
+          <div key={`gameCluesTile-${i}`}>
+            <GameCluesTile />
           </div>
         ))}
       </div>

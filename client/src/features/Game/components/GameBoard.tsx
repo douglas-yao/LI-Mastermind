@@ -3,8 +3,10 @@ import GameCluesRow from './GameClues/GameCluesRow';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+type RandomNumber = number[];
+
 export default function GameBoard() {
-  const [solution, setSolution] = useState<number[] | null | any>(null);
+  const [solution, setSolution] = useState<RandomNumber>([]);
 
   useEffect(() => {
     generateRandomArray();
@@ -20,7 +22,7 @@ export default function GameBoard() {
   }
 
   async function getRandomNumber() {
-    const randomNumber = await axios.get(
+    const randomNumber: RandomNumber = await axios.get(
       'http://localhost:3001/game/randomSolution'
     );
     setSolution(randomNumber.data);
@@ -28,9 +30,9 @@ export default function GameBoard() {
 
   function renderBoardRows() {
     return rows.map((_, i) => (
-      <div className="flex gap-7">
-        <UserGuessRow key={i} />
-        <GameCluesRow />
+      <div key={i} className="flex gap-7">
+        <UserGuessRow key={`userGuessRow-${i}`} />
+        <GameCluesRow key={`gameCluesRow-${i}`} />
       </div>
     ));
   }
