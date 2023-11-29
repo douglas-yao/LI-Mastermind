@@ -37,7 +37,9 @@ export default function GameBoard({ difficulty, playerName }) {
     }
   }
 
-  function handleGuessSubmit() {
+  function handleGuessSubmit(e) {
+    e.preventDefault();
+
     setGuesses((prev) => [...prev, currentGuess]);
   }
 
@@ -49,7 +51,7 @@ export default function GameBoard({ difficulty, playerName }) {
 
   function renderBoardRows() {
     return guesses.map((guess, i) => (
-      <div key={i} className="flex gap-7">
+      <form onSubmit={handleGuessSubmit} key={i} className="flex gap-7">
         <UserGuessRow
           key={`userGuessRow-${i}`}
           guess={guess}
@@ -62,7 +64,7 @@ export default function GameBoard({ difficulty, playerName }) {
         >
           Submit
         </button>
-      </div>
+      </form>
     ));
   }
 
