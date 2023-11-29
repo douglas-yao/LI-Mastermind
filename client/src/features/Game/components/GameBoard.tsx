@@ -1,5 +1,4 @@
-import UserGuessRow from './UserGuesses/UserGuessRow';
-import GameCluesRow from './GameClues/GameCluesRow';
+import BoardRow from './BoardRow';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -13,17 +12,16 @@ type GameBoardProps = {
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [solution, setSolution] = useState<RandomNumbers>([]);
   const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
-  const [guesses, setGuesses] = useState<Guesses>([currentGuess]);
+  const [guesses, setGuesses] = useState<Guesses>([]);
 
   console.log(difficulty);
 
   useEffect(() => {
     generateRandomNumbers();
-    console.log(guesses);
   }, []);
 
   useEffect(() => {
-    console.log(`guesses: ${guesses}`);
+    console.log('guesses: ', guesses);
     if (guesses.length === 10) {
       alert('Game Over!');
     }
@@ -46,25 +44,42 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     e.preventDefault();
 
     setGuesses((prev) => [...prev, currentGuess]);
+    setCurrentGuess(Array(4).fill(''));
   }
 
   function renderBoardRows() {
-    return guesses.map((guess, i) => (
-      <form onSubmit={handleGuessSubmit} key={i} className="flex gap-7">
-        <UserGuessRow
-          key={`userGuessRow-${i}`}
-          guess={guess}
-          setCurrentGuess={setCurrentGuess}
-        />
-        <GameCluesRow key={`gameCluesRow-${i}`} />
-        <button
-          onClick={handleGuessSubmit}
-          className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
-        >
-          Submit
-        </button>
-      </form>
-    ));
+    return (
+      <div>
+        {guesses.map((guess, i) => (
+          <BoardRow key={i} guess={guess} />
+        ))}
+        <form onSubmit={handleGuessSubmit} className="flex gap-7">
+          <BoardRow guess={currentGuess} setCurrentGuess={setCurrentGuess} />
+          <button
+            onClick={handleGuessSubmit}
+            className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    );
+
+    // <form onSubmit={handleGuessSubmit} key={i} className="flex gap-7">
+    //   <UserGuessRow
+    //     key={`userGuessRow-${i}`}
+    //     guess={guess}
+    //     setCurrentGuess={setCurrentGuess}
+    //   />
+    //   {/* Add a component for current guess, change above component to be presentational of submitted guesses */}
+    //   <GameCluesRow key={`gameCluesRow-${i}`} />
+    // <button
+    //   onClick={handleGuessSubmit}
+    //   className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
+    // >
+    //   Submit
+    // </button>
+    // </form>
   }
 
   // const rows = Array.from({ length: 10 }, (_, i) => ({ id: i }));
