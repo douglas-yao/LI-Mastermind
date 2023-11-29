@@ -12,17 +12,8 @@ export default function GameBoard() {
     getRandomNumber();
   }, []);
 
-  // Temporary function to generate a random array of 4 numbers, ranging from 0-7
-  // To be handled by the backend and just fetched here instead
-  function generateRandomArray() {
-    const randomArray = Array.from({ length: 4 }, () =>
-      Math.floor(Math.random() * 8)
-    );
-    return randomArray;
-  }
-
   async function getRandomNumber() {
-    const randomNumber: RandomNumber = await axios.get(
+    const randomNumber = await axios.get(
       'http://localhost:3001/game/randomSolution'
     );
     setSolution(randomNumber.data);

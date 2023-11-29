@@ -7,8 +7,8 @@ export default function UserGuessRow() {
     <div className="flex gap-7 items-center">
       <div className="flex gap-2">
         {tiles.map((_, i) => (
-          <div>
-            <UserGuessTile key={i} />
+          <div key={`userGuessTile-${i}`}>
+            <UserGuessTile />
           </div>
         ))}
       </div>
