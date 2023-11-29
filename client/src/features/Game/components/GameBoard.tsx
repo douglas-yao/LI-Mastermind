@@ -8,7 +8,8 @@ type Guesses = number[][];
 
 export default function GameBoard({ difficulty, playerName }) {
   const [solution, setSolution] = useState<RandomNumbers>([]);
-  const [guesses, setGuesses] = useState<Guesses>([]);
+  const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
+  const [guesses, setGuesses] = useState<Guesses>([currentGuess]);
 
   console.log(difficulty);
 
@@ -16,6 +17,12 @@ export default function GameBoard({ difficulty, playerName }) {
     generateRandomNumbers();
     console.log(guesses);
   }, []);
+
+  useEffect(() => {
+    if (guesses.length === 10) {
+      alert('Game Over!');
+    }
+  }, [guesses]);
 
   async function generateRandomNumbers() {
     try {
@@ -30,22 +37,42 @@ export default function GameBoard({ difficulty, playerName }) {
     }
   }
 
+  function handleGuessSubmit() {
+    setGuesses((prev) => [...prev, currentGuess]);
+  }
+
+  function handleNewGameClick() {
+    generateRandomNumbers();
+    setCurrentGuess(Array(4).fill(''));
+    setGuesses([currentGuess]);
+  }
+
   function renderBoardRows() {
-    return rows.map((_, i) => (
+    return guesses.map((guess, i) => (
       <div key={i} className="flex gap-7">
-        <UserGuessRow key={`userGuessRow-${i}`} />
+        <UserGuessRow
+          key={`userGuessRow-${i}`}
+          guess={guess}
+          setCurrentGuess={setCurrentGuess}
+        />
         <GameCluesRow key={`gameCluesRow-${i}`} />
+        <button
+          onClick={handleGuessSubmit}
+          className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
+        >
+          Submit
+        </button>
       </div>
     ));
   }
 
-  const rows = Array.from({ length: 10 }, (_, i) => ({ id: i }));
+  // const rows = Array.from({ length: 10 }, (_, i) => ({ id: i }));
 
   return (
     <div className="flex flex-col items-center gap-4">
       <button
         className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
-        onClick={generateRandomNumbers}
+        onClick={handleNewGameClick}
       >
         New Game
       </button>

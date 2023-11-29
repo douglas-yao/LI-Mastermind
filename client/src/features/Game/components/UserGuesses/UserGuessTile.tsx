@@ -1,4 +1,4 @@
-export default function UserGuessTile() {
+export default function UserGuessTile({ num, setCurrentGuess }) {
   return (
     <div>
       <input
@@ -6,6 +6,7 @@ export default function UserGuessTile() {
         type="text"
         maxLength={1}
         pattern="[0-7]"
+        onChange={(e) => console.log(e.target.value)}
       />
     </div>
   );
