@@ -22,6 +22,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
   useEffect(() => {
     console.log('guesses: ', guesses);
+    console.log('current guess: ', currentGuess);
     if (guesses.length === 10) {
       alert('Game Over!');
     }
@@ -40,21 +41,32 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
+  function handleNewGameClick() {
+    generateRandomNumbers();
+    setCurrentGuess(Array(4).fill(''));
+    setGuesses([]);
+  }
+
   function handleGuessSubmit(e) {
     e.preventDefault();
 
-    setGuesses((prev) => [...prev, currentGuess]);
+    const submittedGuess = [...currentGuess];
+    setGuesses((prev) => [...prev, submittedGuess]);
     setCurrentGuess(Array(4).fill(''));
   }
 
   function renderBoardRows() {
     return (
-      <div>
+      <div className="flex flex-col gap-5">
         {guesses.map((guess, i) => (
-          <BoardRow key={i} guess={guess} />
+          <BoardRow key={i} guess={guess} disabled={true} />
         ))}
         <form onSubmit={handleGuessSubmit} className="flex gap-7">
-          <BoardRow guess={currentGuess} setCurrentGuess={setCurrentGuess} />
+          <BoardRow
+            guess={currentGuess}
+            setCurrentGuess={setCurrentGuess}
+            disabled={false}
+          />
           <button
             onClick={handleGuessSubmit}
             className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
@@ -85,7 +97,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   // const rows = Array.from({ length: 10 }, (_, i) => ({ id: i }));
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-5">
+      <button
+        className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
+        onClick={handleNewGameClick}
+      >
+        New Game
+      </button>
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
