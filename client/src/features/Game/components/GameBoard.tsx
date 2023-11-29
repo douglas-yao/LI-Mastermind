@@ -5,8 +5,12 @@ import axios from 'axios';
 
 type RandomNumbers = number[];
 type Guesses = number[][];
+type GameBoardProps = {
+  difficulty: string;
+  playerName: string;
+};
 
-export default function GameBoard({ difficulty, playerName }) {
+export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [solution, setSolution] = useState<RandomNumbers>([]);
   const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([currentGuess]);
@@ -19,10 +23,11 @@ export default function GameBoard({ difficulty, playerName }) {
   }, []);
 
   useEffect(() => {
+    console.log(`guesses: ${guesses}`);
     if (guesses.length === 10) {
       alert('Game Over!');
     }
-  }, [guesses]);
+  }, [guesses, currentGuess]);
 
   async function generateRandomNumbers() {
     try {
@@ -41,12 +46,6 @@ export default function GameBoard({ difficulty, playerName }) {
     e.preventDefault();
 
     setGuesses((prev) => [...prev, currentGuess]);
-  }
-
-  function handleNewGameClick() {
-    generateRandomNumbers();
-    setCurrentGuess(Array(4).fill(''));
-    setGuesses([currentGuess]);
   }
 
   function renderBoardRows() {
@@ -72,12 +71,6 @@ export default function GameBoard({ difficulty, playerName }) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <button
-        className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
-        onClick={handleNewGameClick}
-      >
-        New Game
-      </button>
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
@@ -85,3 +78,18 @@ export default function GameBoard({ difficulty, playerName }) {
     </div>
   );
 }
+
+/**
+   function handleNewGameClick() {
+    generateRandomNumbers();
+    setCurrentGuess(Array(4).fill(''));
+    setGuesses([currentGuess]);
+  }
+
+  <button
+    className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
+    onClick={handleNewGameClick}
+  >
+    New Game
+  </button>
+ */
