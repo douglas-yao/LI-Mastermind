@@ -1,19 +1,26 @@
 import express, { Request, Response } from 'express';
+import axios from 'axios';
 
 const gameRouter = express.Router();
 
 gameRouter.get('/randomSolution', async (req: Request, res: Response) => {
-  console.log(`request: ${req.body}`);
-
-  const randomNumber = generateRandomArray();
-
+  const randomNumber = await getRandomNumber();
   res.json(randomNumber);
 
-  function generateRandomArray() {
-    const randomArray = Array.from({ length: 4 }, () =>
-      Math.floor(Math.random() * 8)
+  async function getRandomNumber() {
+    const response = await axios.get(
+      'https://www.random.org/integers/?num=4&min=0&max=7&col=1&base=10&format=plain&rnd=new'
     );
-    return randomArray;
+    const randomNumbers = convertStringToArray(response.data);
+    return randomNumbers;
+  }
+
+  function convertStringToArray(str: string) {
+    const stringArray = str.trim().split('\n');
+
+    const numberArray = stringArray.map(Number);
+
+    return numberArray;
   }
 });
 
