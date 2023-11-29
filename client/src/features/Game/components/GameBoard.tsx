@@ -7,19 +7,22 @@ type RandomNumbers = number[];
 type PlayerName = string;
 type Guesses = number[][];
 
-export default function GameBoard() {
+export default function GameBoard({ difficulty, playerName }) {
   const [solution, setSolution] = useState<RandomNumbers>([]);
-  const [playerName, setPlayerName] = useState<PlayerName>('');
   const [guesses, setGuesses] = useState<Guesses>([]);
 
+  console.log(difficulty);
+
   useEffect(() => {
-    generateRandomNumber();
+    generateRandomNumbers();
+    console.log(guesses);
   }, []);
 
-  async function generateRandomNumber() {
+  async function generateRandomNumbers() {
     try {
-      const randomNumbers = await axios.get(
-        'http://localhost:3001/game/randomSolution'
+      const randomNumbers = await axios.post(
+        'http://localhost:3001/game/randomSolution',
+        { difficulty }
       );
 
       setSolution(randomNumbers.data);
@@ -41,15 +44,15 @@ export default function GameBoard() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <button onClick={generateRandomNumber}>Restart</button>
+      <button
+        className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
+        onClick={generateRandomNumbers}
+      >
+        New Game
+      </button>
+      <span>Player: {playerName}</span>
+      <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
-      <input
-        className="border border-slate-500 rounded-md px-2 py-1"
-        value={playerName}
-        onChange={(e) => setPlayerName(e.target.value)}
-        placeholder="Enter player name"
-        onKeyDown={(e) => (e.key === 'Enter' ? e.target.blur() : null)}
-      />
       {renderBoardRows()}
     </div>
   );
