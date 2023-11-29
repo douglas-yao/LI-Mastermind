@@ -4,11 +4,14 @@ import axios from 'axios';
 const gameRouter = express.Router();
 
 gameRouter.post('/randomSolution', async (req: Request, res: Response) => {
-  console.log('req body: ', req.body);
-  const randomNumber = await getRandomNumber();
+  const { difficulty } = req.body;
+
+  const randomNumber = await getRandomNumber(difficulty);
   res.json(randomNumber);
 
-  async function getRandomNumber() {
+  async function getRandomNumber(difficultyLevel: string) {
+    console.log(`Playing on difficulty ${difficultyLevel}`);
+
     const response = await axios.get(
       'https://www.random.org/integers/?num=4&min=0&max=7&col=1&base=10&format=plain&rnd=new'
     );
