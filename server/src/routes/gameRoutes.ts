@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const gameRouter = express.Router();
 
-gameRouter.get('/randomSolution', async (req: Request, res: Response) => {
+gameRouter.post('/randomSolution', async (req: Request, res: Response) => {
+  console.log('req body: ', req.body);
   const randomNumber = await getRandomNumber();
   res.json(randomNumber);
 
