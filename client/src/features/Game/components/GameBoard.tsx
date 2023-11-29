@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 type RandomNumber = number[];
+type Guesses = number[][];
 
 export default function GameBoard() {
   const [solution, setSolution] = useState<RandomNumber>([]);
+  const [guesses, setGuesses] = useState<Guesses>([]);
 
   useEffect(() => {
     getRandomNumber();
