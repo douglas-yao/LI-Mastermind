@@ -1,7 +1,10 @@
 // gameModel.ts
-import { OkPacket, ResultSetHeader } from 'mysql2';
+import { ResultSetHeader } from 'mysql2';
 import pool from '../config/dbConnect';
 
+// Operations for the games_normal table:
+
+// Insert a new game row
 const createGame = async (
   // userId: number,
   solution1: number,
@@ -15,9 +18,8 @@ const createGame = async (
     [solution1, solution2, solution3, solution4, totalGuesses]
   );
 
-  // Assuming the 'games_normal' table has an auto-incrementing 'id' column
+  // Retrieve the auto-generated (and auto-incremented id) from the db insertion
   const insertedId = (result as ResultSetHeader).insertId;
-
   return insertedId;
 };
 

@@ -1,4 +1,4 @@
-export default function extractSolution(randomNumberSequence: any) {
+export default function stringResToArray(randomNumberSequence: any) {
   if (typeof randomNumberSequence !== 'string') {
     throw new Error('Input is not a string');
   }
