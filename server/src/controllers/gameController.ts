@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { createGame } from '../models/games_normalModel';
-import stringResToArray from '../utils/stringResToArray';
+import parseRandomRes from '../utils/parseRandomRes';
 import fetchRandomNumbers from '../utils/fetchRandomNumbers';
 
 // Controllers to handle game logic
@@ -11,18 +11,10 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     // Fetch a random number sequence from the Random.org API
     const randomNumberSequence = await fetchRandomNumbers();
     // Parse the response string and convert to an array of numbers
-    const solution = stringResToArray(randomNumberSequence);
-    // Initialize variables for db insertion
-    const [solution1, solution2, solution3, solution4] = solution;
+    const solution = parseRandomRes(randomNumberSequence);
 
     // Save the solution and remaining guesses to the database
-    const createdGameId = await createGame(
-      solution1,
-      solution2,
-      solution3,
-      solution4,
-      10
-    );
+    const createdGameId = await createGame(solution, 10);
 
     res.locals.newGameData = { solution, totalGuesses: 10, createdGameId };
     return next();
