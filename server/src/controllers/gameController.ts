@@ -1,28 +1,27 @@
-import { Request, Response } from 'express';
-import createGame from '../models/gameModel';
+import { NextFunction, Request, Response } from 'express';
+import { createGame } from '../models/gameModel';
 import generateSolution from '../utils/generateSolution';
 import fetchRandomNumbers from '../utils/fetchRandomNumbers';
 
-const startGame = async (req: Request, res: Response) => {
+const startGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Assume you have a function to generate a random number sequence
     const randomNumberSequence = await fetchRandomNumbers();
-    console.log('random sequence: ', randomNumberSequence);
     const solution = generateSolution(randomNumberSequence);
-    console.log('solution: ', solution);
     const [solution1, solution2, solution3, solution4] = solution;
 
     // Save the sequence and remaining guesses to the database
-    const createdGame = await createGame(
+    const createdGameId = await createGame(
       solution1,
       solution2,
       solution3,
       solution4,
       10
     );
-    console.log('created game: ', createdGame);
+    console.log('created game id: ', createdGameId);
 
-    res.json({ solution, totalGuesses: 10 });
+    // res.json({ solution, totalGuesses: 10 });
+    res.locals.newGameData = { solution, totalGuesses: 10, createdGameId };
+    return next();
   } catch (error) {
     console.error('Error playing the game:', error);
     res.status(500).send('Internal Server Error');
