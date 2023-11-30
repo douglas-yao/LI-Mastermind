@@ -34,7 +34,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         difficulty,
       });
 
-      console.log('res from backend: ', response);
+      console.log('data from backend: ', response.data);
       setSolution(response.data.solution);
     } catch (error) {
       console.error('Error generating random number:', error);
