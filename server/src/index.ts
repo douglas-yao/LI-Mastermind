@@ -18,7 +18,6 @@ const db = mysql.createConnection({
 app.get('/users', (req: Request, res: Response) => {
   const q = 'SELECT * FROM users';
   db.query(q, (err, data) => {
-    console.log('hit users endpoint');
     if (err) {
       console.log('error!');
       return res.json(err);
