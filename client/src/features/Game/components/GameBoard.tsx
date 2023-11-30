@@ -47,6 +47,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     setGuesses([]);
   }
 
+  // Change submission handler to make an API call instead?
   function handleGuessSubmit(e) {
     e.preventDefault();
 
