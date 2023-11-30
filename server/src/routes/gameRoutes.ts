@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
-import getRandomNumber from '../utils/getRandomNumber';
+import getRandomNumber from '../utils/generateSolution';
+import { startGame } from '../controllers/gameController';
 
 const router = express.Router();
+
+router.post('/play', startGame);
 
 // Generate a random number
 router.post('/randomSolution', async (req: Request, res: Response) => {
