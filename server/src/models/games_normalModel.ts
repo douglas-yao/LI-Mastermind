@@ -8,11 +8,11 @@ import pool from '../config/dbConnect';
 const createGame = async (
   // userId: number,
   solution: string,
-  guessesLeft: number
+  guesses: number
 ) => {
   const [result] = await pool.execute(
-    'INSERT INTO games_normal2 (solution, guessesLeft) VALUES (?, ?)',
-    [solution, guessesLeft]
+    'INSERT INTO games_normal (solution, guesses) VALUES (?, ?)',
+    [solution, guesses]
   );
 
   // Retrieve the auto-generated (and auto-incremented id) from the db insertion

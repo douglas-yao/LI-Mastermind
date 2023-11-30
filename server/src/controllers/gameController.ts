@@ -14,9 +14,9 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     const solution = parseRandomRes(randomNumberSequence);
 
     // Save the solution and remaining guesses to the database
-    const createdGameId = await createGame(solution, 10);
+    const createdGameId = await createGame(solution, 0);
 
-    res.locals.newGameData = { solution, totalGuesses: 10, createdGameId };
+    res.locals.newGameData = { solution, guesses: 0, createdGameId };
     return next();
   } catch (error) {
     console.error('Error starting the game:', error);
