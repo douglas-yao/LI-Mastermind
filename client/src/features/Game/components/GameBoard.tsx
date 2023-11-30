@@ -17,7 +17,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   console.log(difficulty);
 
   useEffect(() => {
-    generateRandomNumbers();
+    getData();
   }, []);
 
   useEffect(() => {
@@ -28,21 +28,21 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }, [guesses, currentGuess]);
 
-  async function generateRandomNumbers() {
+  async function getData() {
     try {
-      const randomNumbers = await axios.post(
-        'http://localhost:3001/game/randomSolution',
-        { difficulty }
-      );
+      const response = await axios.post('http://localhost:3001/game/play', {
+        difficulty,
+      });
 
-      setSolution(randomNumbers.data);
+      console.log('res from backend: ', response);
+      setSolution(response.data.solution);
     } catch (error) {
       console.error('Error generating random number:', error);
     }
   }
 
   function handleNewGameClick() {
-    generateRandomNumbers();
+    getData();
     setCurrentGuess(Array(4).fill(''));
     setGuesses([]);
   }
