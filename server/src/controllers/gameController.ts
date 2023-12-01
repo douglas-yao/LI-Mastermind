@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { createNewGameInstance } from '../models/games_normalModel';
 import { createNewUserGame } from '../models/user_gamesModel';
+import { gameCache as currentGameCache, gameCache } from '../cache/gameCache';
 import parseRandomRes from '../utils/parseRandomRes';
 import fetchRandomNumbers from '../utils/fetchRandomNumbers';
-import { gameCache as currentGameCache } from '../cache/gameCache';
+import generateFeedback from '../utils/generateFeedback';
 
 // Controllers to handle game logic
 
@@ -15,7 +16,7 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, difficulty } = req.body;
     // Fetch a random number sequence from the Random.org API
-    const randomNumberSequence = await fetchRandomNumbers();
+    const randomNumberSequence = await fetchRandomNumbers(difficulty);
     // Parse the response string and convert to an array of numbers
     const solution = parseRandomRes(randomNumberSequence);
 
@@ -51,11 +52,18 @@ const submitAttempt = async (
   next: NextFunction
 ) => {
   try {
-    console.log('in try block of submitAttempt controller');
-    console.log(
-      'printing the solution in the submission controller: ',
-      currentGameCache.currentSolution
-    );
+    if (gameCache.currentSolution) {
+      console.log('incoming submission: ', req.body);
+      const { submittedGuess } = req.body;
+      console.log(currentGameCache.currentSolution === submittedGuess);
+      const feedback = generateFeedback(
+        gameCache.currentSolution,
+        submittedGuess
+      );
+      console.log('feedback: ', feedback);
+    } else {
+      console.error('Error: No solution generated!');
+    }
   } catch (error) {
     console.error('Error submitting current attempt:', error);
     res.status(500).send('Internal Server Error');

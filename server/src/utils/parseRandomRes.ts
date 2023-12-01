@@ -17,7 +17,7 @@ export default function parseRandomRes(randomNumberSequence: string): string {
 
   // Trim the string, split by newline, and join elements without spaces or commas
   const parsed = randomNumberSequence.trim().split('\n').join('');
-  console.log(parsed);
+  console.log('parsed random solution: ', parsed, typeof parsed);
 
   return parsed;
 }
