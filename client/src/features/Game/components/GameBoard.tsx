@@ -44,12 +44,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
-  // async function handleNewGameClick() {
-  //   await handleStartNewGame();
-  //   setCurrentGuess(Array(4).fill(''));
-  //   setGuesses([]);
-  // }
-
   async function handleGuessSubmit(e) {
     e.preventDefault();
 
@@ -89,25 +83,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         </form>
       </div>
     );
-
-    // <form onSubmit={handleGuessSubmit} key={i} className="flex gap-7">
-    //   <UserGuessRow
-    //     key={`userGuessRow-${i}`}
-    //     guess={guess}
-    //     setCurrentGuess={setCurrentGuess}
-    //   />
-    //   {/* Add a component for current guess, change above component to be presentational of submitted guesses */}
-    //   <GameCluesRow key={`gameCluesRow-${i}`} />
-    // <button
-    //   onClick={handleGuessSubmit}
-    //   className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
-    // >
-    //   Submit
-    // </button>
-    // </form>
   }
-
-  // const rows = Array.from({ length: 10 }, (_, i) => ({ id: i }));
 
   return (
     <div className="flex flex-col items-center gap-5">
@@ -125,18 +101,3 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     </div>
   );
 }
-
-/**
-   function handleNewGameClick() {
-    generateRandomNumbers();
-    setCurrentGuess(Array(4).fill(''));
-    setGuesses([currentGuess]);
-  }
-
-  <button
-    className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
-    onClick={handleNewGameClick}
-  >
-    New Game
-  </button>
- */
