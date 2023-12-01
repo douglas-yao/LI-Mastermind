@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { createNewGameInstance } from '../models/games_normalModel';
+import {
+  createNewGameInstance,
+  updateGameInstance,
+} from '../models/games_normalModel';
 import {
   createNewUserGame,
   updateGameCompletionStatus,
@@ -24,7 +27,11 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     const solution = parseRandomRes(randomNumberSequence);
 
     // Save the solution and remaining guesses to the database
-    const createdGameId = await createNewGameInstance(solution);
+    const createdGameId = await createNewGameInstance(
+      solution,
+      currentGameCache.guessesRemaining
+    );
+
     const createdNewUserGame = await createNewUserGame(
       userId,
       createdGameId,
@@ -79,6 +86,14 @@ const submitAttempt = async (
         currentGameCache.gameId,
         feedback.won,
         currentGameCache.difficulty
+      );
+    } else {
+      updateGameInstance(
+        currentGameCache.gameId,
+        submittedGuess,
+        currentGameCache.currentSolution,
+        feedback.directMatches,
+        gameCache.guessesRemaining
       );
     }
 
