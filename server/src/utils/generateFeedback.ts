@@ -1,16 +1,4 @@
-type Comparisons = {
-  directMatches: number;
-  indirectMatches: number;
-  incorrect: number;
-  won: boolean;
-};
-
-type Feedback = {
-  directMatches: string;
-  indirectMatches: string;
-  incorrect: string;
-  won: boolean;
-};
+import { Feedback, Comparisons } from '../types/types';
 
 /**
  * To Do:
@@ -32,13 +20,23 @@ function generateFeedback(
     won: false,
   };
 
+  // Construct the feedback response object:
   const feedback: Feedback = {
-    directMatches: `${comparisons.directMatches} exact matches.`,
-    indirectMatches: `${comparisons.indirectMatches} matches out of place.`,
-    incorrect: `${comparisons.incorrect} incorrect guesses.`,
-    won: comparisons.won,
+    response: '',
+    won: false,
   };
 
+  if (comparisons.incorrect === 4) {
+    feedback.response = 'All incorrect';
+  } else if (comparisons.directMatches === 4) {
+    feedback.response = 'All correct, you are a Mastermind!';
+  } else {
+    feedback.response = `${comparisons.directMatches} correct number and ${comparisons.indirectMatches} correct location`;
+  }
+
+  feedback.won = comparisons.won;
+
+  // Console logs for server debugging:
   console.log('attempt and solution: ', attempt, solution);
   console.log('comparisons object: ', comparisons);
   console.log('feedback object: ', feedback);

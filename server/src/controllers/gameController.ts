@@ -100,7 +100,7 @@ const submitAttempt = async (
         currentGameCache.gameId,
         submittedGuess,
         currentGameCache.currentSolution,
-        feedback.directMatches,
+        feedback.response,
         currentGameCache.guessesRemaining
       );
     }

@@ -4,7 +4,7 @@ import GameBoard from './features/Game/components/GameBoard';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [playerName, setPlayerName] = useState<PlayerName>('');
+  const [playerName, setPlayerName] = useState<string>('');
   const [difficulty, setDifficulty] = useState('Normal');
 
   function toggleGame() {

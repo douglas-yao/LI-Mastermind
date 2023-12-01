@@ -1,7 +1,5 @@
 type Feedback = {
-  directMatches: string;
-  indirectMatches: string;
-  incorrect: string;
+  response: string;
   won: boolean;
 };
 
@@ -12,21 +10,14 @@ type SubmissionFeedbackProps = {
 export default function SubmissionFeedback({
   feedback,
 }: SubmissionFeedbackProps) {
-  const {
-    directMatches = '',
-    indirectMatches = '',
-    incorrect = '',
-    won,
-  } = feedback;
+  const { response, won } = feedback;
 
   function renderFeedback() {
     return won === true ? (
       <span>You're a mastermind!</span>
     ) : (
       <div>
-        <span>{directMatches}</span>
-        <span>{indirectMatches}</span>
-        <span>{incorrect}</span>
+        <span>{response}</span>
       </div>
     );
   }

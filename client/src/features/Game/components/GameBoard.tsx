@@ -3,15 +3,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 type RandomNumbers = number[][] | null;
-type Guesses = [][];
+type Guesses = string[][];
 type GameBoardProps = {
   difficulty: string;
   playerName: string;
 };
 type Feedback = {
-  directMatches: string;
-  indirectMatches: string;
-  incorrect: string;
+  response: string;
   won: boolean;
 };
 
@@ -20,9 +18,9 @@ type Feedback = {
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object
   const [solution, setSolution] = useState<RandomNumbers>(null);
-  const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
+  const [currentGuess, setCurrentGuess] = useState<string[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
-  const [userId, setUserId] = useState<number>(1);
+  const [userId, setUserId] = useState<string>(playerName || 'Anonymous');
   const [gameId, setGameId] = useState<number | null>(null);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
@@ -62,6 +60,12 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     e.preventDefault();
 
     try {
+      console.log('current guess: ', currentGuess, typeof currentGuess);
+      if (currentGuess.some((elem) => elem === '')) {
+        console.error('Unable to submit fewer than 4 guesses!');
+        alert('Must submit all four guesses!');
+        return;
+      }
       const submittedGuess = currentGuess.join('');
       console.log('guesses from handler: ', guesses);
       setGuesses((prev) => [...prev, currentGuess]);

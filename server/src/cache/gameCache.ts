@@ -2,7 +2,7 @@
 // Consider implementing localstorage cache?
 type GameCache = {
   gameId: string;
-  userId: number | null;
+  userId: string;
   currentSolution: string;
   difficulty: string;
   guessesRemaining: number;
@@ -10,7 +10,7 @@ type GameCache = {
 
 const gameCache: GameCache = {
   gameId: '',
-  userId: null,
+  userId: 'Anonymous',
   currentSolution: '',
   difficulty: '',
   guessesRemaining: 10,

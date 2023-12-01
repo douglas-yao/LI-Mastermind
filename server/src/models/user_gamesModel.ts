@@ -4,7 +4,7 @@ import pool from '../config/dbConnect';
 
 // Insert a new game row
 const createNewUserGame = async (
-  userId: number,
+  userId: string,
   gameId: string,
   difficulty: string
 ) => {
