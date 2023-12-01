@@ -2,8 +2,8 @@ import BoardRow from './BoardRow';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-type RandomNumbers = number[];
-type Guesses = number[][];
+type RandomNumbers = number[][];
+type Guesses = number[];
 type GameBoardProps = {
   difficulty: string;
   playerName: string;
@@ -13,47 +13,59 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [solution, setSolution] = useState<RandomNumbers>([]);
   const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
+  const [userId, setUserId] = useState<number>(1);
+  const [gameId, setGameId] = useState<number | null>(null);
+  const [guessesTaken, setGuessesTaken] = useState<number | null>(null);
 
-  console.log(difficulty);
-
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   startNewGame();
+  // }, []);
 
   useEffect(() => {
     console.log('guesses: ', guesses);
-    console.log('current guess: ', currentGuess);
-    if (guesses.length === 10) {
-      alert('Game Over!');
-    }
-  }, [guesses, currentGuess]);
+  }, [guesses]);
 
-  async function getData() {
+  async function handleStartNewGame() {
     try {
+      setCurrentGuess(Array(4).fill(''));
+      setGuesses([]);
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
+        userId: 1,
       });
 
       console.log('data from backend: ', response.data);
-      setSolution(response.data.solution);
+      const { solution, gameId, guessesTaken } = response.data;
+      setSolution(solution);
+      setGameId(gameId);
+      setGuessesTaken(guessesTaken);
     } catch (error) {
       console.error('Error generating random number:', error);
     }
   }
 
-  function handleNewGameClick() {
-    getData();
-    setCurrentGuess(Array(4).fill(''));
-    setGuesses([]);
-  }
+  // async function handleNewGameClick() {
+  //   await handleStartNewGame();
+  //   setCurrentGuess(Array(4).fill(''));
+  //   setGuesses([]);
+  // }
 
-  // Change submission handler to make an API call instead?
-  function handleGuessSubmit(e) {
+  async function handleGuessSubmit(e) {
     e.preventDefault();
 
-    const submittedGuess = [...currentGuess];
-    setGuesses((prev) => [...prev, submittedGuess]);
-    setCurrentGuess(Array(4).fill(''));
+    try {
+      const submittedGuess = currentGuess.join('');
+      setGuesses((prev) => [...prev, currentGuess]);
+      setCurrentGuess(Array(4).fill(''));
+
+      const response = await axios.post('http://localhost:3001/game/attempt', {
+        userId,
+        gameId,
+        submittedGuess,
+      });
+    } catch (error) {
+      console.error('Error occurred submitting an attempt: ', error);
+    }
   }
 
   function renderBoardRows() {
@@ -101,13 +113,14 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     <div className="flex flex-col items-center gap-5">
       <button
         className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
-        onClick={handleNewGameClick}
+        onClick={handleStartNewGame}
       >
         New Game
       </button>
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
+      <span>Guesses left: {10 - guessesTaken}</span>
       {renderBoardRows()}
     </div>
   );

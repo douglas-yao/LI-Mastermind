@@ -12,7 +12,7 @@ export default function BoardRow({
   setCurrentGuess,
   disabled,
 }: BoardRowProps) {
-  console.log('guess: ', guess);
+  // console.log('guess: ', guess);
 
   function handleCurrentGuessUpdate() {
     null;
