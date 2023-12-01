@@ -18,7 +18,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [guesses, setGuesses] = useState<Guesses>([]);
   const [userId, setUserId] = useState<number>(1);
   const [gameId, setGameId] = useState<number | null>(null);
-  const [guessesTaken, setGuessesTaken] = useState<number | null>(null);
+  const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // useEffect(() => {
@@ -41,10 +41,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       });
 
       console.log('data from backend: ', response.data);
-      const { solution, gameId, guessesTaken } = response.data;
+      const { solution, gameId, startingNumberGuesses } = response.data;
       setSolution(solution);
       setGameId(gameId);
-      setGuessesTaken(guessesTaken);
+      setGuessesRemaining(startingNumberGuesses);
       setIsFetching(false);
     } catch (error) {
       console.error('Error generating random number:', error);
@@ -67,6 +67,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         solution,
       });
       console.log('response from submission: ', response);
+      const { updatedGuessesRemaining } = response.data;
+      console.log(updatedGuessesRemaining);
+      setGuessesRemaining(updatedGuessesRemaining);
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
@@ -127,7 +130,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
-      <span>Guesses left: {10 - guessesTaken}</span>
+      <span>Guesses remaining: {guessesRemaining}</span>
       {renderBoardRows()}
     </div>
   );

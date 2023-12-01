@@ -27,6 +27,7 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     const solution = parseRandomRes(randomNumberSequence);
 
     // Save the solution and remaining guesses to the database
+    currentGameCache.guessesRemaining = 10;
     const createdGameId = await createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining
@@ -48,7 +49,11 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
       currentGameCache.currentSolution
     );
 
-    res.locals.newGameData = { solution, guessesTaken: 0, createdGameId };
+    res.locals.newGameData = {
+      solution,
+      startingNumberGuesses: currentGameCache.guessesRemaining,
+      createdGameId,
+    };
     return next();
   } catch (error) {
     console.error('Error starting the game:', error);
@@ -93,14 +98,18 @@ const submitAttempt = async (
         submittedGuess,
         currentGameCache.currentSolution,
         feedback.directMatches,
-        gameCache.guessesRemaining
+        currentGameCache.guessesRemaining
       );
     }
 
     console.log('incoming submission: ', req.body);
     console.log('comparisons: ', comparisons);
     console.log('feedback: ', feedback);
-    res.locals.evaluatedSubmission = { comparisons, feedback };
+    res.locals.evaluatedSubmission = {
+      comparisons,
+      feedback,
+      updatedGuessesRemaining: currentGameCache.guessesRemaining,
+    };
     return next();
   } catch (error) {
     console.error('Error submitting current attempt:', error);
