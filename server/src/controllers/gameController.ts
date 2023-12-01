@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import {
   createNewGameInstance,
   updateGameInstance,
@@ -27,20 +28,22 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     const solution = parseRandomRes(randomNumberSequence);
 
     // Save the solution and remaining guesses to the database
+    currentGameCache.gameId = uuidv4();
     currentGameCache.guessesRemaining = 10;
-    const createdGameId = await createNewGameInstance(
+    const insertId = await createNewGameInstance(
       solution,
-      currentGameCache.guessesRemaining
+      currentGameCache.guessesRemaining,
+      currentGameCache.gameId
     );
 
     const createdNewUserGame = await createNewUserGame(
       userId,
-      createdGameId,
+      currentGameCache.gameId,
       difficulty
     );
 
     currentGameCache.currentSolution = solution;
-    currentGameCache.gameId = createdGameId;
+    currentGameCache.gameId = currentGameCache.gameId;
     currentGameCache.userId = userId;
     currentGameCache.difficulty = difficulty;
 
@@ -52,7 +55,7 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     res.locals.newGameData = {
       solution,
       startingNumberGuesses: currentGameCache.guessesRemaining,
-      createdGameId,
+      gameId: currentGameCache.gameId,
     };
     return next();
   } catch (error) {

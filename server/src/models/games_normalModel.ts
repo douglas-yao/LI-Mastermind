@@ -7,21 +7,29 @@ import pool from '../config/dbConnect';
 // Add a difficulty param and logic to handle
 const createNewGameInstance = async (
   solution: string,
-  guessesRemaining: number
+  guessesRemaining: number,
+  gameId: string
 ) => {
-  // Add logic below to insert into Easy, Normal, or Hard table
-  const [result] = await pool.execute(
-    'INSERT INTO games_normal (solution, guessesRemaining) VALUES (?, ?)',
-    [solution, 10]
-  );
+  try {
+    const query = `
+      INSERT INTO games_normal (solution, guessesRemaining, gameId) VALUES (?, ?, ?)
+    `;
 
-  // Retrieve the auto-generated (and auto-incremented id) from the db insertion
-  const insertedId = (result as ResultSetHeader).insertId;
-  return insertedId;
+    const values = [solution, guessesRemaining, gameId];
+
+    // Add logic below to insert into Easy, Normal, or Hard table
+    const [result] = await pool.execute(query, values);
+
+    const insertedId = (result as ResultSetHeader).insertId;
+    return insertedId;
+  } catch (error) {
+    console.error('Error creating new game instance:', error);
+    throw error;
+  }
 };
 
 const updateGameInstance = async (
-  gameId: number,
+  gameId: string,
   attempt: string,
   solution: string,
   feedback: string,
@@ -29,13 +37,8 @@ const updateGameInstance = async (
 ) => {
   try {
     const query = `
-      INSERT INTO games_normal (id, attempt, solution, feedback, guessesRemaining)
+      INSERT INTO games_normal (gameId, attempt, solution, feedback, guessesRemaining)
       VALUES (?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE
-        attempt = VALUES(attempt),
-        solution = VALUES(solution),
-        feedback = VALUES(feedback),
-        guessesRemaining = VALUES(guessesRemaining);
     `;
 
     const values = [gameId, attempt, solution, feedback, guessesRemaining];

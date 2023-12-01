@@ -17,12 +17,14 @@
     "knex": "^3.0.1",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.1",
-    "mysql2": "^3.6.5"
+    "mysql2": "^3.6.5",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/mysql": "^2.15.24",
+    "@types/uuid": "^9.0.7",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"
   }
