@@ -8,6 +8,12 @@ type GameBoardProps = {
   difficulty: string;
   playerName: string;
 };
+type Feedback = {
+  directMatches: string;
+  indirectMatches: string;
+  incorrect: string;
+  won: boolean;
+};
 
 // Guesses logic is handled using arrays and array methods, whereas backend guesses logic is handled with strings
 
@@ -19,6 +25,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [userId, setUserId] = useState<number>(1);
   const [gameId, setGameId] = useState<number | null>(null);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // useEffect(() => {
@@ -67,9 +74,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         solution,
       });
       console.log('response from submission: ', response);
-      const { updatedGuessesRemaining } = response.data;
+      const { updatedGuessesRemaining, feedback } = response.data;
       console.log(updatedGuessesRemaining);
       setGuessesRemaining(updatedGuessesRemaining);
+      setFeedback((prev) => [...prev, feedback]);
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
@@ -101,7 +109,12 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     return (
       <div className="flex flex-col gap-5">
         {guesses.map((guess, i) => (
-          <BoardRow key={i} guess={guess} disabled={true} />
+          <BoardRow
+            key={i}
+            guess={guess}
+            disabled={true}
+            feedback={feedback[i]}
+          />
         ))}
         <form onSubmit={handleGuessSubmit} className="flex gap-7">
           {solution === null ? null : (
@@ -110,6 +123,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
                 guess={currentGuess}
                 setCurrentGuess={setCurrentGuess}
                 disabled={false}
+                feedback={null}
               />
               <button
                 onClick={handleGuessSubmit}

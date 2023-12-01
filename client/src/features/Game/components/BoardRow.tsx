@@ -1,16 +1,26 @@
 import UserGuessRow from './UserGuesses/UserGuessRow';
 import GameCluesRow from './GameClues/GameCluesRow';
+import SubmissionFeedback from './GameClues/SubmissionFeedback';
+
+type Feedback = {
+  directMatches: string;
+  indirectMatches: string;
+  incorrect: string;
+  won: boolean;
+};
 
 type BoardRowProps = {
   guess: number[];
   setCurrentGuess?: React.Dispatch<React.SetStateAction<number[]>>;
   disabled: boolean;
+  feedback: Feedback | null;
 };
 
 export default function BoardRow({
   guess,
   setCurrentGuess,
   disabled,
+  feedback,
 }: BoardRowProps) {
   // console.log('guess: ', guess);
 
@@ -24,7 +34,8 @@ export default function BoardRow({
         setCurrentGuess={setCurrentGuess}
         disabled={disabled}
       />
-      <GameCluesRow />
+      {/* <GameCluesRow /> */}
+      {feedback ? <SubmissionFeedback feedback={feedback} /> : null}
     </div>
   );
 }
