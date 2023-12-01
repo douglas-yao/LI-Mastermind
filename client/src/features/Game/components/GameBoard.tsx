@@ -2,20 +2,24 @@ import BoardRow from './BoardRow';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-type RandomNumbers = number[][];
-type Guesses = number[];
+type RandomNumbers = number[][] | null;
+type Guesses = [][];
 type GameBoardProps = {
   difficulty: string;
   playerName: string;
 };
 
+// Guesses logic is handled using arrays and array methods, whereas backend guesses logic is handled with strings
+
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
-  const [solution, setSolution] = useState<RandomNumbers>([]);
+  // Consider consolidating some state into one big ol' stateful object
+  const [solution, setSolution] = useState<RandomNumbers>(null);
   const [currentGuess, setCurrentGuess] = useState<number[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
   const [userId, setUserId] = useState<number>(1);
   const [gameId, setGameId] = useState<number | null>(null);
   const [guessesTaken, setGuessesTaken] = useState<number | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // useEffect(() => {
   //   startNewGame();
@@ -29,6 +33,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     try {
       setCurrentGuess(Array(4).fill(''));
       setGuesses([]);
+      console.log('initiating post request to /game/play');
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
         userId: 1,
@@ -48,7 +53,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     e.preventDefault();
 
     try {
+      setIsFetching(true);
       const submittedGuess = currentGuess.join('');
+      console.log('guesses from handler: ', guesses);
       setGuesses((prev) => [...prev, currentGuess]);
       setCurrentGuess(Array(4).fill(''));
 
@@ -57,8 +64,32 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         gameId,
         submittedGuess,
       });
+      console.log('response from submission: ', response);
+      setIsFetching(false);
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
+    }
+  }
+
+  function renderStartButton() {
+    if (isFetching === true) {
+      return (
+        <button
+          className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
+          disabled={true}
+        >
+          Loading...
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
+          onClick={handleStartNewGame}
+        >
+          {solution === null ? 'Start' : 'New Game'}
+        </button>
+      );
     }
   }
 
@@ -69,17 +100,21 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
           <BoardRow key={i} guess={guess} disabled={true} />
         ))}
         <form onSubmit={handleGuessSubmit} className="flex gap-7">
-          <BoardRow
-            guess={currentGuess}
-            setCurrentGuess={setCurrentGuess}
-            disabled={false}
-          />
-          <button
-            onClick={handleGuessSubmit}
-            className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
-          >
-            Submit
-          </button>
+          {solution === null ? null : (
+            <div className="flex gap-7">
+              <BoardRow
+                guess={currentGuess}
+                setCurrentGuess={setCurrentGuess}
+                disabled={false}
+              />
+              <button
+                onClick={handleGuessSubmit}
+                className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
+              >
+                Submit
+              </button>
+            </div>
+          )}
         </form>
       </div>
     );
@@ -87,12 +122,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
   return (
     <div className="flex flex-col items-center gap-5">
-      <button
-        className="bg-orange-400 text-grey-600 px-4 py-2 rounded-md"
-        onClick={handleStartNewGame}
-      >
-        New Game
-      </button>
+      {renderStartButton()}
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
