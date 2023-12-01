@@ -8,6 +8,7 @@ const createNewUserGame = async (
   gameId: string,
   difficulty: string
 ) => {
+  console.log('user id in user games model: ', userId);
   const query =
     'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)';
   const values = [userId, gameId, difficulty];

@@ -42,7 +42,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       console.log('initiating post request to /game/play');
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
-        userId: 1,
+        userId,
       });
 
       console.log('data from backend: ', response.data);
