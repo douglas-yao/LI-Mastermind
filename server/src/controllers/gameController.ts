@@ -32,4 +32,13 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { startGame };
+// Handles the submission of a new attempt
+const submitAttempt = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log('incoming submissions request: ', req.body);
+};
+
+export { startGame, submitAttempt };
