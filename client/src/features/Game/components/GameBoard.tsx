@@ -29,8 +29,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     console.log('guesses: ', guesses);
   }, [guesses]);
 
+  useEffect(() => {
+    console.log('isFetching triggered, ', isFetching);
+  }, [isFetching]);
+
   async function handleStartNewGame() {
     try {
+      setIsFetching(true);
       setCurrentGuess(Array(4).fill(''));
       setGuesses([]);
       console.log('initiating post request to /game/play');
@@ -44,6 +49,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setSolution(solution);
       setGameId(gameId);
       setGuessesTaken(guessesTaken);
+      setIsFetching(false);
     } catch (error) {
       console.error('Error generating random number:', error);
     }
@@ -53,7 +59,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     e.preventDefault();
 
     try {
-      setIsFetching(true);
       const submittedGuess = currentGuess.join('');
       console.log('guesses from handler: ', guesses);
       setGuesses((prev) => [...prev, currentGuess]);
@@ -65,7 +70,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         submittedGuess,
       });
       console.log('response from submission: ', response);
-      setIsFetching(false);
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
