@@ -21,7 +21,7 @@ export default function SubmissionFeedback({
 
   function renderFeedback() {
     return won === true ? (
-      <span>'You\'re a mastermind!'</span>
+      <span>You're a mastermind!</span>
     ) : (
       <div>
         <span>{directMatches}</span>

@@ -28,7 +28,7 @@ export default function BoardRow({
     null;
   }
   return (
-    <div className="flex gap-7">
+    <div className="flex flex-col items-center gap-2">
       <UserGuessRow
         guess={guess}
         setCurrentGuess={setCurrentGuess}

@@ -107,7 +107,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
   function renderBoardRows() {
     return (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-8 items-center border-t-2 p-4">
         {guesses.map((guess, i) => (
           <BoardRow
             key={i}
@@ -116,18 +116,22 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
             feedback={feedback[i]}
           />
         ))}
-        <form onSubmit={handleGuessSubmit} className="flex gap-7">
+        <form
+          onSubmit={handleGuessSubmit}
+          className="flex gap-7 border-t-2 p-4"
+        >
           {solution === null ? null : (
-            <div className="flex gap-7">
+            <div className="flex flex-col gap-2 items-center">
               <BoardRow
                 guess={currentGuess}
                 setCurrentGuess={setCurrentGuess}
                 disabled={false}
                 feedback={null}
               />
+              <span>{guessesRemaining} Guesses Remaining</span>
               <button
                 onClick={handleGuessSubmit}
-                className="bg-green-300 text-grey-600 px-4 py-1 rounded-md"
+                className="bg-green-300 text-grey-600 px-4 py-1 rounded-md w-full"
               >
                 Submit
               </button>
@@ -144,7 +148,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       <span>Player: {playerName}</span>
       <span>Current difficulty: {difficulty}</span>
       <span>Current solution: {solution}</span>
-      <span>Guesses remaining: {guessesRemaining}</span>
       {renderBoardRows()}
     </div>
   );
