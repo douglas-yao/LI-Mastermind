@@ -64,6 +64,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         userId,
         gameId,
         submittedGuess,
+        solution,
       });
       console.log('response from submission: ', response);
     } catch (error) {

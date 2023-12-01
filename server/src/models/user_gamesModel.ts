@@ -8,12 +8,32 @@ const createNewUserGame = async (
   gameId: number,
   difficulty: string
 ) => {
-  const [result] = await pool.execute(
-    'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)',
-    [userId, gameId, difficulty]
-  );
+  const query =
+    'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)';
+  const values = [userId, gameId, difficulty];
 
+  const [result] = await pool.execute(query, values);
   return result;
 };
 
-export { createNewUserGame };
+const updateGameCompletionStatus = async (
+  gameId: number,
+  won: boolean,
+  difficulty: string
+) => {
+  if (gameId === null) {
+    throw new Error('gameId cannot be null.');
+  }
+
+  const query = `
+    UPDATE user_games
+    SET completed = true, won = ?, difficulty = ?
+    WHERE gameId = ?
+  `;
+
+  const values = [won, difficulty, gameId];
+  const [result] = await pool.execute(query, values);
+  return result;
+};
+
+export { createNewUserGame, updateGameCompletionStatus };

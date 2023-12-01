@@ -12,7 +12,10 @@ type Feedback = {
   won: boolean;
 };
 
-function generateFeedback(attempt: string, solution: string): Feedback {
+function generateFeedback(
+  attempt: string,
+  solution: string
+): { comparisons: Comparisons; feedback: Feedback } {
   const comparisons = generateComparisons(attempt, solution) || {
     directMatches: 0,
     indirectMatches: 0,
@@ -31,7 +34,7 @@ function generateFeedback(attempt: string, solution: string): Feedback {
   console.log('comparisons object: ', comparisons);
   console.log('feedback object: ', feedback);
 
-  return feedback;
+  return { comparisons, feedback };
 }
 
 function generateComparisons(

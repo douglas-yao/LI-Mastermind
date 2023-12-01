@@ -10,7 +10,7 @@ router.post('/play', startGame, (req: Request, res: Response) => {
 });
 
 router.post('/attempt', submitAttempt, (req: Request, res: Response) => {
-  res.status(200).json('attempt made!');
+  res.status(200).json(res.locals.evaluatedSubmission);
 });
 
 export default router;
