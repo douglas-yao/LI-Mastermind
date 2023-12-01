@@ -29,10 +29,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     console.log('guesses: ', guesses);
   }, [guesses]);
 
-  useEffect(() => {
-    console.log('isFetching triggered, ', isFetching);
-  }, [isFetching]);
-
   async function handleStartNewGame() {
     try {
       setIsFetching(true);
