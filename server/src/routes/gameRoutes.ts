@@ -9,6 +9,7 @@ router.post('/play', startGame, (req: Request, res: Response) => {
   res.status(200).json(res.locals.newGameData);
 });
 
+// Rename controller below to be more specific
 router.post('/attempt', submitAttempt, (req: Request, res: Response) => {
   res.status(200).json(res.locals.evaluatedSubmission);
 });

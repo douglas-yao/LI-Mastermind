@@ -46,8 +46,8 @@ To-Do:
         - Password: str
       - User games
         - {
-            wins: [{}, {}, {}],
-            losses: []
+          wins: [{}, {}, {}],
+          losses: []
           }
     - Games model
       - High scores
@@ -56,7 +56,7 @@ To-Do:
       - Game id
       - Rounds columns
         - Array of user guesses
-      - 
+      -
 
 Stretch:
 
@@ -80,3 +80,12 @@ Mental hurdles:
   - Limit network calls
 - Logical and practical flow of data
 - Single responsibility principle with handling of game logic
+
+Notes:
+
+- Db wrapper
+- Rename controllers
+- Wrap any similar functions / utils into their own class
+- Validator for inputs
+- If using cache, utilize cache manager
+  - Consider just getting data back from the db

@@ -41,7 +41,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       console.log('initiating post request to /game/play');
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
-        playerName,
+        userId: playerName,
       });
 
       console.log('data from backend: ', response.data);
@@ -71,7 +71,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setCurrentGuess(Array(4).fill(''));
 
       const response = await axios.post('http://localhost:3001/game/attempt', {
-        userId,
+        userId: playerName,
         gameId,
         submittedGuess,
         solution,

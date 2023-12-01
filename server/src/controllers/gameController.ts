@@ -16,6 +16,7 @@ import generateFeedback from '../utils/generateFeedback';
 // Controllers to handle game logic
 
 // Handles the initiation of a new game
+// Very clear inputs and outputs
 const startGame = async (req: Request, res: Response, next: NextFunction) => {
   console.log('incoming new game request: ', req.body);
   try {

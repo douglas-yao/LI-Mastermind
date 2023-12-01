@@ -31,9 +31,9 @@ function generateFeedback(
   } else if (comparisons.directMatches === 4) {
     feedback.response = 'All correct, you are a Mastermind!';
   } else {
-    feedback.response = `${comparisons.directMatches} correct number and ${comparisons.indirectMatches} correct location`;
+    feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
   }
-
+2
   feedback.won = comparisons.won;
 
   // Console logs for server debugging:
