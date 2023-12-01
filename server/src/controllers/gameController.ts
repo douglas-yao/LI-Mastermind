@@ -3,8 +3,11 @@ import { createNewGameInstance } from '../models/games_normalModel';
 import { createNewUserGame } from '../models/user_gamesModel';
 import parseRandomRes from '../utils/parseRandomRes';
 import fetchRandomNumbers from '../utils/fetchRandomNumbers';
+import { gameCache as currentGameCache } from '../cache/gameCache';
 
 // Controllers to handle game logic
+
+// Look into annotations and beans?
 
 // Handles the initiation of a new game
 const startGame = async (req: Request, res: Response, next: NextFunction) => {
@@ -24,6 +27,15 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
       difficulty
     );
 
+    currentGameCache.currentSolution = solution;
+    currentGameCache.gameId = createdGameId;
+    currentGameCache.userId = userId;
+
+    console.log(
+      'current solution set in cache: ',
+      currentGameCache.currentSolution
+    );
+
     res.locals.newGameData = { solution, guessesTaken: 0, createdGameId };
     return next();
   } catch (error) {
@@ -38,9 +50,12 @@ const submitAttempt = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('incoming submissions request: ', req.body);
   try {
     console.log('in try block of submitAttempt controller');
+    console.log(
+      'printing the solution in the submission controller: ',
+      currentGameCache.currentSolution
+    );
   } catch (error) {
     console.error('Error submitting current attempt:', error);
     res.status(500).send('Internal Server Error');
@@ -48,3 +63,5 @@ const submitAttempt = async (
 };
 
 export { startGame, submitAttempt };
+
+// cache: [{gameId: 1, solution: '1234'}, {gameId: 2, solution: '5678'}]

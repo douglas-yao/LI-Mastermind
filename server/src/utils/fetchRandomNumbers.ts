@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async function getRandomNumber(difficultyLevel?: string) {
+export default async function fetchRandomNumbers(difficultyLevel?: string) {
   console.log(`Playing on difficulty ${difficultyLevel}`);
 
   const response = await axios.get(
