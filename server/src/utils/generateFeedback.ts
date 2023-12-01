@@ -12,6 +12,15 @@ type Feedback = {
   won: boolean;
 };
 
+/**
+ * To Do:
+ * Change feedback object to:
+ * {
+ *  feedbackResponse: string
+ *  won: boolean
+ * }
+ */
+
 function generateFeedback(
   attempt: string,
   solution: string
