@@ -24,7 +24,7 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
       difficulty
     );
 
-    res.locals.newGameData = { solution, guesses: 0, createdGameId };
+    res.locals.newGameData = { solution, guessesTaken: 0, createdGameId };
     return next();
   } catch (error) {
     console.error('Error starting the game:', error);
@@ -39,6 +39,12 @@ const submitAttempt = async (
   next: NextFunction
 ) => {
   console.log('incoming submissions request: ', req.body);
+  try {
+    console.log('in try block of submitAttempt controller');
+  } catch (error) {
+    console.error('Error submitting current attempt:', error);
+    res.status(500).send('Internal Server Error');
+  }
 };
 
 export { startGame, submitAttempt };
