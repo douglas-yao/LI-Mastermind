@@ -52,18 +52,14 @@ const submitAttempt = async (
   next: NextFunction
 ) => {
   try {
-    if (gameCache.currentSolution) {
-      console.log('incoming submission: ', req.body);
-      const { submittedGuess } = req.body;
-      console.log(currentGameCache.currentSolution === submittedGuess);
-      const feedback = generateFeedback(
-        gameCache.currentSolution,
-        submittedGuess
-      );
-      console.log('feedback: ', feedback);
-    } else {
-      console.error('Error: No solution generated!');
-    }
+    console.log('incoming submission: ', req.body);
+    const { submittedGuess, solution } = req.body;
+
+    // To-do: validation check if submittedGuess is an appropriate submission
+
+    console.log(currentGameCache.currentSolution === submittedGuess);
+    const feedback = generateFeedback(submittedGuess, solution);
+    console.log('feedback: ', feedback);
   } catch (error) {
     console.error('Error submitting current attempt:', error);
     res.status(500).send('Internal Server Error');
