@@ -9,6 +9,9 @@ function App() {
 
   function toggleGame() {
     setGameStarted((prevGameStarted) => !prevGameStarted);
+    if (!playerName) {
+      setPlayerName('Anonymous');
+    }
   }
 
   function renderHomeScreen() {
@@ -76,7 +79,7 @@ function App() {
         className="bg-blue-500 text-white px-4 py-2 rounded-md"
         onClick={toggleGame}
       >
-        {gameStarted ? 'Home' : 'Play!'}
+        {gameStarted ? 'Home' : 'Play'}
       </button>
     );
   }

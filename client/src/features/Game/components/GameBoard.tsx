@@ -1,5 +1,5 @@
 import BoardRow from './BoardRow';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 
 type RandomNumbers = number[][] | null;
@@ -20,7 +20,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [solution, setSolution] = useState<RandomNumbers>(null);
   const [currentGuess, setCurrentGuess] = useState<string[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
-  const [userId, setUserId] = useState<string>(playerName || 'Anonymous');
   const [gameId, setGameId] = useState<number | null>(null);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
@@ -42,7 +41,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       console.log('initiating post request to /game/play');
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
-        userId,
+        playerName,
       });
 
       console.log('data from backend: ', response.data);
@@ -56,7 +55,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
-  async function handleGuessSubmit(e) {
+  async function handleGuessSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
