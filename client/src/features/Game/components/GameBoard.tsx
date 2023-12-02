@@ -25,14 +25,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   startNewGame();
-  // }, []);
-
-  useEffect(() => {
-    console.log('guesses: ', guesses);
-  }, [guesses]);
-
   async function handleStartNewGame() {
     try {
       setIsFetching(true);
@@ -40,8 +32,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setCurrentGuess(Array(4).fill(''));
       setGuesses([]);
       setFeedback([]);
-      console.log('initiating post request to /game/play');
-      const response = await axios.post('http://localhost:3001/game/play', {
+      const response = await axios.post('http://localhost:3001/game/start', {
         difficulty,
         userId: playerName,
       });
@@ -60,7 +51,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     e.preventDefault();
 
     try {
-      console.log('current guess: ', currentGuess, typeof currentGuess);
       if (currentGuess.some((elem) => elem === '')) {
         console.error('Unable to submit fewer than 4 guesses!');
         alert('Must submit all four guesses!');
@@ -71,7 +61,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setGuesses((prev) => [...prev, currentGuess]);
       setCurrentGuess(Array(4).fill(''));
 
-      const response = await axios.post('http://localhost:3001/game/attempt', {
+      const response = await axios.post('http://localhost:3001/game/update', {
         userId: playerName,
         submittedGuess,
         solution,

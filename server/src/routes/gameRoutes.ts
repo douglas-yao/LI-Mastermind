@@ -8,12 +8,12 @@ import {
 
 const router = express.Router();
 
-router.post('/play', startGameController, (req: Request, res: Response) => {
+router.post('/start', startGameController, (req: Request, res: Response) => {
   res.status(200).json(res.locals.newGameData);
 });
 
 // Rename controller below to be more specific
-router.post('/attempt', updateGameController, (req: Request, res: Response) => {
+router.post('/update', updateGameController, (req: Request, res: Response) => {
   res.status(200).json(res.locals.evaluatedSubmission);
 });
 
