@@ -8,9 +8,12 @@ import {
   createNewUserGame,
   updateGameCompletionStatus,
 } from '../models/user_gamesModel';
-import { gameCache as currentGameCache, gameCache } from '../cache/gameCache';
+import { CurrentGameCache } from '../cache/gameCache';
 import getRandomSolution from '../services/getRandomSolution';
 import generateFeedback from '../utils/generateFeedback';
+
+// CurrentGameCache to store current game instance's data
+const currentGameCache = new CurrentGameCache();
 
 // Controllers to handle game logic
 
@@ -34,12 +37,19 @@ const startGameController = async (
 
     // Wrap into a handler that initiates the gameCache
     // Inputs: guessesRemaining, solution, userId, difficulty
-    currentGameCache.gameId = uuidv4();
-    currentGameCache.guessesRemaining = 10;
-    currentGameCache.currentSolution = solution;
-    currentGameCache.userId = userId;
-    currentGameCache.difficulty = difficulty;
-
+    // currentGameCache.gameId = uuidv4();
+    // currentGameCache.guessesRemaining = 10;
+    // currentGameCache.currentSolution = solution;
+    // currentGameCache.userId = userId;
+    // currentGameCache.difficulty = difficulty;
+    currentGameCache.setProperties({
+      gameId: uuidv4(),
+      guessesRemaining: 10,
+      currentSolution: solution,
+      userId: userId,
+      difficulty: difficulty,
+    });
+    console.log('current cache: ', currentGameCache);
     // Wrap below into a db class that handles new game db interactions
     // Save the solution and remaining guesses to the database
     await createNewGameInstance(
@@ -86,7 +96,7 @@ const updateGameController = async (
       currentGameCache.currentSolution
     );
 
-    if (--gameCache.guessesRemaining === 0 || feedback.won === true) {
+    if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       console.log('***** Game result ***** ', feedback.won);
       updateGameCompletionStatus(
         currentGameCache.gameId,

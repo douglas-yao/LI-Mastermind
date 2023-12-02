@@ -62,6 +62,10 @@ class CurrentGameCache {
   set guessesRemaining(value: number) {
     this._gameCache.guessesRemaining = value;
   }
+
+  setProperties(properties: Partial<GameCache>): void {
+    this._gameCache = { ...this._gameCache, ...properties };
+  }
 }
 
 export { CurrentGameCache, gameCache };
