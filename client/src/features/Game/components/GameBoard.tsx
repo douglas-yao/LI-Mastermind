@@ -36,6 +36,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   async function handleStartNewGame() {
     try {
       setIsFetching(true);
+      setGameFinished(false);
       setCurrentGuess(Array(4).fill(''));
       setGuesses([]);
       console.log('initiating post request to /game/play');
