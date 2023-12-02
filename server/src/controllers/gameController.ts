@@ -9,8 +9,7 @@ import {
   updateGameCompletionStatus,
 } from '../models/user_gamesModel';
 import { gameCache as currentGameCache, gameCache } from '../cache/gameCache';
-import parseRandomRes from '../utils/parseRandomRes';
-import fetchRandomNumbers from '../utils/fetchRandomNumbers';
+import getRandomSolution from '../services/getRandomSolution';
 import generateFeedback from '../utils/generateFeedback';
 
 // Controllers to handle game logic
@@ -25,13 +24,8 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, difficulty } = req.body;
 
-    // Wrap below into an random number API handler:
     // Fetch a random number sequence from the Random.org API
-    const randomNumberSequence = await fetchRandomNumbers(difficulty);
-    // Parse the response string and convert to an array of numbers
-    // const solution = parseRandomRes(randomNumberSequence);
-    // solution = parseRandomRes(randomNumberSequence);
-    const solution = parseRandomRes(randomNumberSequence);
+    const solution = getRandomSolution(difficulty);
 
     // Wrap into a handler that initiates the gameCache
     // Inputs: guessesRemaining, solution, userId, difficulty
