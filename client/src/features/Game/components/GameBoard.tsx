@@ -39,6 +39,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setGameFinished(false);
       setCurrentGuess(Array(4).fill(''));
       setGuesses([]);
+      setFeedback([]);
       console.log('initiating post request to /game/play');
       const response = await axios.post('http://localhost:3001/game/play', {
         difficulty,
