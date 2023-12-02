@@ -1,4 +1,5 @@
 import { Feedback, Comparisons } from '../types/types';
+import compareStrings from './compareStrings';
 
 /**
  * To Do:
@@ -13,7 +14,7 @@ function generateFeedback(
   attempt: string,
   solution: string
 ): { comparisons: Comparisons; feedback: Feedback } {
-  const comparisons: Comparisons = generateComparisons(attempt, solution) || {
+  const comparisons: Comparisons = compareStrings(attempt, solution) || {
     directMatches: 0,
     indirectMatches: 0,
     incorrect: 0,
@@ -48,59 +49,6 @@ function generateFeedback(
   console.log('feedback object: ', feedback);
 
   return { comparisons, feedback };
-}
-
-function generateComparisons(
-  attempt: string,
-  solution: string
-): Comparisons | void {
-  if (attempt.length !== solution.length) {
-    console.error('Attempt and solution lengths are different!');
-    return;
-  }
-
-  const comparisons = {
-    directMatches: 0,
-    indirectMatches: 0,
-    incorrect: 0,
-    won: false,
-  };
-
-  const attemptArr = attempt.split('');
-  const solutionArr = solution.split('');
-  const attemptLeftover: string[] = [];
-  const solutionLeftover: string[] = [];
-  const solutionLeftoverHash: {
-    [key: string]: number;
-  } = {};
-
-  for (let i = 0; i < attempt.length; i++) {
-    if (attemptArr[i] === solutionArr[i]) {
-      comparisons.directMatches++;
-      comparisons.indirectMatches++;
-    } else {
-      attemptLeftover.push(attemptArr[i]);
-      solutionLeftover.push(solutionArr[i]);
-    }
-  }
-
-  for (let i = 0; i < solutionLeftover.length; i++) {
-    solutionLeftoverHash[solutionLeftover[i]] =
-      ++solutionLeftoverHash[solutionLeftover[i]] || 1;
-  }
-
-  for (let i = 0; i < attemptLeftover.length; i++) {
-    if (solutionLeftoverHash[attemptLeftover[i]] > 0) {
-      comparisons.indirectMatches++;
-      solutionLeftoverHash[attemptLeftover[i]]--;
-    } else {
-      comparisons.incorrect++;
-    }
-  }
-
-  comparisons.won = comparisons.directMatches === attempt.length;
-
-  return comparisons;
 }
 
 export default generateFeedback;
