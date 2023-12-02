@@ -88,7 +88,7 @@ function generateComparisons(
     solutionLeftoverHash[solutionLeftover[i]] =
       ++solutionLeftoverHash[solutionLeftover[i]] || 1;
   }
-  console.log('solution leftover hash: ', solutionLeftoverHash);
+
   for (let i = 0; i < attemptLeftover.length; i++) {
     if (solutionLeftoverHash[attemptLeftover[i]] > 0) {
       comparisons.indirectMatches++;
