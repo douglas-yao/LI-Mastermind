@@ -19,13 +19,16 @@ import generateFeedback from '../utils/generateFeedback';
  * Input: Request body containing the userId:string and difficulty:string
  * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
  */
-const startGame = async (req: Request, res: Response, next: NextFunction) => {
+const startGameController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   console.log('incoming new game request: ', req.body);
+  const { userId, difficulty } = req.body;
   try {
-    const { userId, difficulty } = req.body;
-
     // Fetch a random number sequence from the Random.org API
-    const solution = getRandomSolution(difficulty);
+    const solution = await getRandomSolution(difficulty);
 
     // Wrap into a handler that initiates the gameCache
     // Inputs: guessesRemaining, solution, userId, difficulty
@@ -37,17 +40,13 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
 
     // Wrap below into a db class that handles new game db interactions
     // Save the solution and remaining guesses to the database
-    const insertId = await createNewGameInstance(
+    await createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining,
       currentGameCache.gameId
     );
 
-    const createdNewUserGame = await createNewUserGame(
-      userId,
-      currentGameCache.gameId,
-      difficulty
-    );
+    await createNewUserGame(userId, currentGameCache.gameId, difficulty);
 
     // Return to the client: the fetched random solution and the number of guesses remaining
     res.locals.newGameData = {
@@ -62,7 +61,7 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Handles the submission of a new attempt
-const submitAttempt = async (
+const updateGameController = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -117,6 +116,6 @@ const submitAttempt = async (
   }
 };
 
-export { startGame, submitAttempt };
+export { startGameController, updateGameController };
 
 // cache: [{gameId: 1, solution: '1234'}, {gameId: 2, solution: '5678'}]

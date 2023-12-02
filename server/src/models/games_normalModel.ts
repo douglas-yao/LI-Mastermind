@@ -9,7 +9,7 @@ const createNewGameInstance = async (
   solution: string,
   guessesRemaining: number,
   gameId: string
-) => {
+): Promise<void> => {
   try {
     const query = `
       INSERT INTO games_normal (solution, guessesRemaining, gameId) VALUES (?, ?, ?)
@@ -19,9 +19,6 @@ const createNewGameInstance = async (
 
     // Add logic below to insert into Easy, Normal, or Hard table
     const [result] = await pool.execute(query, values);
-
-    const insertedId = (result as ResultSetHeader).insertId;
-    return insertedId;
   } catch (error) {
     console.error('Error creating new game instance:', error);
     throw error;
@@ -34,7 +31,7 @@ const updateGameInstance = async (
   solution: string,
   feedback: string,
   guessesRemaining: number
-) => {
+): Promise<void> => {
   try {
     const query = `
       INSERT INTO games_normal (gameId, attempt, solution, feedback, guessesRemaining)
@@ -43,8 +40,6 @@ const updateGameInstance = async (
 
     const values = [gameId, attempt, solution, feedback, guessesRemaining];
     const [result] = await pool.execute(query, values);
-
-    return result;
   } catch (error) {
     console.error('Error updating game instance:', error);
     throw error;

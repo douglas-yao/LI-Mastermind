@@ -1,16 +1,19 @@
 import express, { Request, Response } from 'express';
-import { startGame, submitAttempt } from '../controllers/gameController';
+import {
+  startGameController,
+  updateGameController,
+} from '../controllers/gameController';
 
 // Routes for game interactions
 
 const router = express.Router();
 
-router.post('/play', startGame, (req: Request, res: Response) => {
+router.post('/play', startGameController, (req: Request, res: Response) => {
   res.status(200).json(res.locals.newGameData);
 });
 
 // Rename controller below to be more specific
-router.post('/attempt', submitAttempt, (req: Request, res: Response) => {
+router.post('/attempt', updateGameController, (req: Request, res: Response) => {
   res.status(200).json(res.locals.evaluatedSubmission);
 });
 
