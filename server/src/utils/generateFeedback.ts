@@ -13,12 +13,18 @@ function generateFeedback(
   attempt: string,
   solution: string
 ): { comparisons: Comparisons; feedback: Feedback } {
-  const comparisons = generateComparisons(attempt, solution) || {
+  const comparisons: Comparisons = generateComparisons(attempt, solution) || {
     directMatches: 0,
     indirectMatches: 0,
     incorrect: 0,
     won: false,
   };
+  // if (comparisons === null) {
+  //   console.error('Error with comparing values');
+  //   return null;
+  // }
+
+  console.log('comparisons: ', comparisons);
 
   // Construct the feedback response object:
   const feedback: Feedback = {
@@ -33,7 +39,7 @@ function generateFeedback(
   } else {
     feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
   }
-2
+  2;
   feedback.won = comparisons.won;
 
   // Console logs for server debugging:
@@ -60,26 +66,34 @@ function generateComparisons(
     won: false,
   };
 
-  const solutionHash: { [key: string]: number[] } = {};
-
-  for (let i = 0; i < solution.length; i++) {
-    solutionHash.hasOwnProperty(solution[i])
-      ? solutionHash[solution[i]].push(i)
-      : (solutionHash[solution[i]] = [i]);
-  }
+  const attemptArr = attempt.split('');
+  const solutionArr = solution.split('');
+  const attemptLeftover: string[] = [];
+  const solutionLeftover: string[] = [];
+  const solutionLeftoverHash: {
+    [key: string]: number;
+  } = {};
 
   for (let i = 0; i < attempt.length; i++) {
-    if (
-      solutionHash.hasOwnProperty(attempt[i]) &&
-      solutionHash[attempt[i]].includes(i)
-    ) {
-      // Direct match
+    if (attemptArr[i] === solutionArr[i]) {
       comparisons.directMatches++;
-    } else if (solutionHash.hasOwnProperty(attempt[i])) {
-      // Indirect match
       comparisons.indirectMatches++;
     } else {
-      // Incorrect
+      attemptLeftover.push(attemptArr[i]);
+      solutionLeftover.push(solutionArr[i]);
+    }
+  }
+
+  for (let i = 0; i < solutionLeftover.length; i++) {
+    solutionLeftoverHash[solutionLeftover[i]] =
+      ++solutionLeftoverHash[solutionLeftover[i]] || 1;
+  }
+  console.log('solution leftover hash: ', solutionLeftoverHash);
+  for (let i = 0; i < attemptLeftover.length; i++) {
+    if (solutionLeftoverHash[attemptLeftover[i]] > 0) {
+      comparisons.indirectMatches++;
+      solutionLeftoverHash[attemptLeftover[i]]--;
+    } else {
       comparisons.incorrect++;
     }
   }
