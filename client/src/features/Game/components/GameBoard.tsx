@@ -1,5 +1,5 @@
 import BoardRow from './BoardRow';
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import axios from 'axios';
 
 type RandomNumbers = number[][] | null;
@@ -103,7 +103,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
   function renderBoardRows() {
     return (
-      <div className="flex flex-col gap-8 items-center border-t-2 p-4">
+      <div className={`flex flex-col gap-8 items-center p-4 `}>
         {guesses.map((guess, i) => (
           <BoardRow
             key={i}
@@ -114,7 +114,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         ))}
         <form
           onSubmit={handleGuessSubmit}
-          className="flex gap-7 border-t-2 p-4"
+          className={`flex gap-7 p-4 ${guesses.length ? 'border-t-2' : ''}`}
         >
           {solution === null || gameFinished ? null : (
             <div className="flex flex-col gap-2 items-center">
@@ -141,9 +141,11 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   return (
     <div className="flex flex-col items-center gap-5">
       {renderStartButton()}
-      <span>Player: {playerName}</span>
-      <span>Current difficulty: {difficulty}</span>
-      <span>Current solution: {solution}</span>
+      <div className="flex flex-col gap-2 items-center border-b-2 p-4 w-[vw100]">
+        <span>Player: {playerName}</span>
+        <span>Current difficulty: {difficulty}</span>
+        {/* <span>Current solution: {solution}</span> */}
+      </div>
       {renderBoardRows()}
     </div>
   );
