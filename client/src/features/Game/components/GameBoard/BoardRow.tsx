@@ -1,5 +1,5 @@
-import UserGuessRow from './UserGuesses/UserGuessRow';
-import SubmissionFeedback from './GameClues/SubmissionFeedback';
+import UserGuessRow from '../UserGuesses/UserGuessRow';
+import SubmissionFeedback from '../GameClues/SubmissionFeedback';
 
 type Feedback = {
   response: string;
