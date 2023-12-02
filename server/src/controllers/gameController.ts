@@ -19,6 +19,8 @@ import generateFeedback from '../utils/generateFeedback';
  * Input: Request body containing the userId:string and difficulty:string
  * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
  */
+
+//
 const startGameController = async (
   req: Request,
   res: Response,
