@@ -8,22 +8,17 @@ import {
   createNewUserGame,
   updateGameCompletionStatus,
 } from '../models/user_gamesModel';
-import { CurrentGameCache } from '../cache/gameCache';
-import getRandomSolution from '../services/getRandomSolution';
-import generateFeedback from '../utils/generateFeedback';
+import CurrentGameCache from '../cache/gameCache';
+import { getRandomSolution, generateFeedback } from '../services/index';
 
 // CurrentGameCache to store current game instance's data
 const currentGameCache = new CurrentGameCache();
-
-// Controllers to handle game logic
 
 // Handles the initiation of a new game
 /**
  * Input: Request body containing the userId:string and difficulty:string
  * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
  */
-
-//
 const startGameController = async (
   req: Request,
   res: Response,
@@ -35,13 +30,7 @@ const startGameController = async (
     // Fetch a random number sequence from the Random.org API
     const solution = await getRandomSolution(difficulty);
 
-    // Wrap into a handler that initiates the gameCache
-    // Inputs: guessesRemaining, solution, userId, difficulty
-    // currentGameCache.gameId = uuidv4();
-    // currentGameCache.guessesRemaining = 10;
-    // currentGameCache.currentSolution = solution;
-    // currentGameCache.userId = userId;
-    // currentGameCache.difficulty = difficulty;
+    // Instantiate game cache with starting data
     currentGameCache.setProperties({
       gameId: uuidv4(),
       guessesRemaining: 10,
@@ -49,7 +38,7 @@ const startGameController = async (
       userId: userId,
       difficulty: difficulty,
     });
-    console.log('current cache: ', currentGameCache);
+
     // Wrap below into a db class that handles new game db interactions
     // Save the solution and remaining guesses to the database
     await createNewGameInstance(

@@ -68,4 +68,4 @@ class CurrentGameCache {
   }
 }
 
-export { CurrentGameCache, gameCache };
+export default CurrentGameCache;

@@ -1,5 +1,5 @@
 import { Feedback, Comparisons } from '../types/types';
-import compareStrings from './compareStrings';
+import compareStrings from '../utils/compareStrings';
 
 /**
  * To Do:
