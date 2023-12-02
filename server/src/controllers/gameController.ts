@@ -1,13 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  createNewGameInstance,
-  updateGameInstance,
-} from '../models/games_normalModel';
-import {
-  createNewUserGame,
-  updateGameCompletionStatus,
-} from '../models/user_gamesModel';
+import gameOperations from '../models/games_normalModel';
+import userGameOperations from '../models/user_gamesModel';
 import CurrentGameCache from '../cache/gameCache';
 import { getRandomSolution, generateFeedback } from '../services/index';
 
@@ -39,17 +33,20 @@ const startGameController = async (
       difficulty: difficulty,
     });
 
-    // Wrap below into a db class that handles new game db interactions
     // Save the solution and remaining guesses to the database
-    await createNewGameInstance(
+    await gameOperations.createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining,
       currentGameCache.gameId
     );
 
-    await createNewUserGame(userId, currentGameCache.gameId, difficulty);
+    await userGameOperations.createNewUserGame(
+      userId,
+      currentGameCache.gameId,
+      difficulty
+    );
 
-    // Return to the client: the fetched random solution and the number of guesses remaining
+    // Return random solution and remaining guesses to the client
     res.locals.newGameData = {
       solution,
       startingNumberGuesses: currentGameCache.guessesRemaining,
@@ -87,13 +84,13 @@ const updateGameController = async (
 
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       console.log('***** Game result ***** ', feedback.won);
-      updateGameCompletionStatus(
+      userGameOperations.updateGameCompletionStatus(
         currentGameCache.gameId,
         feedback.won,
         currentGameCache.difficulty
       );
     } else {
-      updateGameInstance(
+      gameOperations.updateGameInstance(
         currentGameCache.gameId,
         submittedGuess,
         currentGameCache.currentSolution,

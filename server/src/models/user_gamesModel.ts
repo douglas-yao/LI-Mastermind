@@ -1,40 +1,36 @@
 import pool from '../config/dbConnect';
 
-// Operations for the user_games table:
+class UserGameOperations {
+  async createNewUserGame(userId: string, gameId: string, difficulty: string) {
+    console.log('user id in user games model: ', userId);
+    const query =
+      'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)';
+    const values = [userId, gameId, difficulty];
 
-// Insert a new game row
-const createNewUserGame = async (
-  userId: string,
-  gameId: string,
-  difficulty: string
-) => {
-  console.log('user id in user games model: ', userId);
-  const query =
-    'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)';
-  const values = [userId, gameId, difficulty];
-
-  const [result] = await pool.execute(query, values);
-  return result;
-};
-
-const updateGameCompletionStatus = async (
-  gameId: string,
-  won: boolean,
-  difficulty: string
-) => {
-  if (gameId === null) {
-    throw new Error('gameId cannot be null.');
+    const [result] = await pool.execute(query, values);
+    return result;
   }
 
-  const query = `
-    UPDATE user_games
-    SET completed = true, won = ?, difficulty = ?
-    WHERE gameId = ?
-  `;
+  async updateGameCompletionStatus(
+    gameId: string,
+    won: boolean,
+    difficulty: string
+  ) {
+    if (gameId === null) {
+      throw new Error('gameId cannot be null.');
+    }
 
-  const values = [won, difficulty, gameId];
-  const [result] = await pool.execute(query, values);
-  return result;
-};
+    const query = `
+      UPDATE user_games
+      SET completed = true, won = ?, difficulty = ?
+      WHERE gameId = ?
+    `;
 
-export { createNewUserGame, updateGameCompletionStatus };
+    const values = [won, difficulty, gameId];
+    const [result] = await pool.execute(query, values);
+    return result;
+  }
+}
+
+const userGameOperations = new UserGameOperations();
+export default userGameOperations;
