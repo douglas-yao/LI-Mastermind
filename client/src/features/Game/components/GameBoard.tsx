@@ -20,9 +20,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [solution, setSolution] = useState<RandomNumbers>(null);
   const [currentGuess, setCurrentGuess] = useState<string[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
-  const [gameId, setGameId] = useState<number | null>(null);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [gameFinished, setGameFinished] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // useEffect(() => {
@@ -45,9 +45,8 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       });
 
       console.log('data from backend: ', response.data);
-      const { solution, gameId, startingNumberGuesses } = response.data;
+      const { solution, startingNumberGuesses } = response.data;
       setSolution(solution);
-      setGameId(gameId);
       setGuessesRemaining(startingNumberGuesses);
       setIsFetching(false);
     } catch (error) {
@@ -72,13 +71,15 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
       const response = await axios.post('http://localhost:3001/game/attempt', {
         userId: playerName,
-        gameId,
         submittedGuess,
         solution,
       });
       console.log('response from submission: ', response);
       const { updatedGuessesRemaining, feedback } = response.data;
       console.log(updatedGuessesRemaining);
+      if (feedback.won === true || updatedGuessesRemaining === 0) {
+        setGameFinished(true);
+      }
       setGuessesRemaining(updatedGuessesRemaining);
       setFeedback((prev) => [...prev, feedback]);
     } catch (error) {
@@ -123,7 +124,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
           onSubmit={handleGuessSubmit}
           className="flex gap-7 border-t-2 p-4"
         >
-          {solution === null ? null : (
+          {solution === null || gameFinished ? null : (
             <div className="flex flex-col gap-2 items-center">
               <BoardRow
                 guess={currentGuess}

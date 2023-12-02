@@ -16,11 +16,16 @@ import generateFeedback from '../utils/generateFeedback';
 // Controllers to handle game logic
 
 // Handles the initiation of a new game
-// Very clear inputs and outputs
+/**
+ * Input: Request body containing the userId:string and difficulty:string
+ * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
+ */
 const startGame = async (req: Request, res: Response, next: NextFunction) => {
   console.log('incoming new game request: ', req.body);
   try {
     const { userId, difficulty } = req.body;
+
+    // Wrap below into an random number API handler:
     // Fetch a random number sequence from the Random.org API
     const randomNumberSequence = await fetchRandomNumbers(difficulty);
     // Parse the response string and convert to an array of numbers
@@ -28,9 +33,16 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
     // solution = parseRandomRes(randomNumberSequence);
     const solution = parseRandomRes(randomNumberSequence);
 
-    // Save the solution and remaining guesses to the database
+    // Wrap into a handler that initiates the gameCache
+    // Inputs: guessesRemaining, solution, userId, difficulty
     currentGameCache.gameId = uuidv4();
     currentGameCache.guessesRemaining = 10;
+    currentGameCache.currentSolution = solution;
+    currentGameCache.userId = userId;
+    currentGameCache.difficulty = difficulty;
+
+    // Wrap below into a db class that handles new game db interactions
+    // Save the solution and remaining guesses to the database
     const insertId = await createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining,
@@ -43,20 +55,10 @@ const startGame = async (req: Request, res: Response, next: NextFunction) => {
       difficulty
     );
 
-    currentGameCache.currentSolution = solution;
-    currentGameCache.gameId = currentGameCache.gameId;
-    currentGameCache.userId = userId;
-    currentGameCache.difficulty = difficulty;
-
-    console.log(
-      'current solution set in cache: ',
-      currentGameCache.currentSolution
-    );
-
+    // Return to the client: the fetched random solution and the number of guesses remaining
     res.locals.newGameData = {
       solution,
       startingNumberGuesses: currentGameCache.guessesRemaining,
-      gameId: currentGameCache.gameId,
     };
     return next();
   } catch (error) {
