@@ -17,7 +17,7 @@ router.post(
   (req: Request, res: Response, next: NextFunction) => {
     const validationError = res.locals.validationError;
     if (validationError) {
-      return res.status(400).json(validationError);
+      return res.status(200).json(validationError);
     }
 
     // Continue to the next middleware or route handler

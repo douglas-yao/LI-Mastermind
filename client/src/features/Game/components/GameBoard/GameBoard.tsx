@@ -8,7 +8,7 @@ type GameBoardProps = {
   difficulty: string;
   playerName: string;
 };
-type Feedback = {
+type FeedbackResponse = {
   response: string;
   won: boolean;
 };
@@ -21,7 +21,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [currentGuess, setCurrentGuess] = useState<string[]>(Array(4).fill(''));
   const [guesses, setGuesses] = useState<Guesses>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
-  const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [feedback, setFeedback] = useState<FeedbackResponse[]>([]);
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -47,33 +47,48 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
+  // if (currentGuess.some((elem) => elem === '')) {
+  //   console.error('Unable to submit fewer than 4 guesses!');
+  //   alert('Must submit all four guesses!');
+  //   return;
+  // }
   async function handleGuessSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
-      if (currentGuess.some((elem) => elem === '')) {
-        console.error('Unable to submit fewer than 4 guesses!');
-        alert('Must submit all four guesses!');
-        return;
-      }
       const submittedGuess = currentGuess.join('');
-      console.log('guesses from handler: ', guesses);
-      setGuesses((prev) => [...prev, currentGuess]);
-      setCurrentGuess(Array(4).fill(''));
 
       const response = await axios.post('http://localhost:3001/game/update', {
         userId: playerName,
         submittedGuess,
         solution,
       });
+
       console.log('response from submission: ', response);
-      const { updatedGuessesRemaining, feedback } = response.data;
-      console.log(updatedGuessesRemaining);
+
+      // Check for errors in the response
+      if (response.data.error) {
+        console.error('Error submitting guess:', response.data.error);
+        alert(`Error submitting guess: ${response.data.error}`);
+        return;
+      }
+
+      const { updatedGuessesRemaining, feedback, error } = response.data;
+
+      if (error) {
+        console.error('Server error:', error);
+        alert(`Server error: ${error}`);
+        return;
+      }
+
       if (feedback.won === true || updatedGuessesRemaining === 0) {
         setGameFinished(true);
       }
+
       setGuessesRemaining(updatedGuessesRemaining);
       setFeedback((prev) => [...prev, feedback]);
+      setGuesses((prev) => [...prev, currentGuess]);
+      setCurrentGuess(Array(4).fill(''));
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
