@@ -37,6 +37,14 @@ To get started, follow these steps:
      sh scripts/setupDb.sh
      ```
 
+     If you encounter a permission error, run the following command:
+
+     ```bash
+     chmod +x scripts/setupDb.sh
+     ```
+
+     Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+
    - For Windows:
 
      ```batch
@@ -44,37 +52,33 @@ To get started, follow these steps:
      setupDb.bat
      ```
 
-   Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+     If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `setupDb.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
 
-4. **Run Client:**
+4. **Run Client and Server:**
 
-   - Change into the `client` directory.
-
-     ```bash
-     cd client
-     ```
-
-   - Execute the following command to start the client development server.
+   - For Unix-like systems (Linux or macOS):
 
      ```bash
-     npm run dev
+     cd LI-Mastermind
+     sh run.sh
      ```
 
-5. **Run Server:**
-
-   - Change into the `server` directory.
+     If you encounter a permission error, run the following command:
 
      ```bash
-     cd server
+     chmod +x run.sh
      ```
 
-   - Run the following command to start the server.
+   - For Windows:
 
-     ```bash
-     npm run dev
+     ```batch
+     cd LI-Mastermind
+     run.bat
      ```
 
-6. **Play the Game:**
+   The script will navigate to the `client` and `server` directories, running the necessary commands to start both the client and server.
+
+5. **Play the Game:**
    - Open your web browser and go to [localhost:5172](http://localhost:5172) to start playing the game!
 
 ## Contributing
