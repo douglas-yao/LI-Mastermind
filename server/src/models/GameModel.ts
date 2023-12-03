@@ -4,14 +4,15 @@ class GameModel {
   async createNewGameInstance(
     solution: string,
     guessesRemaining: number,
-    gameId: string
+    gameId: string,
+    difficulty: string
   ): Promise<void> {
     try {
       const query = `
-        INSERT INTO games_normal (solution, guessesRemaining, gameId) VALUES (?, ?, ?)
+        INSERT INTO games (solution, guessesRemaining, gameId, difficulty) VALUES (?, ?, ?, ?)
       `;
 
-      const values = [solution, guessesRemaining, gameId];
+      const values = [solution, guessesRemaining, gameId, difficulty];
 
       // Add logic below to insert into Easy, Normal, or Hard table
       const [result] = await pool.execute(query, values);
@@ -30,7 +31,7 @@ class GameModel {
   ): Promise<void> {
     try {
       const query = `
-        INSERT INTO games_normal (gameId, attempt, solution, feedback, guessesRemaining)
+        INSERT INTO games (gameId, attempt, solution, feedback, guessesRemaining)
         VALUES (?, ?, ?, ?, ?)
       `;
 
