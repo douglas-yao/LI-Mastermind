@@ -1,32 +1,32 @@
-type Comparisons = {
+export type Comparisons = {
   directMatches: number;
   indirectMatches: number;
   incorrect: number;
   won: boolean;
 };
 
-type Feedback = {
+export type Feedback = {
   response: string;
   won: boolean;
 };
 
-type FeedbackResponse = {
+export type FeedbackResponse = {
   response: string;
   won: boolean;
 };
 
-type UpdateGameControllerResponse = {
+export type UpdateGameControllerResponse = {
   feedback: FeedbackResponse[];
   updatedGuessesRemaining: number;
   error?: string;
 };
 
-type IsGameOver = {
+export type IsGameOver = {
   status: boolean;
   message: string;
 };
 
-type GameCache = {
+export type GameCache = {
   gameId: string;
   userId: string;
   currentSolution: string;
@@ -35,13 +35,4 @@ type GameCache = {
   isGameOver: IsGameOver;
   guessHistory: string[];
   feedbackHistory: Feedback[];
-};
-
-export {
-  Comparisons,
-  Feedback,
-  FeedbackResponse,
-  UpdateGameControllerResponse,
-  IsGameOver,
-  GameCache,
 };
