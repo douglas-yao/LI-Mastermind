@@ -5,23 +5,18 @@ const validateCurrentGuess = (
   res: Response,
   next: NextFunction
 ) => {
-  const { currentGuess } = req.body; // Change variable name here
-  console.log(
-    'in validation middleware: ',
-    currentGuess, // Change variable name here
-    typeof currentGuess // Change variable name here
-  );
+  const { currentGuess } = req.body;
+  console.log('in validation middleware: ', currentGuess, typeof currentGuess);
   if (
-    !currentGuess || // Change variable name here
-    typeof currentGuess !== 'string' || // Change variable name here
-    currentGuess.length !== 4 // Change variable name here
+    !currentGuess ||
+    typeof currentGuess !== 'string' ||
+    currentGuess.length !== 4
   ) {
     res.locals.validationError = {
       error: 'Invalid submitted guess. It should be a string of length 4.',
     };
   } else {
     const isValidGuess = currentGuess.split('').every((digit) => {
-      // Change variable name here
       const numericDigit = parseInt(digit, 10);
       return !isNaN(numericDigit) && numericDigit >= 0 && numericDigit <= 7;
     });
@@ -33,7 +28,6 @@ const validateCurrentGuess = (
     }
   }
 
-  // Continue to the next middleware or route handler
   next();
 };
 
