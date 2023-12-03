@@ -79,18 +79,31 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
+  /**
+   * Handles the submission of a player's guess by sending a POST request to the server.
+   * Updates local state with the response data, including feedback on the guess.
+   *
+   * @async
+   * @function
+   * @param {FormEvent} e - The form event triggering the guess submission.
+   * @returns {Promise<void>}
+   * @throws {Error} If there's an issue submitting the guess.
+   */
   async function handleGuessSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
+      // Make a POST request to the server to update the game with the player's guess
       const response = await axios.post('http://localhost:3001/game/update', {
         userId: playerName,
         currentGuess,
         solution,
       });
 
+      // Log the response data for debugging
       console.log('response from submission: ', response);
 
+      // Destructure relevant data from the response
       const {
         updatedGuessesRemaining,
         feedback,
@@ -99,19 +112,23 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         error,
       } = response.data;
 
+      // Check for errors in the response and display an alert if needed
       if (error) {
         console.error('Error submitting guess:', error);
         alert(`Error submitting guess: ${error}`);
         return;
       }
 
+      // Update local state with the received data
       setGuessesRemaining(updatedGuessesRemaining);
       setIsGameOver(isGameOver);
       setGuesses(updatedGuessHistory);
       setFeedback(feedback);
       setCurrentGuess('');
     } catch (error) {
+      // Log an error if there's an issue submitting the guess
       console.error('Error occurred submitting an attempt: ', error);
+      throw error;
     }
   }
 
