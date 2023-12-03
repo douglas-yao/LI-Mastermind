@@ -1,27 +1,16 @@
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
-
-// modularize types
-
-type Guesses = string[];
-type GameBoardProps = {
-  difficulty: string;
-  playerName: string;
-};
-type FeedbackResponse = {
-  response: string;
-  won: boolean;
-};
-type IsGameOver = {
-  status: boolean;
-  message: string;
-};
+import {
+  GameBoardProps,
+  FeedbackResponse,
+  IsGameOver,
+} from '../../types/types';
 
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
   const [solution, setSolution] = useState<string>('');
   const [currentGuess, setCurrentGuess] = useState<string>('');
-  const [guesses, setGuesses] = useState<Guesses>([]);
+  const [guesses, setGuesses] = useState<string[]>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<FeedbackResponse[]>([]);
   const [isGameOver, setIsGameOver] = useState<IsGameOver>({
