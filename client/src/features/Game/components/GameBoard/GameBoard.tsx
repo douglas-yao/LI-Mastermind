@@ -34,7 +34,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setIsFetching(true);
 
       // Make a POST request to the server to initiate a new game with user ID and difficulty level
-      const response = await axios.post('http://localhost:3001/game/start', {
+      const response = await axios.post('http://localhost:8080/game/start', {
         difficulty,
         userId: playerName,
       });
@@ -83,7 +83,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
     try {
       // Make a POST request to the server to update the game with the player's guess
-      const response = await axios.post('http://localhost:3001/game/update', {
+      const response = await axios.post('http://localhost:8080/game/update', {
         userId: playerName,
         currentGuess,
         solution,
