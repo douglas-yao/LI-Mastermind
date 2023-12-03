@@ -1,6 +1,6 @@
 import pool from '../config/dbConnect';
 
-class UserGameOperations {
+class UserGameModel {
   async createNewUserGame(userId: string, gameId: string, difficulty: string) {
     console.log('user id in user games model: ', userId);
     const query =
@@ -32,5 +32,5 @@ class UserGameOperations {
   }
 }
 
-const userGameOperations = new UserGameOperations();
-export default userGameOperations;
+const userGameModel = new UserGameModel();
+export default userGameModel;

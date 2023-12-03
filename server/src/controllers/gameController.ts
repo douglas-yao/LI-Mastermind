@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import gameOperations from '../models/games_normalModel';
-import userGameOperations from '../models/user_gamesModel';
+import gameModel from '../models/GameModel';
+import userGameModel from '../models/userGameModel';
 import CurrentGameCache from '../cache/gameCache';
 import { getRandomSolution, generateFeedback } from '../services/index';
 
@@ -34,13 +34,13 @@ const startGameController = async (
     });
 
     // Save the solution and remaining guesses to the database
-    await gameOperations.createNewGameInstance(
+    await gameModel.createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining,
       currentGameCache.gameId
     );
 
-    await userGameOperations.createNewUserGame(
+    await userGameModel.createNewUserGame(
       userId,
       currentGameCache.gameId,
       difficulty
@@ -59,11 +59,21 @@ const startGameController = async (
 };
 
 // Handles the submission of a new attempt
+type FeedbackResponse = {
+  response: string;
+  won: boolean;
+};
+type UpdateGameControllerResponse = {
+  feedback: FeedbackResponse;
+  updatedGuessesRemaining: number;
+  error?: string;
+};
 const updateGameController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const { submittedGuess } = req.body;
   try {
     // Validation: Consider wrapping into its own module
     if (currentGameCache.gameId === null) {
@@ -73,24 +83,22 @@ const updateGameController = async (
 
     // To-do: validation check if submittedGuess is an appropriate submission
 
-    const { submittedGuess } = req.body;
-
     // Modularize feedback logic into its own handler function
 
-    const { comparisons, feedback } = generateFeedback(
+    const { feedback } = generateFeedback(
       submittedGuess,
       currentGameCache.currentSolution
     );
 
+    // Wrap into a db transaction handler that takes in guessesRemaining and feedback.won
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
-      console.log('***** Game result ***** ', feedback.won);
-      userGameOperations.updateGameCompletionStatus(
+      userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
         feedback.won,
         currentGameCache.difficulty
       );
     } else {
-      gameOperations.updateGameInstance(
+      gameModel.updateGameInstance(
         currentGameCache.gameId,
         submittedGuess,
         currentGameCache.currentSolution,
@@ -99,11 +107,11 @@ const updateGameController = async (
       );
     }
 
+    // If keeping debugging logs below, consider wrapping
     console.log('incoming submission: ', req.body);
-    console.log('comparisons: ', comparisons);
     console.log('feedback: ', feedback);
-    res.locals.evaluatedSubmission = {
-      comparisons,
+    feedback.won ? console.log('***** User won the game *****') : null;
+    res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
       feedback,
       updatedGuessesRemaining: currentGameCache.guessesRemaining,
     };

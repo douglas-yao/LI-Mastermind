@@ -1,6 +1,6 @@
 import pool from '../config/dbConnect';
 
-class GameOperations {
+class GameModel {
   async createNewGameInstance(
     solution: string,
     guessesRemaining: number,
@@ -43,5 +43,5 @@ class GameOperations {
   }
 }
 
-const gameOperations = new GameOperations();
-export default gameOperations;
+const gameModel = new GameModel();
+export default gameModel;

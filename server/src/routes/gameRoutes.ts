@@ -1,10 +1,9 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import {
   startGameController,
   updateGameController,
 } from '../controllers/gameController';
-
-// Routes for game interactions
+import validateSubmittedGuess from '../middleware/validateSubmittedGuess';
 
 const router = express.Router();
 
@@ -12,9 +11,22 @@ router.post('/start', startGameController, (req: Request, res: Response) => {
   res.status(200).json(res.locals.newGameData);
 });
 
-// Rename controller below to be more specific
-router.post('/update', updateGameController, (req: Request, res: Response) => {
-  res.status(200).json(res.locals.evaluatedSubmission);
-});
+router.post(
+  '/update',
+  validateSubmittedGuess,
+  (req: Request, res: Response, next: NextFunction) => {
+    const validationError = res.locals.validationError;
+    if (validationError) {
+      return res.status(400).json(validationError);
+    }
+
+    // Continue to the next middleware or route handler
+    next();
+  },
+  updateGameController,
+  (req: Request, res: Response) => {
+    res.status(200).json(res.locals.evaluatedSubmission);
+  }
+);
 
 export default router;
