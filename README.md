@@ -73,8 +73,8 @@ To get started, follow these steps:
      The script will run the necessary commands to start both the client and server.
 
 5. **Play the Game:**
-   - Open your web browser and go to [localhost:5172](http://localhost:5172) to start playing the game!
-   - The localhost address may change if that port is already used! Keep an eye on the terminal for the final port used for the client.
+   - Open your web browser and go to [localhost:3000](http://localhost:3000) to start playing the game.
+   - Note: The localhost address may vary if port 3000 is already in use. Please keep an eye on the terminal output for the final port used by the client.
 
 ## Contributing
 
