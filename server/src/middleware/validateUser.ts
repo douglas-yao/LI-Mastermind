@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 
 const validateUserId = (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.body;
-  console.log('in userId validation middleware: ', userId, typeof userId);
 
   // Regular expression to match only letters and numbers
   const alphanumericRegex = /^[a-zA-Z0-9]+$/;

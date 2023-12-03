@@ -21,7 +21,7 @@ const startGameController = async (
 ) => {
   const { userId, difficulty } = req.body;
   console.log(
-    `***** Starting new game for ${userId} on ${difficulty} difficulty! *****`
+    `\n***** Starting new game for ${userId} on ${difficulty} difficulty! *****\n`
   );
   try {
     // Fetch a random number sequence from the Random.org API
@@ -71,7 +71,6 @@ const updateGameController = async (
   next: NextFunction
 ) => {
   const { currentGuess } = req.body;
-  console.log(`*** ${currentGameCache.userId} guessed ${currentGuess} ***`);
 
   try {
     const feedback = generateFeedback(
@@ -84,8 +83,10 @@ const updateGameController = async (
     // Handle game end if guesses 0
     // Consider creating a method or function to re-initialize gameCache
     // E.g., method called, client receives back all the empty pieces of state
-    currentGameCache.guessHistory.push(currentGuess);
-    currentGameCache.feedbackHistory.push(feedback);
+    currentGameCache.setProperties({
+      guessHistory: [...currentGameCache.guessHistory, currentGuess],
+      feedbackHistory: [...currentGameCache.feedbackHistory, feedback],
+    });
 
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
@@ -101,9 +102,6 @@ const updateGameController = async (
             : 'With each loss, you grow closer to becoming a Mastermind.'
         }`,
       };
-      feedback.won
-        ? console.log('***** User won the game *****')
-        : console.log('***** User lost the game *****');
     }
 
     gameModel.updateGameInstance(
@@ -116,13 +114,32 @@ const updateGameController = async (
     );
 
     // Server logs to show game progress:
-    console.log(feedback.response);
     if (!currentGameCache.isGameOver.status) {
-      currentGameCache.guessHistory.map((guess, i) => {
+      console.log(`*** Round ${10 - currentGameCache.guessesRemaining} ***`);
+      console.log('---------------');
+
+      const lastGuessIndex = currentGameCache.guessHistory.length - 1;
+
+      // Display the current guess
+      console.log(`${currentGameCache.userId} guessed:`);
+      console.log(currentGameCache.guessHistory[lastGuessIndex]);
+      console.log(currentGameCache.feedbackHistory[lastGuessIndex].response);
+
+      // Check for winning or losing condition, display corresponding message:
+      feedback.won || currentGameCache.guessesRemaining === 0
+        ? console.log('***** User won the game *****')
+        : console.log('***** User lost the game *****');
+
+      // Display the overall guess history
+      console.log('\nGuess history:');
+      for (let i = lastGuessIndex - 1; i >= 0; i--) {
         console.log(currentGameCache.guessHistory[i]);
         console.log(currentGameCache.feedbackHistory[i].response);
-      });
-      console.log('guesses remaining: ', currentGameCache.guessesRemaining);
+      }
+
+      console.log(
+        `\nGuesses remaining: ${currentGameCache.guessesRemaining}\n---------------\n`
+      );
     }
 
     // If keeping debugging logs below, consider wrapping

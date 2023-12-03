@@ -6,7 +6,6 @@ const validateCurrentGuess = (
   next: NextFunction
 ) => {
   const { currentGuess } = req.body;
-  console.log('in validation middleware: ', currentGuess, typeof currentGuess);
   if (
     !currentGuess ||
     typeof currentGuess !== 'string' ||
