@@ -37,6 +37,8 @@ To get started, follow these steps:
 
 3. **Run Database Setup:**
 
+   - While in the server directory, initialize the database. Ensure you have MySQL installed and running on your local machine:
+
    - For Unix-like systems (Linux or macOS):
 
      ```bash
@@ -49,7 +51,7 @@ To get started, follow these steps:
      chmod +x scripts/serverDbInit.sh
      ```
 
-     Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+     Follow the prompts to enter your MySQL username and password. Ensure you have MySQL installed and running on your local machine. The script will create the necessary database and tables.
 
    - For Windows:
 
@@ -64,7 +66,7 @@ To get started, follow these steps:
    - For all systems:
 
      ```bash
-     cd LI-Mastermind
+     cd ..
      npm run dev
      ```
 
@@ -72,6 +74,7 @@ To get started, follow these steps:
 
 5. **Play the Game:**
    - Open your web browser and go to [localhost:5172](http://localhost:5172) to start playing the game!
+   - The localhost address may change if that port is already used! Keep an eye on the terminal for the final port used for the client.
 
 ## Contributing
 
