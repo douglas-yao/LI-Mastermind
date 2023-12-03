@@ -1,12 +1,17 @@
 import { Feedback } from '../types/types';
 
+type IsGameOver = {
+  status: boolean;
+  message: string;
+};
+
 type GameCache = {
   gameId: string;
   userId: string;
   currentSolution: string;
   difficulty: string;
   guessesRemaining: number;
-  isGameOver: boolean;
+  isGameOver: IsGameOver;
   guessHistory: string[];
   feedbackHistory: Feedback[];
 };
@@ -17,7 +22,10 @@ const gameCache: GameCache = {
   currentSolution: '',
   difficulty: '',
   guessesRemaining: 10,
-  isGameOver: false,
+  isGameOver: {
+    status: false,
+    message: '',
+  },
   guessHistory: [],
   feedbackHistory: [],
 };
@@ -69,11 +77,11 @@ class CurrentGameCache {
     this._gameCache.guessesRemaining = value;
   }
 
-  get isGameOver(): boolean {
+  get isGameOver(): IsGameOver {
     return this._gameCache.isGameOver;
   }
 
-  set isGameOver(value: boolean) {
+  set isGameOver(value: IsGameOver) {
     this._gameCache.isGameOver = value;
   }
 

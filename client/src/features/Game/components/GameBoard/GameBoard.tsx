@@ -8,6 +8,10 @@ type GameBoardProps = {
   playerName: string;
 };
 type FeedbackResponse = string[];
+type IsGameOver = {
+  status: boolean;
+  message: string;
+};
 
 // Guesses logic is handled using arrays and array methods, whereas backend guesses logic is handled with strings
 
@@ -18,7 +22,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   const [guesses, setGuesses] = useState<Guesses>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<FeedbackResponse[]>([]);
-  const [gameFinished, setGameFinished] = useState<boolean>(false);
+  const [isGameOver, setIsGameOver] = useState<IsGameOver>({
+    status: false,
+    message: '',
+  });
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,10 +42,12 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       });
 
       console.log('data from backend: ', response.data);
-      const { currentSolution, guessesRemaining, isGameOver } = response.data;
+      const { currentSolution, guessesRemaining, isGameOver } =
+        response.data._gameCache;
+
       setSolution(currentSolution);
       setGuessesRemaining(guessesRemaining);
-      setGameFinished(isGameOver);
+      setIsGameOver(isGameOver.status);
       setCurrentGuess('');
       setGuesses([]);
       setFeedback([]);
@@ -89,17 +98,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         return;
       }
 
-      console.log('updated history from backend: ', updatedGuessHistory);
-      console.log('guesses state: ', guesses);
-
       setGuessesRemaining(updatedGuessesRemaining);
-      // setFeedback((prev) => [...prev, feedback.response]);
+      setIsGameOver(isGameOver);
       setGuesses(updatedGuessHistory);
       setFeedback(feedback);
       setCurrentGuess('');
 
-      if (isGameOver) {
-        setGameFinished(true);
+      if (isGameOver.status === true) {
         console.log(`${feedback.won ? 'You won!' : 'You lost!'}`);
       }
     } catch (error) {
@@ -129,7 +134,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
-  function renderBoardRows() {
+  function renderHistory() {
     return (
       <div className={`flex flex-col items-center p-4 `}>
         {guesses.map((guess, i) => (
@@ -141,29 +146,32 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
             <span>{feedback[i]?.response}</span>
           </div>
         ))}
-        <form onSubmit={handleGuessSubmit} className={`flex gap-7 p-4`}>
-          {solution === null || gameFinished ? null : (
-            <div className="flex flex-col gap-2 items-center">
-              <input
-                className="border border-slate-500 py-2 px-4 rounded-lg text-center"
-                type="text"
-                value={currentGuess}
-                onChange={(e) =>
-                  setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
-                }
-              />
-
-              <span>{guessesRemaining} Guesses Remaining</span>
-              <button
-                onClick={handleGuessSubmit}
-                className="bg-green-300 text-grey-600 px-4 py-1 rounded-md w-full"
-              >
-                Submit
-              </button>
-            </div>
-          )}
-        </form>
       </div>
+    );
+  }
+
+  function renderGuessInput() {
+    return (
+      <form onSubmit={handleGuessSubmit} className={`flex gap-7 p-4`}>
+        <div className="flex flex-col gap-2 items-center">
+          <input
+            className="border border-slate-500 py-2 px-4 rounded-lg text-center"
+            type="text"
+            value={currentGuess}
+            onChange={(e) =>
+              setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+            }
+          />
+
+          <span>{guessesRemaining} Guesses Remaining</span>
+          <button
+            onClick={handleGuessSubmit}
+            className="bg-green-300 text-grey-600 px-4 py-1 rounded-md w-full"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     );
   }
 
@@ -185,7 +193,12 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         </p>
         {/* <span>Current solution: {solution}</span> */}
       </div>
-      {renderBoardRows()}
+      {guesses.length ? renderHistory() : null}
+      {isGameOver.status === true ? (
+        <span>{isGameOver.message}</span>
+      ) : (
+        renderGuessInput()
+      )}
     </div>
   );
 }

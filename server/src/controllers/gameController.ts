@@ -33,7 +33,10 @@ const startGameController = async (
       feedbackHistory: [],
       userId: userId,
       difficulty: difficulty,
-      isGameOver: false,
+      isGameOver: {
+        status: false,
+        message: '',
+      },
     });
 
     // Save the solution and remaining guesses to the database
@@ -49,11 +52,7 @@ const startGameController = async (
       difficulty
     );
 
-    // Return random solution and remaining guesses to the client
-    // res.locals.newGameData = {
-    //   solution,
-    //   startingNumberGuesses: currentGameCache.guessesRemaining,
-    // };
+    console.log('sending back to client: ', currentGameCache);
     res.locals.newGameData = currentGameCache;
     return next();
   } catch (error) {
@@ -87,8 +86,12 @@ const updateGameController = async (
 
     // Wrap into a db transaction handler that takes in guessesRemaining and feedback.won
     // Handle logic to send losing condition message to client
+    // Handle game end if guesses 0
+    // Consider creating a method or function to re-initialize gameCache
+    // E.g., method called, client receives back all the empty pieces of state
     currentGameCache.guessHistory.push(currentGuess);
     currentGameCache.feedbackHistory.push(feedback);
+    console.log('guesses remaining: ', currentGameCache.guessesRemaining);
     console.log('updated guess history: ', currentGameCache.guessHistory);
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
@@ -96,19 +99,26 @@ const updateGameController = async (
         feedback.won,
         currentGameCache.difficulty
       );
-      currentGameCache.setProperties({ isGameOver: true });
+      currentGameCache.isGameOver = {
+        status: true,
+        message: `${
+          feedback.won
+            ? 'You are a Mastermind!'
+            : 'With each loss, you grow closer to becoming a Mastermind.'
+        }`,
+      };
       feedback.won
         ? console.log('***** User won the game *****')
         : console.log('***** User lost the game *****');
-    } else {
-      gameModel.updateGameInstance(
-        currentGameCache.gameId,
-        currentGuess,
-        currentGameCache.currentSolution,
-        feedback.response,
-        currentGameCache.guessesRemaining
-      );
     }
+
+    gameModel.updateGameInstance(
+      currentGameCache.gameId,
+      currentGuess,
+      currentGameCache.currentSolution,
+      feedback.response,
+      currentGameCache.guessesRemaining
+    );
 
     // If keeping debugging logs below, consider wrapping
     console.log('incoming submission: ', req.body);
