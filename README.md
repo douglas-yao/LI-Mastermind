@@ -28,7 +28,25 @@ To get started, follow these steps:
      npm install
      ```
 
-3. **Run Client:**
+3. **Run Database Setup:**
+
+   - For Unix-like systems (Linux or macOS):
+
+     ```bash
+     cd server
+     sh scripts/setupDb.sh
+     ```
+
+   - For Windows:
+
+     ```batch
+     cd server
+     setupDb.bat
+     ```
+
+   Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+
+4. **Run Client:**
 
    - Change into the `client` directory.
 
@@ -42,7 +60,7 @@ To get started, follow these steps:
      npm run dev
      ```
 
-4. **Run Server:**
+5. **Run Server:**
 
    - Change into the `server` directory.
 
@@ -55,30 +73,6 @@ To get started, follow these steps:
      ```bash
      npm run dev
      ```
-
-5. **Database Setup:**
-
-   - Before running the application, you need to set up the database.
-
-   - Open a terminal and navigate to the root directory of the project.
-
-   - Run the following command to make the setup script executable:
-
-     ```bash
-     chmod +x scripts/setupDb.sh
-     ```
-
-     This command grants the necessary permissions to the setup script.
-
-   - Run the setup script to create the database and tables:
-
-     ```bash
-     ./scripts/setupDb.sh
-     ```
-
-     The script will prompt you for your MySQL password. Enter the password when prompted.
-
-     The database and tables will be created, and you're ready to use the application!
 
 6. **Play the Game:**
    - Open your web browser and go to [localhost:5172](http://localhost:5172) to start playing the game!
@@ -93,6 +87,6 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 ## Acknowledgments
 
-Special thanks to LinkedIn and the REACH Apprenticeship for the fun opportunity to create this game!
+Shoutout to LinkedIn and the REACH Apprenticeship for the fun opportunity to create this game!
 
 Happy Gaming!
