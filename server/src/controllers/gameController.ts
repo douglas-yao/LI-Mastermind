@@ -118,9 +118,7 @@ const updateGameController = async (
     );
 
     // Server logs to show game progress:
-    if (!currentGameCache.isGameOver.status) {
-      gameLoggingService.logGameProgress(currentGameCache, currentGuess);
-    }
+    gameLoggingService.logGameProgress(currentGameCache, currentGuess);
 
     // If keeping debugging logs below, consider wrapping
     // console.log('incoming submission: ', req.body);
