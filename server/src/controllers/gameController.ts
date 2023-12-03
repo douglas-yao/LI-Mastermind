@@ -118,7 +118,11 @@ const updateGameController = async (
     );
 
     // Server logs to show game progress:
-    gameLoggingService.logGameProgress(currentGameCache, currentGuess);
+    gameLoggingService.logGameProgress(
+      currentGameCache,
+      currentGuess,
+      feedback
+    );
 
     // If keeping debugging logs below, consider wrapping
     // console.log('incoming submission: ', req.body);

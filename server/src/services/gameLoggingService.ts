@@ -1,7 +1,12 @@
 import { GameCache } from '../types/types';
+import { FeedbackResponse } from '../types/types';
 
 class GameLoggingService {
-  logGameProgress(gameCache: GameCache, currentGuess: string): void {
+  logGameProgress(
+    gameCache: GameCache,
+    currentGuess: string,
+    currentFeedback: FeedbackResponse
+  ): void {
     console.log(`*** Round ${10 - gameCache.guessesRemaining} ***`);
     console.log('---------------');
     console.log(`${gameCache.userId} guessed:`);
@@ -10,9 +15,9 @@ class GameLoggingService {
       gameCache.feedbackHistory[gameCache.feedbackHistory.length - 1].response
     );
 
-    if (gameCache.isGameOver.status || gameCache.guessesRemaining === 0) {
+    if (currentFeedback.won) {
       console.log('***** User won the game *****');
-    } else {
+    } else if (gameCache.guessesRemaining === 0) {
       console.log('***** User lost the game *****');
     }
 
