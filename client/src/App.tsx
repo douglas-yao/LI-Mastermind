@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import GameBoard from './features/Game/components/GameBoard/GameBoard';
 import Scoreboard from './features/Game/components/Scoreboard/Scoreboard';
 import axios from 'axios';
+import { Difficulty } from './features/Game/types/types';
 
 type Score = {
   userId: string;
@@ -17,8 +18,11 @@ type Scores = {
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerName, setPlayerName] = useState<string>('');
-  const [difficulty, setDifficulty] = useState('Normal');
-  const [scores, setScores] = useState<Scores>();
+  const [difficulty, setDifficulty] = useState<Difficulty>({
+    level: 'Normal',
+    startingGuesses: 10,
+  });
+  // const [scores, setScores] = useState<Scores>();
 
   useEffect(() => {
     getTopScores();

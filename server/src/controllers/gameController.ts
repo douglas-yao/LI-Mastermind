@@ -8,7 +8,7 @@ import {
   generateFeedback,
   gameLoggingService,
 } from '../services/index';
-import { UpdateGameControllerResponse } from '../types/types';
+import { UpdateGameControllerResponse, Difficulty } from '../types/types';
 
 // CurrentGameCache to store current game instance's data
 const currentGameCache = new CurrentGameCache();
@@ -25,16 +25,16 @@ const startGameController = async (
 ) => {
   const { userId, difficulty } = req.body;
   console.log(
-    `\n***** Starting new game for ${userId} on ${difficulty} difficulty! *****\n`
+    `\n***** Starting new game for ${userId} on ${difficulty.level} difficulty! *****\n`
   );
   try {
     // Fetch a random number sequence from the Random.org API
-    const solution = await getRandomSolution(difficulty);
+    const solution = await getRandomSolution(difficulty.level);
 
     // Instantiate game cache with starting data
     currentGameCache.setProperties({
       gameId: uuidv4(),
-      guessesRemaining: 10,
+      guessesRemaining: difficulty.startingGuesses,
       currentSolution: solution,
       guessHistory: [],
       feedbackHistory: [],
@@ -96,7 +96,8 @@ const updateGameController = async (
       userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
         feedback.won,
-        currentGameCache.difficulty
+        currentGameCache.difficulty,
+        currentGameCache.guessesRemaining
       );
       currentGameCache.isGameOver = {
         status: true,

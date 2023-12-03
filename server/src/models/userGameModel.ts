@@ -1,4 +1,5 @@
 import pool from '../config/dbConnect';
+import { Difficulty } from '../types/types';
 
 class UserGameModel {
   async createNewUserGame(userId: string, gameId: string, difficulty: string) {
@@ -13,7 +14,8 @@ class UserGameModel {
   async updateGameCompletionStatus(
     gameId: string,
     won: boolean,
-    difficulty: string
+    difficulty: Difficulty,
+    guessesRemaining: number
   ) {
     if (gameId === null) {
       throw new Error('gameId cannot be null.');
@@ -21,11 +23,11 @@ class UserGameModel {
 
     const query = `
       UPDATE user_games
-      SET completed = true, won = ?, difficulty = ?
+      SET completed = true, won = ?, difficulty = ?, guessesTaken = ?
       WHERE gameId = ?
     `;
-
-    const values = [won, difficulty, gameId];
+    const guessesTaken = difficulty.startingGuesses - guessesRemaining;
+    const values = [won, difficulty.level, guessesTaken, gameId];
     const [result] = await pool.execute(query, values);
     return result;
   }

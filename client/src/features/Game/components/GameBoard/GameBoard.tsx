@@ -4,6 +4,7 @@ import {
   GameBoardProps,
   FeedbackResponse,
   IsGameOver,
+  Difficulty,
 } from '../../types/types';
 
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
@@ -193,7 +194,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       <div className="flex flex-col gap-5 items-center border-b-2 p-4 w-[vw100]">
         <div className="flex flex-col items-center gap-1">
           <span>Player: {playerName}</span>
-          <span>Current difficulty: {difficulty}</span>
+          <span>Current difficulty: {difficulty.level}</span>
         </div>
         <p className="flex flex-col gap-1 items-center">
           <span>

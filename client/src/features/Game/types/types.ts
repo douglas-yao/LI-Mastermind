@@ -1,7 +1,7 @@
 export type Guesses = string[];
 
 export type GameBoardProps = {
-  difficulty: string;
+  difficulty: Difficulty;
   playerName: string;
 };
 
@@ -13,4 +13,9 @@ export type FeedbackResponse = {
 export type IsGameOver = {
   status: boolean;
   message: string;
+};
+
+export type Difficulty = {
+  level: string;
+  startingGuesses: number;
 };

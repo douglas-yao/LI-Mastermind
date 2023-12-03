@@ -30,9 +30,14 @@ export type GameCache = {
   gameId: string;
   userId: string;
   currentSolution: string;
-  difficulty: string;
+  difficulty: Difficulty;
   guessesRemaining: number;
   isGameOver: IsGameOver;
   guessHistory: string[];
   feedbackHistory: Feedback[];
+};
+
+export type Difficulty = {
+  level: string;
+  startingGuesses: number;
 };

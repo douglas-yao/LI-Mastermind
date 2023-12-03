@@ -1,10 +1,13 @@
-import { Feedback, IsGameOver, GameCache } from '../types/types';
+import { Feedback, IsGameOver, GameCache, Difficulty } from '../types/types';
 
 const gameCache: GameCache = {
   gameId: '',
   userId: 'Anonymous',
   currentSolution: '',
-  difficulty: '',
+  difficulty: {
+    level: 'Normal',
+    startingGuesses: 10,
+  },
   guessesRemaining: 10,
   isGameOver: {
     status: false,
@@ -45,11 +48,11 @@ class CurrentGameCache {
     this._gameCache.currentSolution = value;
   }
 
-  get difficulty(): string {
+  get difficulty(): Difficulty {
     return this._gameCache.difficulty;
   }
 
-  set difficulty(value: string) {
+  set difficulty(value: Difficulty) {
     this._gameCache.difficulty = value;
   }
 

@@ -1,4 +1,5 @@
 import pool from '../config/dbConnect';
+import { Difficulty } from '../types/types';
 
 class GameModel {
   async createNewGameInstance(
@@ -27,7 +28,7 @@ class GameModel {
     solution: string,
     feedback: string,
     guessesRemaining: number,
-    difficulty: string
+    difficulty: Difficulty
   ): Promise<void> {
     try {
       const query = `
@@ -41,7 +42,7 @@ class GameModel {
         solution,
         feedback,
         guessesRemaining,
-        difficulty,
+        difficulty.level,
       ];
       const [result] = await pool.execute(query, values);
     } catch (error) {
