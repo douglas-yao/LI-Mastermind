@@ -1,11 +1,11 @@
-// Kinda cache for now:
-// Consider implementing localstorage cache?
 type GameCache = {
   gameId: string;
   userId: string;
   currentSolution: string;
   difficulty: string;
   guessesRemaining: number;
+  isGameOver: boolean;
+  guessHistory: string[];
 };
 
 const gameCache: GameCache = {
@@ -14,6 +14,8 @@ const gameCache: GameCache = {
   currentSolution: '',
   difficulty: '',
   guessesRemaining: 10,
+  isGameOver: false,
+  guessHistory: [],
 };
 
 class CurrentGameCache {
@@ -61,6 +63,22 @@ class CurrentGameCache {
 
   set guessesRemaining(value: number) {
     this._gameCache.guessesRemaining = value;
+  }
+
+  get isGameOver(): boolean {
+    return this._gameCache.isGameOver;
+  }
+
+  set isGameOver(value: boolean) {
+    this._gameCache.isGameOver = value;
+  }
+
+  get guessHistory(): string[] {
+    return this._gameCache.guessHistory;
+  }
+
+  set guessHistory(value: string[]) {
+    this._gameCache.guessHistory = value;
   }
 
   setProperties(properties: Partial<GameCache>): void {

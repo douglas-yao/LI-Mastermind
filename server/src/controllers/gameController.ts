@@ -31,6 +31,7 @@ const startGameController = async (
       currentSolution: solution,
       userId: userId,
       difficulty: difficulty,
+      isGameOver: false,
     });
 
     // Save the solution and remaining guesses to the database
@@ -47,10 +48,11 @@ const startGameController = async (
     );
 
     // Return random solution and remaining guesses to the client
-    res.locals.newGameData = {
-      solution,
-      startingNumberGuesses: currentGameCache.guessesRemaining,
-    };
+    // res.locals.newGameData = {
+    //   solution,
+    //   startingNumberGuesses: currentGameCache.guessesRemaining,
+    // };
+    res.locals.newGameData = currentGameCache;
     return next();
   } catch (error) {
     console.error('Error starting the game:', error);
@@ -91,12 +93,17 @@ const updateGameController = async (
     );
 
     // Wrap into a db transaction handler that takes in guessesRemaining and feedback.won
+    // Handle logic to send losing condition message to client
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
         feedback.won,
         currentGameCache.difficulty
       );
+      currentGameCache.setProperties({ isGameOver: true });
+      feedback.won
+        ? console.log('***** User won the game *****')
+        : console.log('***** User lost the game *****');
     } else {
       gameModel.updateGameInstance(
         currentGameCache.gameId,
@@ -110,10 +117,11 @@ const updateGameController = async (
     // If keeping debugging logs below, consider wrapping
     console.log('incoming submission: ', req.body);
     console.log('feedback: ', feedback);
-    feedback.won ? console.log('***** User won the game *****') : null;
+
     res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
       feedback,
       updatedGuessesRemaining: currentGameCache.guessesRemaining,
+      isGameOver: currentGameCache.isGameOver,
     };
     return next();
   } catch (error) {

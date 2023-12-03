@@ -28,19 +28,21 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   async function handleStartNewGame() {
     try {
       setIsFetching(true);
-      setGameFinished(false);
-      setCurrentGuess(Array(4).fill(''));
-      setGuesses([]);
-      setFeedback([]);
+
       const response = await axios.post('http://localhost:3001/game/start', {
         difficulty,
         userId: playerName,
       });
 
       console.log('data from backend: ', response.data);
-      const { solution, startingNumberGuesses } = response.data;
-      setSolution(solution);
-      setGuessesRemaining(startingNumberGuesses);
+      const { currentSolution, guessesRemaining, isGameOver } = response.data;
+      setSolution(currentSolution);
+      setGuessesRemaining(guessesRemaining);
+      setGameFinished(isGameOver);
+      setCurrentGuess(Array(4).fill(''));
+      setGuesses([]);
+      setFeedback([]);
+
       setIsFetching(false);
     } catch (error) {
       console.error('Error generating random number:', error);
@@ -66,6 +68,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
 
       console.log('response from submission: ', response);
 
+      const { updatedGuessesRemaining, feedback, error, isGameOver } =
+        response.data;
+
       // Check for errors in the response
       if (response.data.error) {
         console.error('Error submitting guess:', response.data.error);
@@ -73,22 +78,21 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         return;
       }
 
-      const { updatedGuessesRemaining, feedback, error } = response.data;
-
       if (error) {
         console.error('Server error:', error);
         alert(`Server error: ${error}`);
         return;
       }
 
-      if (feedback.won === true || updatedGuessesRemaining === 0) {
-        setGameFinished(true);
-      }
-
       setGuessesRemaining(updatedGuessesRemaining);
       setFeedback((prev) => [...prev, feedback]);
       setGuesses((prev) => [...prev, currentGuess]);
       setCurrentGuess(Array(4).fill(''));
+
+      if (isGameOver) {
+        setGameFinished(true);
+        console.log(`${feedback.won ? 'You won!' : 'You lost!'}`);
+      }
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
