@@ -1,23 +1,25 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import axios from 'axios';
 
-type RandomNumbers = number[][] | null;
+// modularize types
+
 type Guesses = string[];
 type GameBoardProps = {
   difficulty: string;
   playerName: string;
 };
-type FeedbackResponse = string[];
+type FeedbackResponse = {
+  response: string;
+  won: boolean;
+};
 type IsGameOver = {
   status: boolean;
   message: string;
 };
 
-// Guesses logic is handled using arrays and array methods, whereas backend guesses logic is handled with strings
-
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
-  // Consider consolidating some state into one big ol' stateful object
-  const [solution, setSolution] = useState<RandomNumbers>(null);
+  // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
+  const [solution, setSolution] = useState<string>('');
   const [currentGuess, setCurrentGuess] = useState<string>('');
   const [guesses, setGuesses] = useState<Guesses>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
@@ -27,10 +29,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     message: '',
   });
   const [isFetching, setIsFetching] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log('feedback: ', feedback);
-  }, [feedback]);
 
   async function handleStartNewGame() {
     try {
@@ -58,17 +56,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     }
   }
 
-  // if (currentGuess.some((elem) => elem === '')) {
-  //   console.error('Unable to submit fewer than 4 guesses!');
-  //   alert('Must submit all four guesses!');
-  //   return;
-  // }
   async function handleGuessSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
-      // const submittedGuess = currentGuess.join('');
-
       const response = await axios.post('http://localhost:3001/game/update', {
         userId: playerName,
         currentGuess,
@@ -85,16 +76,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         error,
       } = response.data;
 
-      // Check for errors in the response
-      if (response.data.error) {
-        console.error('Error submitting guess:', response.data.error);
-        alert(`Error submitting guess: ${response.data.error}`);
-        return;
-      }
-
       if (error) {
-        console.error('Server error:', error);
-        alert(`Server error: ${error}`);
+        console.error('Error submitting guess:', error);
+        alert(`Error submitting guess: ${error}`);
         return;
       }
 
@@ -103,10 +87,6 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setGuesses(updatedGuessHistory);
       setFeedback(feedback);
       setCurrentGuess('');
-
-      if (isGameOver.status === true) {
-        console.log(`${feedback.won ? 'You won!' : 'You lost!'}`);
-      }
     } catch (error) {
       console.error('Error occurred submitting an attempt: ', error);
     }
@@ -135,49 +115,52 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   }
 
   function renderHistory() {
-    return (
-      <div className={`flex flex-col items-center p-4 `}>
-        {guesses.map((guess, i) => (
-          <div
-            className="flex flex-col gap-2 items-center border-b-2 p-4"
-            key={i}
-          >
-            <span>{guess}</span>
-            <span>{feedback[i]?.response}</span>
-          </div>
-        ))}
-      </div>
-    );
+    if (guesses.length) {
+      return (
+        <div className={`flex flex-col items-center p-4 `}>
+          {guesses.map((guess, i) => (
+            <div
+              className="flex flex-col gap-2 items-center border-b-2 p-4"
+              key={i}
+            >
+              <span>{guess}</span>
+              <span>{feedback[i]?.response}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
   }
 
   function renderGuessInput() {
-    return (
-      <form onSubmit={handleGuessSubmit} className={`flex gap-7 p-4`}>
-        <div className="flex flex-col gap-2 items-center">
-          <input
-            className="border border-slate-500 py-2 px-4 rounded-lg text-center"
-            type="text"
-            value={currentGuess}
-            onChange={(e) =>
-              setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
-            }
-          />
+    if (!isGameOver.status && solution !== '') {
+      return (
+        <form onSubmit={handleGuessSubmit} className={`flex gap-7 p-4`}>
+          <div className="flex flex-col gap-2 items-center">
+            <input
+              className="border border-slate-500 py-2 px-4 rounded-lg text-center"
+              type="text"
+              value={currentGuess}
+              onChange={(e) =>
+                setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+              }
+            />
 
-          <span>{guessesRemaining} Guesses Remaining</span>
-          <button
-            onClick={handleGuessSubmit}
-            className="bg-green-300 text-grey-600 px-4 py-1 rounded-md w-full"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-    );
+            <span>{guessesRemaining} Guesses Remaining</span>
+            <button
+              onClick={handleGuessSubmit}
+              className="bg-green-300 text-grey-600 px-4 py-1 rounded-md w-full"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      );
+    }
   }
 
-  return (
-    <div className="flex flex-col items-center gap-5">
-      {renderStartButton()}
+  function renderGameHeader() {
+    return (
       <div className="flex flex-col gap-5 items-center border-b-2 p-4 w-[vw100]">
         <div className="flex flex-col items-center gap-1">
           <span>Player: {playerName}</span>
@@ -191,14 +174,17 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
           </span>
           <span>You have 10 guesses to prove you're a Mastermind.</span>
         </p>
-        {/* <span>Current solution: {solution}</span> */}
       </div>
-      {guesses.length ? renderHistory() : null}
-      {isGameOver.status === true ? (
-        <span>{isGameOver.message}</span>
-      ) : (
-        renderGuessInput()
-      )}
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-5">
+      {renderStartButton()}
+      {renderGameHeader()}
+      {renderHistory()}
+      {renderGuessInput()}
+      {!feedback[feedback.length - 1]?.won && isGameOver.message}
     </div>
   );
 }

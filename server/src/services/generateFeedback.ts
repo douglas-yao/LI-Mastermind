@@ -18,7 +18,7 @@ function generateFeedback(attempt: string, solution: string): Feedback {
   if (comparisons.incorrect === 4) {
     feedback.response = 'All incorrect';
   } else if (comparisons.directMatches === 4) {
-    feedback.response = 'All correct, you are a Mastermind!';
+    feedback.response = 'You are a Mastermind!';
   } else {
     feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
   }
