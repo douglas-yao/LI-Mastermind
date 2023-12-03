@@ -26,9 +26,9 @@ function generateFeedback(attempt: string, solution: string): Feedback {
   feedback.won = comparisons.won;
 
   // Console logs for server debugging:
-  console.log('attempt and solution: ', attempt, solution);
-  console.log('comparisons object: ', comparisons);
-  console.log('feedback object: ', feedback);
+  // console.log('attempt and solution: ', attempt, solution);
+  // console.log('comparisons object: ', comparisons);
+  // console.log('feedback object: ', feedback);
 
   return feedback;
 }

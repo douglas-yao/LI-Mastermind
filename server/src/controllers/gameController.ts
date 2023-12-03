@@ -19,8 +19,10 @@ const startGameController = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('incoming new game request: ', req.body);
   const { userId, difficulty } = req.body;
+  console.log(
+    `***** Starting new game for ${userId} on ${difficulty} difficulty! *****`
+  );
   try {
     // Fetch a random number sequence from the Random.org API
     const solution = await getRandomSolution(difficulty);
@@ -54,7 +56,6 @@ const startGameController = async (
       difficulty
     );
 
-    console.log('sending back to client: ', currentGameCache);
     res.locals.newGameData = currentGameCache;
     return next();
   } catch (error) {
@@ -70,6 +71,7 @@ const updateGameController = async (
   next: NextFunction
 ) => {
   const { currentGuess } = req.body;
+  console.log(`*** ${currentGameCache.userId} guessed ${currentGuess} ***`);
 
   try {
     const feedback = generateFeedback(
@@ -84,8 +86,7 @@ const updateGameController = async (
     // E.g., method called, client receives back all the empty pieces of state
     currentGameCache.guessHistory.push(currentGuess);
     currentGameCache.feedbackHistory.push(feedback);
-    console.log('guesses remaining: ', currentGameCache.guessesRemaining);
-    console.log('updated guess history: ', currentGameCache.guessHistory);
+
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
@@ -114,9 +115,19 @@ const updateGameController = async (
       currentGameCache.difficulty
     );
 
+    // Server logs to show game progress:
+    console.log(feedback.response);
+    if (!currentGameCache.isGameOver.status) {
+      currentGameCache.guessHistory.map((guess, i) => {
+        console.log(currentGameCache.guessHistory[i]);
+        console.log(currentGameCache.feedbackHistory[i].response);
+      });
+      console.log('guesses remaining: ', currentGameCache.guessesRemaining);
+    }
+
     // If keeping debugging logs below, consider wrapping
-    console.log('incoming submission: ', req.body);
-    console.log('feedback: ', feedback);
+    // console.log('incoming submission: ', req.body);
+    // console.log('feedback: ', feedback);
 
     res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
       feedback: currentGameCache.feedbackHistory,

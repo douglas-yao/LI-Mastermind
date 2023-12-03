@@ -2,7 +2,6 @@ import pool from '../config/dbConnect';
 
 class UserGameModel {
   async createNewUserGame(userId: string, gameId: string, difficulty: string) {
-    console.log('user id in user games model: ', userId);
     const query =
       'INSERT INTO user_games (userId, gameId, difficulty) VALUES (?, ?, ?)';
     const values = [userId, gameId, difficulty];
