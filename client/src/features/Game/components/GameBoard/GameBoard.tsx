@@ -196,10 +196,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
           <span>Current difficulty: {difficulty}</span>
         </div>
         <p className="flex flex-col gap-1 items-center">
-          <span>Guess a combination of four numbers.</span>
           <span>
-            Numbers can only range between 0 and 7 inclusive, and numbers can
-            repeat.
+            Guess four numbers. Each number can be one of 7 numbers from 0 to 7
+            (potential repeats).
           </span>
           <span>You have 10 guesses to prove you're a Mastermind.</span>
         </p>

@@ -20,7 +20,6 @@ router.post(
       return res.status(200).json(validationError);
     }
 
-    // Continue to the next middleware or route handler
     next();
   },
   updateGameController,
