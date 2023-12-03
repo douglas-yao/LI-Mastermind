@@ -35,7 +35,20 @@ To get started, follow these steps:
      npm install
      ```
 
-3. **Run Database Setup:**
+3. **Create a `.env` file:**
+
+   - Create a `.env` file in the root directory of the `server` folder.
+
+   - Open the `.env` file in a text editor.
+
+   - Add the following lines, replacing `<your-db-user>` and `<your-db-password>` with your actual MySQL database username and password:
+
+     ```env
+     DB_USER=<your-db-user>
+     DB_PASSWORD=<your-db-password>
+     ```
+
+4. **Run Database Setup:**
 
    - While in the server directory, initialize the database. Ensure you have MySQL installed and running on your local machine:
 
@@ -61,7 +74,7 @@ To get started, follow these steps:
 
      If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `serverDbInit.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
 
-4. **Run Client and Server:**
+5. **Run Client and Server:**
 
    - For all systems:
 
@@ -72,7 +85,7 @@ To get started, follow these steps:
 
      The script will run the necessary commands to start both the client and server.
 
-5. **Play the Game:**
+6. **Play the Game:**
    - Open your web browser and go to [localhost:3000](http://localhost:3000) to start playing the game.
    - Note: The localhost address may vary if port 3000 is already in use. Please keep an eye on the terminal output for the final port used by the client.
 
