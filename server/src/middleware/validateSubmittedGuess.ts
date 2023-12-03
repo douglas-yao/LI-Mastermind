@@ -1,22 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 
-const validateSubmittedGuess = (
+const validateCurrentGuess = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { submittedGuess } = req.body as { submittedGuess: string };
-
+  const { currentGuess } = req.body; // Change variable name here
+  console.log(
+    'in validation middleware: ',
+    currentGuess, // Change variable name here
+    typeof currentGuess // Change variable name here
+  );
   if (
-    !submittedGuess ||
-    typeof submittedGuess !== 'string' ||
-    submittedGuess.length !== 4
+    !currentGuess || // Change variable name here
+    typeof currentGuess !== 'string' || // Change variable name here
+    currentGuess.length !== 4 // Change variable name here
   ) {
     res.locals.validationError = {
       error: 'Invalid submitted guess. It should be a string of length 4.',
     };
   } else {
-    const isValidGuess = submittedGuess.split('').every((digit) => {
+    const isValidGuess = currentGuess.split('').every((digit) => {
+      // Change variable name here
       const numericDigit = parseInt(digit, 10);
       return !isNaN(numericDigit) && numericDigit >= 0 && numericDigit <= 7;
     });
@@ -32,4 +37,4 @@ const validateSubmittedGuess = (
   next();
 };
 
-export default validateSubmittedGuess;
+export default validateCurrentGuess;

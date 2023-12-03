@@ -29,6 +29,8 @@ const startGameController = async (
       gameId: uuidv4(),
       guessesRemaining: 10,
       currentSolution: solution,
+      guessHistory: [],
+      feedbackHistory: [],
       userId: userId,
       difficulty: difficulty,
       isGameOver: false,
@@ -66,7 +68,7 @@ type FeedbackResponse = {
   won: boolean;
 };
 type UpdateGameControllerResponse = {
-  feedback: FeedbackResponse;
+  feedback: FeedbackResponse[];
   updatedGuessesRemaining: number;
   error?: string;
 };
@@ -75,25 +77,19 @@ const updateGameController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { submittedGuess } = req.body;
+  const { currentGuess } = req.body;
+
   try {
-    // Validation: Consider wrapping into its own module
-    if (currentGameCache.gameId === null) {
-      console.error('Server error occurred: no game id saved in cache');
-      return;
-    }
-
-    // To-do: validation check if submittedGuess is an appropriate submission
-
-    // Modularize feedback logic into its own handler function
-
-    const { feedback } = generateFeedback(
-      submittedGuess,
+    const feedback = generateFeedback(
+      currentGuess,
       currentGameCache.currentSolution
     );
 
     // Wrap into a db transaction handler that takes in guessesRemaining and feedback.won
     // Handle logic to send losing condition message to client
+    currentGameCache.guessHistory.push(currentGuess);
+    currentGameCache.feedbackHistory.push(feedback);
+    console.log('updated guess history: ', currentGameCache.guessHistory);
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
@@ -107,7 +103,7 @@ const updateGameController = async (
     } else {
       gameModel.updateGameInstance(
         currentGameCache.gameId,
-        submittedGuess,
+        currentGuess,
         currentGameCache.currentSolution,
         feedback.response,
         currentGameCache.guessesRemaining
@@ -119,9 +115,10 @@ const updateGameController = async (
     console.log('feedback: ', feedback);
 
     res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
-      feedback,
+      feedback: currentGameCache.feedbackHistory,
       updatedGuessesRemaining: currentGameCache.guessesRemaining,
       isGameOver: currentGameCache.isGameOver,
+      updatedGuessHistory: currentGameCache.guessHistory,
     };
     return next();
   } catch (error) {

@@ -1,3 +1,5 @@
+import { Feedback } from '../types/types';
+
 type GameCache = {
   gameId: string;
   userId: string;
@@ -6,6 +8,7 @@ type GameCache = {
   guessesRemaining: number;
   isGameOver: boolean;
   guessHistory: string[];
+  feedbackHistory: Feedback[];
 };
 
 const gameCache: GameCache = {
@@ -16,6 +19,7 @@ const gameCache: GameCache = {
   guessesRemaining: 10,
   isGameOver: false,
   guessHistory: [],
+  feedbackHistory: [],
 };
 
 class CurrentGameCache {
@@ -79,6 +83,14 @@ class CurrentGameCache {
 
   set guessHistory(value: string[]) {
     this._gameCache.guessHistory = value;
+  }
+
+  get feedbackHistory(): Feedback[] {
+    return this._gameCache.feedbackHistory;
+  }
+
+  set feedbackHistory(value: Feedback[]) {
+    this._gameCache.feedbackHistory = value;
   }
 
   setProperties(properties: Partial<GameCache>): void {

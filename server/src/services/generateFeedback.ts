@@ -1,10 +1,7 @@
 import { Feedback, Comparisons } from '../types/types';
 import compareStrings from '../utils/compareStrings';
 
-function generateFeedback(
-  attempt: string,
-  solution: string
-): { comparisons: Comparisons; feedback: Feedback } {
+function generateFeedback(attempt: string, solution: string): Feedback {
   const comparisons: Comparisons = compareStrings(attempt, solution) || {
     directMatches: 0,
     indirectMatches: 0,
@@ -33,7 +30,7 @@ function generateFeedback(
   console.log('comparisons object: ', comparisons);
   console.log('feedback object: ', feedback);
 
-  return { comparisons, feedback };
+  return feedback;
 }
 
 export default generateFeedback;
