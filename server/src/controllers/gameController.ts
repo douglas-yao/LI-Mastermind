@@ -4,6 +4,7 @@ import gameModel from '../models/GameModel';
 import userGameModel from '../models/userGameModel';
 import CurrentGameCache from '../cache/gameCache';
 import { getRandomSolution, generateFeedback } from '../services/index';
+import { UpdateGameControllerResponse } from '../types/types';
 
 // CurrentGameCache to store current game instance's data
 const currentGameCache = new CurrentGameCache();
@@ -62,15 +63,6 @@ const startGameController = async (
 };
 
 // Handles the submission of a new attempt
-type FeedbackResponse = {
-  response: string;
-  won: boolean;
-};
-type UpdateGameControllerResponse = {
-  feedback: FeedbackResponse[];
-  updatedGuessesRemaining: number;
-  error?: string;
-};
 const updateGameController = async (
   req: Request,
   res: Response,
@@ -138,5 +130,3 @@ const updateGameController = async (
 };
 
 export { startGameController, updateGameController };
-
-// cache: [{gameId: 1, solution: '1234'}, {gameId: 2, solution: '5678'}]

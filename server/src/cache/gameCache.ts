@@ -1,20 +1,4 @@
-import { Feedback } from '../types/types';
-
-type IsGameOver = {
-  status: boolean;
-  message: string;
-};
-
-type GameCache = {
-  gameId: string;
-  userId: string;
-  currentSolution: string;
-  difficulty: string;
-  guessesRemaining: number;
-  isGameOver: IsGameOver;
-  guessHistory: string[];
-  feedbackHistory: Feedback[];
-};
+import { Feedback, IsGameOver, GameCache } from '../types/types';
 
 const gameCache: GameCache = {
   gameId: '',
