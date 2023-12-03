@@ -1,0 +1,12 @@
+{
+  "name": "li-mastermind",
+  "version": "1.0.0",
+  "description": "Welcome to LI-Mastermind, a numbers guessing Mastermind game!",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd client && npm run dev & cd ../server && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
