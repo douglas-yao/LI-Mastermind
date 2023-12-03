@@ -22,9 +22,16 @@ To get started, follow these steps:
      cd LI-Mastermind
      ```
 
-   - Run the following command to install dependencies.
+   - **Client:**
 
      ```bash
+     cd client
+     npm install
+     ```
+
+   - **Server:**
+     ```bash
+     cd ../server
      npm install
      ```
 
@@ -33,7 +40,6 @@ To get started, follow these steps:
    - For Unix-like systems (Linux or macOS):
 
      ```bash
-     cd server
      sh scripts/serverDbInit.sh
      ```
 
@@ -48,11 +54,10 @@ To get started, follow these steps:
    - For Windows:
 
      ```batch
-     cd server
      serverDbInit.bat
      ```
 
-     If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `setupDb.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+     If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `serverDbInit.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
 
 4. **Run Client and Server:**
 
