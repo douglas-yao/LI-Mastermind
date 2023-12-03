@@ -30,29 +30,52 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   });
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
+  /**
+   * Initiates a new game by sending a POST request to the server with the provided user ID and difficulty level.
+   * Receives a response object with a randomized solution, number of guesses remaining, and end-of-game data.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   * @throws {Error} If there's an issue generating the random number.
+   */
   async function handleStartNewGame() {
     try {
+      // Set the loading state to true
       setIsFetching(true);
 
+      // Make a POST request to the server to initiate a new game with user ID and difficulty level
       const response = await axios.post('http://localhost:3001/game/start', {
         difficulty,
         userId: playerName,
       });
 
+      // Log the data received from the backend
       console.log('data from backend: ', response.data);
-      const { currentSolution, guessesRemaining, isGameOver } =
-        response.data._gameCache;
 
+      // Destructure the relevant data from the response
+      const {
+        currentSolution,
+        guessesRemaining,
+        guessHistory,
+        feedbackHistory,
+        isGameOver,
+      } = response.data._gameCache;
+
+      // Update the local state with the received data
       setSolution(currentSolution);
       setGuessesRemaining(guessesRemaining);
       setIsGameOver(isGameOver.status);
+      setGuesses(guessHistory);
+      setFeedback(feedbackHistory);
       setCurrentGuess('');
-      setGuesses([]);
-      setFeedback([]);
 
+      // Set the loading state to false
       setIsFetching(false);
     } catch (error) {
+      // Log an error if there's an issue generating the random number
       console.error('Error generating random number:', error);
+      throw error;
     }
   }
 
