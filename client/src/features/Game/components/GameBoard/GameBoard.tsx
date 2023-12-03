@@ -160,11 +160,11 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         <div className={`flex flex-col items-center p-4 `}>
           {guesses.map((guess, i) => (
             <div
-              className="flex flex-col gap-2 items-center border-b-2 p-4"
+              className="flex flex-col gap-1 items-center border-b-2 p-4"
               key={i}
             >
-              <span>{guess}</span>
-              <span>{feedback[i]?.response}</span>
+              <span className="text-xl">{guess}</span>
+              <span className="text-slate-700">{feedback[i]?.response}</span>
             </div>
           ))}
         </div>
@@ -224,7 +224,9 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       {renderGameHeader()}
       {renderHistory()}
       {renderGuessInput()}
-      {!feedback[feedback.length - 1]?.won && isGameOver.message}
+      {!feedback[feedback.length - 1]?.won && (
+        <span className="text-slate">{isGameOver.message}</span>
+      )}
     </div>
   );
 }

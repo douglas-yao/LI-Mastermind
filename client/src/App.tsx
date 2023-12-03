@@ -85,7 +85,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-5 p-5">
+    <div className="flex flex-col items-center gap-5 p-8 mb-12">
       <h1 className="text-xl font-bold">Mastermind</h1>
       {renderPlayButton()}
       {renderContent()}
