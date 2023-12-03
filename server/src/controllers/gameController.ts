@@ -3,7 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import gameModel from '../models/GameModel';
 import userGameModel from '../models/userGameModel';
 import CurrentGameCache from '../cache/gameCache';
-import { getRandomSolution, generateFeedback } from '../services/index';
+import {
+  getRandomSolution,
+  generateFeedback,
+  gameLoggingService,
+} from '../services/index';
 import { UpdateGameControllerResponse } from '../types/types';
 
 // CurrentGameCache to store current game instance's data
@@ -115,31 +119,7 @@ const updateGameController = async (
 
     // Server logs to show game progress:
     if (!currentGameCache.isGameOver.status) {
-      console.log(`*** Round ${10 - currentGameCache.guessesRemaining} ***`);
-      console.log('---------------');
-
-      const lastGuessIndex = currentGameCache.guessHistory.length - 1;
-
-      // Display the current guess
-      console.log(`${currentGameCache.userId} guessed:`);
-      console.log(currentGameCache.guessHistory[lastGuessIndex]);
-      console.log(currentGameCache.feedbackHistory[lastGuessIndex].response);
-
-      // Check for winning or losing condition, display corresponding message:
-      feedback.won || currentGameCache.guessesRemaining === 0
-        ? console.log('***** User won the game *****')
-        : console.log('***** User lost the game *****');
-
-      // Display the overall guess history
-      console.log('\nGuess history:');
-      for (let i = lastGuessIndex - 1; i >= 0; i--) {
-        console.log(currentGameCache.guessHistory[i]);
-        console.log(currentGameCache.feedbackHistory[i].response);
-      }
-
-      console.log(
-        `\nGuesses remaining: ${currentGameCache.guessesRemaining}\n---------------\n`
-      );
+      gameLoggingService.logGameProgress(currentGameCache, currentGuess);
     }
 
     // If keeping debugging logs below, consider wrapping
