@@ -14,7 +14,6 @@ class GameModel {
 
       const values = [solution, guessesRemaining, gameId, difficulty];
 
-      // Add logic below to insert into Easy, Normal, or Hard table
       const [result] = await pool.execute(query, values);
     } catch (error) {
       console.error('Error creating new game instance:', error);
@@ -27,15 +26,23 @@ class GameModel {
     attempt: string,
     solution: string,
     feedback: string,
-    guessesRemaining: number
+    guessesRemaining: number,
+    difficulty: string
   ): Promise<void> {
     try {
       const query = `
-        INSERT INTO games (gameId, attempt, solution, feedback, guessesRemaining)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO games (gameId, attempt, solution, feedback, guessesRemaining, difficulty)
+        VALUES (?, ?, ?, ?, ?, ?)
       `;
 
-      const values = [gameId, attempt, solution, feedback, guessesRemaining];
+      const values = [
+        gameId,
+        attempt,
+        solution,
+        feedback,
+        guessesRemaining,
+        difficulty,
+      ];
       const [result] = await pool.execute(query, values);
     } catch (error) {
       console.error('Error updating game instance:', error);

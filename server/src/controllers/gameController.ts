@@ -44,7 +44,8 @@ const startGameController = async (
     await gameModel.createNewGameInstance(
       solution,
       currentGameCache.guessesRemaining,
-      currentGameCache.gameId
+      currentGameCache.gameId,
+      difficulty
     );
 
     await userGameModel.createNewUserGame(
@@ -109,7 +110,8 @@ const updateGameController = async (
       currentGuess,
       currentGameCache.currentSolution,
       feedback.response,
-      currentGameCache.guessesRemaining
+      currentGameCache.guessesRemaining,
+      currentGameCache.difficulty
     );
 
     // If keeping debugging logs below, consider wrapping
