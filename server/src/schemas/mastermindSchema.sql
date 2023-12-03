@@ -7,18 +7,20 @@ USE mastermind_game;
 -- Create the games table
 CREATE TABLE IF NOT EXISTS games (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  solution VARCHAR(255) NOT NULL,
-  guessesRemaining INT NOT NULL,
-  gameId VARCHAR(255) NOT NULL,
-  difficulty VARCHAR(255) NOT NULL
+  gameId VARCHAR(45) NOT NULL,
+  attempt VARCHAR(45) DEFAULT NULL,
+  solution VARCHAR(45) DEFAULT NULL,
+  feedback VARCHAR(45) DEFAULT NULL,
+  guessesRemaining INT DEFAULT 0,
+  difficulty VARCHAR(45) DEFAULT NULL
 );
 
 -- Create the user_games table
 CREATE TABLE IF NOT EXISTS user_games (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  userId VARCHAR(255) NOT NULL,
-  gameId VARCHAR(255) NOT NULL,
-  difficulty VARCHAR(255) NOT NULL,
+  gameId VARCHAR(45) PRIMARY KEY NOT NULL,
+  userId VARCHAR(45) DEFAULT NULL,
+  won BOOLEAN NOT NULL,
   completed BOOLEAN NOT NULL DEFAULT false,
-  won BOOLEAN
+  difficulty VARCHAR(45) NOT NULL,
+  time VARCHAR(45) DEFAULT NULL
 );
