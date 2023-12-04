@@ -59,12 +59,12 @@ const gameController = {
       );
 
       // Log start of game to the console
-      gameLoggingService.logNewGameStart(
-        userId,
-        difficulty,
-        currentGameCache.guessesRemaining
-      );
-
+      // gameLoggingService.logNewGameStart(
+      //   userId,
+      //   difficulty,
+      //   currentGameCache.guessesRemaining
+      // );
+      console.log('generated solution: ', solution);
       // Send the game cache back to the client
       res.locals.newGameData = <GameCache>currentGameCache;
       return next();
@@ -77,7 +77,7 @@ const gameController = {
   // Handles the submission of a new attempt
   updateGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
-
+    console.log('current guess: ', currentGuess);
     try {
       // Generate feedback based on user's provided guess
       const feedback = generateFeedback(
@@ -124,11 +124,11 @@ const gameController = {
       }
 
       // Server logs to show game progress:
-      gameLoggingService.logGameProgress(
-        currentGameCache,
-        currentGuess,
-        feedback
-      );
+      // gameLoggingService.logGameProgress(
+      //   currentGameCache,
+      //   currentGuess,
+      //   feedback
+      // );
 
       // Return data back to the client
       res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
