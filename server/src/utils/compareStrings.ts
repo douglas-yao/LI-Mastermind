@@ -4,7 +4,11 @@ export default function compareStrings(
   attempt: string,
   solution: string
 ): Comparisons | void {
-  if (attempt.length !== solution.length) {
+  if (
+    attempt.length !== solution.length ||
+    typeof attempt !== 'string' ||
+    typeof solution !== 'string'
+  ) {
     console.error('Attempt and solution lengths are different!');
     return;
   }
@@ -31,10 +35,6 @@ export default function compareStrings(
         solutionLeftoverHash[solution[i]] + 1 || 1;
     }
   }
-
-  console.log('attempt leftover: ', attemptLeftover);
-  console.log('solution hash: ', solutionLeftoverHash);
-  console.log('comparisons hash: ', comparisons);
 
   for (let i = 0; i < attemptLeftover.length; i++) {
     if (solutionLeftoverHash[attemptLeftover[i]] > 0) {
