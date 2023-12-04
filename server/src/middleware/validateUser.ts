@@ -11,10 +11,10 @@ const validateUserId = (req: Request, res: Response, next: NextFunction) => {
     typeof userId !== 'string' ||
     !alphanumericRegex.test(userId)
   ) {
-    res.locals.validationError = {
+    res.status(400).json({
       error:
         'Invalid userId. It should be a string containing only letters and numbers.',
-    };
+    });
   }
 
   next();
