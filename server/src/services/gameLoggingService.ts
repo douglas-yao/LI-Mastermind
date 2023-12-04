@@ -1,5 +1,4 @@
-import { GameCache } from '../types/types';
-import { FeedbackResponse } from '../types/types';
+import { GameCache, FeedbackResponse } from '../types/types';
 
 class GameLoggingService {
   logGameProgress(
@@ -7,7 +6,7 @@ class GameLoggingService {
     currentGuess: string,
     currentFeedback: FeedbackResponse
   ): void {
-    console.log(`*** Round ${10 - gameCache.guessesRemaining} ***`);
+    console.log(`*** Round ${gameCache.guessesTaken} ***`);
     console.log('---------------');
     console.log(`${gameCache.userId} guessed:`);
     console.log(currentGuess);
@@ -28,6 +27,23 @@ class GameLoggingService {
     }
     console.log(
       `\nGuesses remaining: ${gameCache.guessesRemaining}\n---------------\n`
+    );
+  }
+
+  logNewGameStart(
+    userId: string,
+    difficulty: string,
+    totalGuesses: number
+  ): void {
+    console.log(
+      `\n***** Starting new game for ${userId} on ${difficulty} difficulty! *****\n`
+    );
+    console.log(
+      `
+        Guess four numbers. Each number can be one of 8 numbers from 0 to 7.\n
+        There are potential repeats.\n
+        You have ${totalGuesses} guesses to prove you are a Mastermind
+      `
     );
   }
 }

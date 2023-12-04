@@ -28,17 +28,18 @@ const startGameController = async (
     userId: string;
     difficulty: string;
   };
-  console.log(
-    `\n***** Starting new game for ${userId} on ${difficulty} difficulty! *****\n`
-  );
+
   try {
     // Fetch a random number sequence from the Random.org API
     const solution = await getRandomSolution(difficulty);
 
+    // Get the current difficulty settings for the user selected difficulty
+    const currentDifficultySettings = difficultySettings[difficulty];
+
     // Instantiate game cache with starting data
     currentGameCache.setProperties({
       gameId: uuidv4(),
-      guessesRemaining: difficultySettings[difficulty].startingGuesses,
+      guessesRemaining: currentDifficultySettings.startingGuesses,
       guessesTaken: 0,
       currentSolution: solution,
       guessHistory: [],
@@ -65,6 +66,14 @@ const startGameController = async (
       currentGameCache.difficultyLevel
     );
 
+    // Log start of game to the console
+    gameLoggingService.logNewGameStart(
+      userId,
+      difficulty,
+      currentGameCache.guessesRemaining
+    );
+
+    // Send the game cache back to the client
     res.locals.newGameData = currentGameCache;
     return next();
   } catch (error) {
