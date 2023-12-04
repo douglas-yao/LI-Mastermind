@@ -48,8 +48,8 @@ export default function Scoreboard() {
   return (
     // Render buttons, the current difficulty selected, and corresponding table of players and scores
     <div className="max-w-screen-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        Scoreboard - {difficulties[difficultyIndex]} Difficulty
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        Top Ten Masterminds
       </h1>
       <div className="flex items-center justify-between mb-4">
         <button
