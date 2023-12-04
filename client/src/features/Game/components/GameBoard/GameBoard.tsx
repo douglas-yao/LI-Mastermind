@@ -106,15 +106,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         feedback,
         updatedGuessHistory,
         isGameOver,
-        error,
       } = response.data;
-
-      // Check for errors in the response and display an alert if needed
-      if (error) {
-        console.error('Error submitting guess:', error);
-        alert(`Error submitting guess: ${error}`);
-        return;
-      }
 
       // Update local state with the received data
       setGuessesRemaining(updatedGuessesRemaining);
@@ -125,6 +117,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
     } catch (error) {
       // Log an error if there's an issue submitting the guess
       console.error('Error occurred submitting an attempt: ', error);
+      alert(error.response.data.error);
       throw error;
     }
   }
