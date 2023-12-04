@@ -79,7 +79,6 @@ const gameController = {
   // Handles the submission of a new attempt
   updateGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
-    const currentGameCache = gameCacheService.currentGameCache;
     console.log('current guess: ', currentGuess);
     try {
       // Generate feedback based on user's provided guess
@@ -95,7 +94,7 @@ const gameController = {
       await gameDbService.updatePlayGame(
         currentGuess,
         feedback.response,
-        currentGameCache
+        gameCacheService.currentGameCache
       );
       // gameModel.updateGameInstance(
       //   currentGameCache.gameId,
@@ -107,10 +106,16 @@ const gameController = {
       // );
 
       // Check if a winning or losing condition has been met, and update game cache and db appropriately
-      if (currentGameCache.guessesRemaining === 0 || feedback.won === true) {
-        gameDbService.updateGameOver(feedback.won, currentGameCache);
+      if (
+        gameCacheService.currentGameCache.guessesRemaining === 0 ||
+        feedback.won === true
+      ) {
+        gameDbService.updateGameOver(
+          feedback.won,
+          gameCacheService.currentGameCache
+        );
         // Wrap below!
-        currentGameCache.isGameOver = {
+        gameCacheService.currentGameCache.isGameOver = {
           status: true,
           message: `${
             feedback.won
@@ -129,10 +134,11 @@ const gameController = {
 
       // Return data back to the client
       res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
-        feedback: currentGameCache.feedbackHistory,
-        updatedGuessesRemaining: currentGameCache.guessesRemaining,
-        isGameOver: currentGameCache.isGameOver,
-        updatedGuessHistory: currentGameCache.guessHistory,
+        feedback: gameCacheService.currentGameCache.feedbackHistory,
+        updatedGuessesRemaining:
+          gameCacheService.currentGameCache.guessesRemaining,
+        isGameOver: gameCacheService.currentGameCache.isGameOver,
+        updatedGuessHistory: gameCacheService.currentGameCache.guessHistory,
       };
       return next();
     } catch (error) {
