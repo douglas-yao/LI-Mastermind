@@ -16,8 +16,9 @@ const gameCacheService = new GameCacheService();
 const gameController = {
   // Handles the initiation of a new game
   /**
-   * Input: Request body containing the userId:string and difficulty:string
-   * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
+   * Input: User-provided username and difficulty level to start a game
+   * Output: All data relevant for the user to play the game
+   * NOTE TO DEV: TYPE THE RESPONSE BODY <STARTGAMECONTROLLERRESPONSE>
    */
   startGame: async (req: Request, res: Response, next: NextFunction) => {
     // if (!validationService.validateStartGame(req)) {
@@ -77,8 +78,11 @@ const gameController = {
     }
   },
 
-  // Handles the submission of a new attempt
-  updateGame: async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * Input: The user's current guess
+   * Output: Returns updated game data, including whether or not a winning condition has been met
+   */
+  playGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
     console.log('current guess: ', currentGuess);
     try {
