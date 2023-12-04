@@ -13,7 +13,7 @@ const validateCurrentGuess = (
     currentGuess.length !== 4
   ) {
     return res.status(400).json({
-      error: 'Invalid submitted guess. It should be a string of length 4.',
+      error: 'Invalid submitted guess. It should be 4 digits.',
     });
   }
 
