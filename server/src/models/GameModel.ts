@@ -28,7 +28,7 @@ class GameModel {
     solution: string,
     feedback: string,
     guessesRemaining: number,
-    difficulty: Difficulty
+    difficultyLevel: string
   ): Promise<void> {
     try {
       const query = `
@@ -42,7 +42,7 @@ class GameModel {
         solution,
         feedback,
         guessesRemaining,
-        difficulty.level,
+        difficultyLevel,
       ];
       const [result] = await pool.execute(query, values);
     } catch (error) {
