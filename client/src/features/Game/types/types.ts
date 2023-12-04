@@ -19,3 +19,14 @@ export type Difficulty = {
   level: string;
   startingGuesses: number;
 };
+
+export type Score = {
+  userId: string;
+  guessesTaken: number;
+};
+
+export type Scores = {
+  Easy: Score[];
+  Normal: Score[];
+  Hard: Score[];
+};
