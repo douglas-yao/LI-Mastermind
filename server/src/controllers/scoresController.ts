@@ -1,20 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import userGameModel from '../models/userGameModel';
-
-type Score = {
-  userId: string;
-  totalGuesses: number;
-};
-type Scores = {
-  Easy: number[];
-  Normal: number[];
-  Hard: number[];
-};
+import { Scores, Score } from '../types/types';
 
 const scoresController = {
-  getScores: async (req: Request, res: Response, next: NextFunction) => {
-    const scores = console.log('get scores here!');
-    res.locals.scores = 'hi!';
+  getTopScores: async (req: Request, res: Response, next: NextFunction) => {
+    const { difficulty } = req.body;
+    console.log('getTopScores req body: ', difficulty);
+    const topScores = await userGameModel.getTopScores(difficulty, '10');
+    // console.log(topScores);
+
+    res.locals.scores = topScores;
     next();
   },
 };

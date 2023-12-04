@@ -4,37 +4,16 @@ import GameBoard from './features/Game/components/GameBoard/GameBoard';
 import Scoreboard from './features/Game/components/Scoreboard/Scoreboard';
 import axios from 'axios';
 
-type Score = {
-  userId: string;
-  totalGuesses: number;
-};
-type Scores = {
-  Easy: Score[];
-  Normal: Score[];
-  Hard: Score[];
-};
-
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerName, setPlayerName] = useState<string>('');
   const [difficulty, setDifficulty] = useState<string>('Normal');
-  // const [scores, setScores] = useState<Scores>();
-
-  useEffect(() => {
-    getTopScores();
-  }, []);
 
   function toggleGame() {
     setGameStarted((prevGameStarted) => !prevGameStarted);
     if (!playerName) {
       setPlayerName('Anonymous');
     }
-  }
-
-  async function getTopScores() {
-    const response = await axios.get(`/scores/`);
-    console.log('/scores response: ', response.data);
-    // setScores(response.data);
   }
 
   function renderHomeScreen() {

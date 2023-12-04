@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Prompt the user for the MySQL username
 read -p "Enter your MySQL username: " MYSQL_USER
 

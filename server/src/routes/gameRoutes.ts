@@ -1,8 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import {
-  startGameController,
-  updateGameController,
-} from '../controllers/gameController';
+import gameController from '../controllers/gameController';
 import validateSubmittedGuess from '../middleware/validateSubmittedGuess';
 import validateUserId from '../middleware/validateUser';
 
@@ -27,7 +24,7 @@ router.post(
     next();
   },
   // Start game logic and db transactions
-  startGameController,
+  gameController.startGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.newGameData);
   }
@@ -53,7 +50,7 @@ router.post(
     next();
   },
   // Handle db transactions to update new user guess and corresponding game feedback
-  updateGameController,
+  gameController.updateGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.evaluatedSubmission);
   }
