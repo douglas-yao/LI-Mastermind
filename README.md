@@ -35,6 +35,8 @@ To get started, follow these steps:
      npm install
      ```
 
+**To skip use of a database, checkout to branch `cacheOnly` and skip steps 3 and 4**
+
 3. **Create a `.env` file:**
 
    - Create a `.env` file in the root directory of the `server` folder.
