@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   GameBoardProps,
   FeedbackResponse,
@@ -88,7 +88,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
    */
   async function handleGuessSubmit(e: FormEvent) {
     e.preventDefault();
-    console.log(solution);
+
     try {
       // Make a POST request to the server to update the game with the player's guess
       const response = await axios.post('http://localhost:8080/game/update', {
@@ -97,7 +97,8 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         solution,
       });
 
-      // Log the response data for debugging
+      // Log the solution and response data for debugging
+      console.log(solution);
       console.log('response from submission: ', response);
 
       // Destructure relevant data from the response
@@ -114,7 +115,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       setGuesses(updatedGuessHistory);
       setFeedback(feedback);
       setCurrentGuess('');
-    } catch (error) {
+    } catch (error: AxiosError) {
       // Log an error if there's an issue submitting the guess
       console.error('Error occurred submitting an attempt: ', error);
       alert(error.response.data.error);
