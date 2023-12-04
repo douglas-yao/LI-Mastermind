@@ -1,5 +1,4 @@
 import pool from '../config/dbConnect';
-import { Difficulty } from '../types/types';
 
 class GameModel {
   async createNewGameInstance(

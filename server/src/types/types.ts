@@ -37,8 +37,3 @@ export type GameCache = {
   guessHistory: string[];
   feedbackHistory: Feedback[];
 };
-
-export type Difficulty = {
-  level: string;
-  startingGuesses: number;
-};

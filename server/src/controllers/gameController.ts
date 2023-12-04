@@ -8,7 +8,7 @@ import {
   generateFeedback,
   gameLoggingService,
 } from '../services/index';
-import { UpdateGameControllerResponse, Difficulty } from '../types/types';
+import { UpdateGameControllerResponse } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
 
 // CurrentGameCache to store current game instance's data
