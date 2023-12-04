@@ -48,7 +48,6 @@ class UserGameModel {
 
   async getTopScores(difficulty: string, limit: string = '10') {
     try {
-      console.log('in model: ', difficulty, limit);
       const query = `
         SELECT * FROM user_games
         WHERE difficulty = '${difficulty}'

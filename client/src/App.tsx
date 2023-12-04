@@ -1,8 +1,7 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import GameBoard from './features/Game/components/GameBoard/GameBoard';
 import Scoreboard from './features/Game/components/Scoreboard/Scoreboard';
-import axios from 'axios';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
