@@ -7,6 +7,7 @@ import {
   getRandomSolution,
   generateFeedback,
   gameLoggingService,
+  gameDbService,
 } from '../services/index';
 import { UpdateGameControllerResponse, GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
@@ -22,16 +23,25 @@ const gameController = {
    * Output: Response to the route handler containing a randomized solution:string and number of guesses:number
    */
   startGame: async (req: Request, res: Response, next: NextFunction) => {
+    // if (!validationService.validateStartGame(req)) {
+    //   // respond with 404
+    //   res.status(404).json({error: ${error}})
+    // }
+
     const { userId, difficulty } = req.body as {
       userId: string;
       difficulty: string;
     };
 
     try {
+      // Game manager, game service, cache service, db services to wrap logic
+      // Make it very clear what this controller is doing and what its job is
+
       // Fetch a random number sequence from the Random.org API
       const solution = await getRandomSolution(difficulty);
 
       // Get the current difficulty settings for the user selected difficulty
+      // Set number of available guesses for the user
       const currentDifficultySettings = difficultySettings[difficulty];
 
       // Instantiate game cache with starting data
@@ -45,17 +55,10 @@ const gameController = {
       });
 
       // Save the solution and remaining guesses to the database
-      await gameModel.createNewGameInstance(
-        solution,
-        currentGameCache.guessesRemaining,
-        currentGameCache.gameId,
-        currentGameCache.difficultyLevel
-      );
-
-      await userGameModel.createNewUserGame(
+      await gameDbService.createNewGameAndUser(
         userId,
-        currentGameCache.gameId,
-        currentGameCache.difficultyLevel
+        solution,
+        currentGameCache
       );
 
       // Log start of game to the console
@@ -86,6 +89,7 @@ const gameController = {
       );
 
       // Update the game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
+
       currentGameCache.setProperties({
         guessHistory: [...currentGameCache.guessHistory, currentGuess],
         feedbackHistory: [...currentGameCache.feedbackHistory, feedback],
@@ -94,25 +98,24 @@ const gameController = {
       });
 
       // Update the db with the same information
-      gameModel.updateGameInstance(
-        currentGameCache.gameId,
+      await gameDbService.updatePlayGame(
         currentGuess,
-        currentGameCache.currentSolution,
         feedback.response,
-        currentGameCache.guessesRemaining,
-        currentGameCache.difficultyLevel
+        currentGameCache
       );
+      // gameModel.updateGameInstance(
+      //   currentGameCache.gameId,
+      //   currentGuess,
+      //   currentGameCache.currentSolution,
+      //   feedback.response,
+      //   currentGameCache.guessesRemaining,
+      //   currentGameCache.difficultyLevel
+      // );
 
       // Check if a winning or losing condition has been met, and update game cache and db appropriately
-      // Consider wrapping this block into its own module
       if (currentGameCache.guessesRemaining === 0 || feedback.won === true) {
-        userGameModel.updateGameCompletionStatus(
-          currentGameCache.gameId,
-          feedback.won,
-          currentGameCache.difficultyLevel,
-          currentGameCache.guessesRemaining,
-          currentGameCache.guessesTaken
-        );
+        gameDbService.updateGameOver(feedback.won, currentGameCache);
+        // Wrap below!
         currentGameCache.isGameOver = {
           status: true,
           message: `${

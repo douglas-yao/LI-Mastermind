@@ -67,14 +67,4 @@ class UserGameModel {
   }
 }
 
-const userGameModel = new UserGameModel();
-export default userGameModel;
-
-/**
-   SELECT userId, difficulty, guessesTaken
-        FROM user_games
-        WHERE completed = true
-        AND difficulty = ?
-        ORDER BY guessesTaken ASC
-        LIMIT ?
- */
+export default UserGameModel;
