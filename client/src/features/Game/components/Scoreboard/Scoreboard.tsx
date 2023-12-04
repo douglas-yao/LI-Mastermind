@@ -33,14 +33,12 @@ export default function Scoreboard() {
   // Function to handle arrow clicks for changing difficulty
   const handleArrowClick = (direction: 'prev' | 'next') => {
     if (direction === 'prev') {
-      // Decrease the difficulty index (with wrap-around to the end)
       setDifficultyIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : difficulties.length - 1
+        prevIndex > 0 ? prevIndex - 1 : prevIndex
       );
     } else {
-      // Increase the difficulty index (with wrap-around to the beginning)
       setDifficultyIndex((prevIndex) =>
-        prevIndex < difficulties.length - 1 ? prevIndex + 1 : 0
+        prevIndex < difficulties.length - 1 ? prevIndex + 1 : prevIndex
       );
     }
   };
