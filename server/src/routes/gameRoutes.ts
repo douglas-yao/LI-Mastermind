@@ -18,6 +18,7 @@ router.post(
   // Start game logic and db transactions
   gameController.startGame,
   (req: Request, res: Response) => {
+    // check for errors
     res.status(200).json(res.locals.newGameData);
   }
 );

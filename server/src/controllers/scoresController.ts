@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import userGameModel from '../models/userGameModel';
+import UserGameModel from '../models/userGameModel';
 import { Scores, Score } from '../types/types';
+
+const userGameModel = new UserGameModel();
 
 const scoresController = {
   getTopScores: async (req: Request, res: Response, next: NextFunction) => {

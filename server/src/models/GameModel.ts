@@ -51,5 +51,4 @@ class GameModel {
   }
 }
 
-const gameModel = new GameModel();
-export default gameModel;
+export default GameModel;

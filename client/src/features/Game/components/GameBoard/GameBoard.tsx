@@ -55,7 +55,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         guessHistory,
         feedbackHistory,
         isGameOver,
-      } = response.data._gameCache;
+      } = response.data;
 
       // Update the local state with the received data
       setSolution(currentSolution);
