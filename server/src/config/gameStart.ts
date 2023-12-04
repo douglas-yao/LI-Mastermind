@@ -1,8 +1,10 @@
-const gameStartData = {
+import { GameCache } from '../types/types';
+
+const gameStartData: GameCache = {
   gameId: '',
   guessesRemaining: 10,
   guessesTaken: 0,
-  currentSolution: null,
+  currentSolution: '',
   guessHistory: [],
   feedbackHistory: [],
   userId: 'Anonymous',

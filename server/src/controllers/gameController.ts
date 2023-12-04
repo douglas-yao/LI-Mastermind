@@ -1,20 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import gameModel from '../models/GameModel';
-import userGameModel from '../models/userGameModel';
-import CurrentGameCache from '../cache/gameCache';
 import {
   getRandomSolution,
   generateFeedback,
   gameLoggingService,
   gameDbService,
+  GameCacheService,
 } from '../services/index';
 import { UpdateGameControllerResponse, GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
-import gameStart from '../config/gameStart';
 
 // CurrentGameCache to store current game instance's data
-const currentGameCache = new CurrentGameCache();
+const gameCacheService = new GameCacheService();
 
 const gameController = {
   // Handles the initiation of a new game
@@ -44,21 +41,23 @@ const gameController = {
       // Set number of available guesses for the user
       const currentDifficultySettings = difficultySettings[difficulty];
 
+      // Wrap into a game manager service:
+      const gameId = uuidv4();
+
       // Instantiate game cache with starting data
-      currentGameCache.setProperties({
-        ...gameStart,
-        gameId: uuidv4(),
-        guessesRemaining: currentDifficultySettings.startingGuesses,
-        currentSolution: solution,
-        userId: userId,
-        difficultyLevel: difficulty,
-      });
+      gameCacheService.initializeGameCache(
+        userId,
+        gameId,
+        difficulty,
+        solution,
+        currentDifficultySettings.startingGuesses
+      );
 
       // Save the solution and remaining guesses to the database
       await gameDbService.createNewGameAndUser(
         userId,
         solution,
-        currentGameCache
+        gameCacheService.currentGameCache
       );
 
       // Log start of game to the console
@@ -69,7 +68,7 @@ const gameController = {
       // );
       console.log('generated solution: ', solution);
       // Send the game cache back to the client
-      res.locals.newGameData = <GameCache>currentGameCache;
+      res.locals.newGameData = <GameCache>gameCacheService.currentGameCache;
       return next();
     } catch (error) {
       console.error('Error starting the game:', error);
@@ -80,22 +79,17 @@ const gameController = {
   // Handles the submission of a new attempt
   updateGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
+    const currentGameCache = gameCacheService.currentGameCache;
     console.log('current guess: ', currentGuess);
     try {
       // Generate feedback based on user's provided guess
       const feedback = generateFeedback(
         currentGuess,
-        currentGameCache.currentSolution
+        gameCacheService.currentGameCache.currentSolution
       );
 
       // Update the game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
-
-      currentGameCache.setProperties({
-        guessHistory: [...currentGameCache.guessHistory, currentGuess],
-        feedbackHistory: [...currentGameCache.feedbackHistory, feedback],
-        guessesTaken: ++currentGameCache.guessesTaken,
-        guessesRemaining: --currentGameCache.guessesRemaining,
-      });
+      gameCacheService.updateGameCacheOnAttempt(currentGuess, feedback);
 
       // Update the db with the same information
       await gameDbService.updatePlayGame(
