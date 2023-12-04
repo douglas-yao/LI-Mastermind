@@ -10,6 +10,7 @@ import {
 } from '../services/index';
 import { UpdateGameControllerResponse, GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
+import gameStart from '../config/gameStart';
 
 // CurrentGameCache to store current game instance's data
 const currentGameCache = new CurrentGameCache();
@@ -35,18 +36,12 @@ const gameController = {
 
       // Instantiate game cache with starting data
       currentGameCache.setProperties({
+        ...gameStart,
         gameId: uuidv4(),
         guessesRemaining: currentDifficultySettings.startingGuesses,
-        guessesTaken: 0,
         currentSolution: solution,
-        guessHistory: [],
-        feedbackHistory: [],
         userId: userId,
         difficultyLevel: difficulty,
-        isGameOver: {
-          status: false,
-          message: '',
-        },
       });
 
       // Save the solution and remaining guesses to the database
