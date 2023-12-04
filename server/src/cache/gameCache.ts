@@ -4,8 +4,9 @@ const gameCache: GameCache = {
   gameId: '',
   userId: 'Anonymous',
   currentSolution: '',
-  difficulty: '',
+  difficultyLevel: '',
   guessesRemaining: 10,
+  guessesTaken: 0,
   isGameOver: {
     status: false,
     message: '',
@@ -45,12 +46,12 @@ class CurrentGameCache {
     this._gameCache.currentSolution = value;
   }
 
-  get difficulty(): string {
-    return this._gameCache.difficulty;
+  get difficultyLevel(): string {
+    return this._gameCache.difficultyLevel;
   }
 
-  set difficulty(value: string) {
-    this._gameCache.difficulty = value;
+  set difficultyLevel(value: string) {
+    this._gameCache.difficultyLevel = value;
   }
 
   get guessesRemaining(): number {
@@ -59,6 +60,14 @@ class CurrentGameCache {
 
   set guessesRemaining(value: number) {
     this._gameCache.guessesRemaining = value;
+  }
+
+  get guessesTaken(): number {
+    return this._gameCache.guessesTaken;
+  }
+
+  set guessesTaken(value: number) {
+    this._gameCache.guessesTaken = value;
   }
 
   get isGameOver(): IsGameOver {

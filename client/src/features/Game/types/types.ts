@@ -14,3 +14,8 @@ export type IsGameOver = {
   status: boolean;
   message: string;
 };
+
+export type Difficulty = {
+  level: string;
+  startingGuesses: number;
+};

@@ -5,6 +5,7 @@ import {
   FeedbackResponse,
   IsGameOver,
 } from '../../types/types';
+import difficultySettings from '../../../config/difficultySettings';
 
 export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
@@ -200,7 +201,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
             Guess four numbers. Each number can be one of 7 numbers from 0 to 7
             (potential repeats).
           </span>
-          <span>You have 10 guesses to prove you're a Mastermind.</span>
+          <span>
+            You have {difficultySettings[difficulty].startingGuesses} guesses to
+            prove you're a Mastermind.
+          </span>
         </p>
       </div>
     );

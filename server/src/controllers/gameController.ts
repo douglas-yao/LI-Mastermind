@@ -9,6 +9,7 @@ import {
   gameLoggingService,
 } from '../services/index';
 import { UpdateGameControllerResponse } from '../types/types';
+import difficultySettings from '../config/difficultySettings';
 
 // CurrentGameCache to store current game instance's data
 const currentGameCache = new CurrentGameCache();
@@ -23,7 +24,10 @@ const startGameController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { userId, difficulty } = req.body;
+  const { userId, difficulty } = req.body as {
+    userId: string;
+    difficulty: string;
+  };
   console.log(
     `\n***** Starting new game for ${userId} on ${difficulty} difficulty! *****\n`
   );
@@ -34,12 +38,13 @@ const startGameController = async (
     // Instantiate game cache with starting data
     currentGameCache.setProperties({
       gameId: uuidv4(),
-      guessesRemaining: 10,
+      guessesRemaining: difficultySettings[difficulty].startingGuesses,
+      guessesTaken: 0,
       currentSolution: solution,
       guessHistory: [],
       feedbackHistory: [],
       userId: userId,
-      difficulty: difficulty,
+      difficultyLevel: difficulty,
       isGameOver: {
         status: false,
         message: '',
@@ -51,13 +56,13 @@ const startGameController = async (
       solution,
       currentGameCache.guessesRemaining,
       currentGameCache.gameId,
-      difficulty
+      currentGameCache.difficultyLevel
     );
 
     await userGameModel.createNewUserGame(
       userId,
       currentGameCache.gameId,
-      difficulty
+      currentGameCache.difficultyLevel
     );
 
     res.locals.newGameData = currentGameCache;
@@ -90,13 +95,16 @@ const updateGameController = async (
     currentGameCache.setProperties({
       guessHistory: [...currentGameCache.guessHistory, currentGuess],
       feedbackHistory: [...currentGameCache.feedbackHistory, feedback],
+      guessesTaken: ++currentGameCache.guessesTaken,
     });
 
     if (--currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       userGameModel.updateGameCompletionStatus(
         currentGameCache.gameId,
         feedback.won,
-        currentGameCache.difficulty
+        currentGameCache.difficultyLevel,
+        currentGameCache.guessesRemaining,
+        currentGameCache.guessesTaken
       );
       currentGameCache.isGameOver = {
         status: true,
@@ -114,7 +122,7 @@ const updateGameController = async (
       currentGameCache.currentSolution,
       feedback.response,
       currentGameCache.guessesRemaining,
-      currentGameCache.difficulty
+      currentGameCache.difficultyLevel
     );
 
     // Server logs to show game progress:
