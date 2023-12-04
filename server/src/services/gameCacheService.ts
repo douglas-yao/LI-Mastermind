@@ -52,6 +52,19 @@ class GameCacheService {
     return updatedGameCache;
   }
 
+  updateGameCacheOnCompletion(feedback: Feedback): void {
+    if (this.currentGameCache.guessesRemaining === 0 || feedback.won === true) {
+      this.currentGameCache.isGameOver = {
+        status: true,
+        message: `${
+          feedback.won
+            ? 'You are a Mastermind!'
+            : 'With each loss, you grow closer to becoming a Mastermind.'
+        }`,
+      };
+    }
+  }
+
   getCurrentGameCache(): GameCache | null {
     return this.currentGameCache;
   }

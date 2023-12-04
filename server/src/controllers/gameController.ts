@@ -10,7 +10,7 @@ import {
 import { UpdateGameControllerResponse, GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
 
-// CurrentGameCache to store current game instance's data
+// Cache to store current game instance's data
 const gameCacheService = new GameCacheService();
 
 const gameController = {
@@ -61,6 +61,7 @@ const gameController = {
       );
 
       // Log start of game to the console
+      // Consider moving into its own middleware instead?
       // gameLoggingService.logNewGameStart(
       //   userId,
       //   difficulty,
@@ -87,23 +88,13 @@ const gameController = {
         gameCacheService.currentGameCache.currentSolution
       );
 
-      // Update the game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
+      // Update the db and game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
       gameCacheService.updateGameCacheOnAttempt(currentGuess, feedback);
-
-      // Update the db with the same information
       await gameDbService.updatePlayGame(
         currentGuess,
         feedback.response,
         gameCacheService.currentGameCache
       );
-      // gameModel.updateGameInstance(
-      //   currentGameCache.gameId,
-      //   currentGuess,
-      //   currentGameCache.currentSolution,
-      //   feedback.response,
-      //   currentGameCache.guessesRemaining,
-      //   currentGameCache.difficultyLevel
-      // );
 
       // Check if a winning or losing condition has been met, and update game cache and db appropriately
       if (
@@ -114,18 +105,11 @@ const gameController = {
           feedback.won,
           gameCacheService.currentGameCache
         );
-        // Wrap below!
-        gameCacheService.currentGameCache.isGameOver = {
-          status: true,
-          message: `${
-            feedback.won
-              ? 'You are a Mastermind!'
-              : 'With each loss, you grow closer to becoming a Mastermind.'
-          }`,
-        };
+        gameCacheService.updateGameCacheOnCompletion(feedback);
       }
 
       // Server logs to show game progress:
+      // Consider moving to its own middleware instead?
       // gameLoggingService.logGameProgress(
       //   currentGameCache,
       //   currentGuess,
