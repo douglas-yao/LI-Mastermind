@@ -5,14 +5,12 @@ import Scoreboard from './features/Game/components/Scoreboard/Scoreboard';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [playerName, setPlayerName] = useState<string>('');
+
   const [difficulty, setDifficulty] = useState<string>('Normal');
 
   function toggleGame() {
     setGameStarted((prevGameStarted) => !prevGameStarted);
-    if (!playerName) {
-      setPlayerName('Anonymous');
-    }
+
   }
 
   function renderHomeScreen() {
@@ -25,18 +23,11 @@ function App() {
 
   function renderContent() {
     if (gameStarted) {
-      return <GameBoard difficulty={difficulty} playerName={playerName} />;
+      return <GameBoard difficulty={difficulty} />;
     } else {
       return (
         <div className="flex flex-col gap-5 items-center">
           {renderDifficultyButtons()}
-          <input
-            className="border border-slate-500 rounded-md px-2 py-1"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="Enter player name"
-            onKeyDown={(e) => (e.key === 'Enter' ? e.target.blur() : null)}
-          />
           {renderHomeScreen()}
         </div>
       );

@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   GameBoardProps,
   FeedbackResponse,
@@ -7,7 +7,7 @@ import {
 } from '../../types/types';
 import difficultySettings from '../../../config/difficultySettings';
 
-export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
+export default function GameBoard({ difficulty }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
   const [solution, setSolution] = useState<string>('');
   const [solutionLength, setSolutionLength] = useState<number>(4);
@@ -19,6 +19,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     status: false,
     message: '',
   });
+  const [userId, setUserId] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   /**
@@ -35,10 +36,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       // Set the loading state to true
       setIsFetching(true);
 
+      if (!userId) {
+        setUserId('Anonymous');
+      }
       // Make a POST request to the server to initiate a new game with user ID and difficulty level
       const response = await axios.post('http://localhost:8080/game/start', {
         difficulty,
-        userId: playerName,
+        userId,
       });
 
       // Log the data received from the backend
@@ -66,6 +70,8 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     } catch (error) {
       // Log an error if there's an issue generating the random number
       console.error('Error generating random number:', error);
+      alert('Invalidate player name! Enter only letters and numbers.');
+      setIsFetching(false);
       throw error;
     }
   }
@@ -86,12 +92,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     try {
       // Make a POST request to the server to update the game with the player's guess
       const response = await axios.post('http://localhost:8080/game/update', {
-        userId: playerName,
+        userId,
         currentGuess,
         solution,
       });
 
-      // Log the response data for debugging
+      // Log the solution and response data for debugging
+      console.log(solution);
       console.log('response from submission: ', response);
 
       // Destructure relevant data from the response
@@ -100,15 +107,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
         feedback,
         updatedGuessHistory,
         isGameOver,
-        error,
       } = response.data;
-
-      // Check for errors in the response and display an alert if needed
-      if (error) {
-        console.error('Error submitting guess:', error);
-        alert(`Error submitting guess: ${error}`);
-        return;
-      }
 
       // Update local state with the received data
       setGuessesRemaining(updatedGuessesRemaining);
@@ -116,9 +115,10 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
       setGuesses(updatedGuessHistory);
       setFeedback(feedback);
       setCurrentGuess('');
-    } catch (error) {
+    } catch (error: AxiosError) {
       // Log an error if there's an issue submitting the guess
       console.error('Error occurred submitting an attempt: ', error);
+      alert(error.response.data.error);
       throw error;
     }
   }
@@ -194,7 +194,7 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
     return (
       <div className="flex flex-col gap-5 items-center border-b-2 p-4 w-[vw100]">
         <div className="flex flex-col items-center gap-1">
-          <span>Player: {playerName}</span>
+          <span>Player: {userId}</span>
           <span>Current difficulty: {difficulty}</span>
         </div>
         <p className="flex flex-col gap-1 items-center">
@@ -214,6 +214,13 @@ export default function GameBoard({ difficulty, playerName }: GameBoardProps) {
   return (
     <div className="flex flex-col items-center gap-5">
       {renderStartButton()}
+      <input
+        className="border border-slate-500 rounded-md px-2 py-1"
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
+        placeholder="Enter player name"
+        onKeyDown={(e) => (e.key === 'Enter' ? e.target.blur() : null)}
+      />
       {renderGameHeader()}
       {renderHistory()}
       {renderGuessInput()}
