@@ -1,14 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  getRandomSolution,
-  generateFeedback,
   gameDbService,
   gameManagementService,
   GameCacheService,
 } from '../services/index';
 import { GameCache } from '../types/types';
-import difficultySetting from '../config/difficultySettings';
 
 // Cache to store current game instance's data
 const gameCacheService = new GameCacheService();
@@ -63,6 +59,7 @@ const gameController = {
   playGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
     console.log('current guess: ', currentGuess);
+
     try {
       // Generate feedback based on user's provided guess
       const feedback = gameManagementService.getFeedback(
