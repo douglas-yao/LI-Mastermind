@@ -172,8 +172,10 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
               className="border border-slate-500 py-2 px-4 rounded-lg text-center"
               type="text"
               value={currentGuess}
-              onChange={(e) => setCurrentGuess(e.target.value)}
-              // onChange={(e) => setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))}
+              // onChange={(e) => setCurrentGuess(e.target.value)}
+              onChange={(e) =>
+                setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+              }
             />
 
             <span>{guessesRemaining} Guesses Remaining</span>
