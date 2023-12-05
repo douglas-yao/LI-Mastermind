@@ -2,7 +2,7 @@ import { DifficultySettings } from '../types/types';
 
 const difficultySettings: DifficultySettings = {
   Easy: {
-    startingGuesses: 12,
+    startingGuesses: 10,
     solutionLength: 3,
   },
   Normal: {
@@ -10,7 +10,7 @@ const difficultySettings: DifficultySettings = {
     solutionLength: 4,
   },
   Hard: {
-    startingGuesses: 8,
+    startingGuesses: 10,
     solutionLength: 5,
   },
 };
