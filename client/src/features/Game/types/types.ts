@@ -38,4 +38,5 @@ export type DifficultySettings = {
 export type DifficultySetting = {
   startingGuesses: number;
   solutionLength: number;
+  timerDuration: number;
 };
