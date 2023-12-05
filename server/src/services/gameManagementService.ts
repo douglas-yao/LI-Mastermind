@@ -1,4 +1,4 @@
-import fetchRandomNumbers from '../utils/fetchRandomNumbers';
+import fetchRandomNumbers from '../api/fetchRandomNumbers';
 import difficultySettings from '../config/difficultySettings';
 import { v4 as uuidv4 } from 'uuid';
 import {
