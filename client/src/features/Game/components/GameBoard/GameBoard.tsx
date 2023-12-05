@@ -99,21 +99,17 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
       // Log the solution and response data for debugging
       console.log(solution);
-      console.log('response from submission: ', response);
+      console.log('response from submission: ', response.data);
 
       // Destructure relevant data from the response
-      const {
-        updatedGuessesRemaining,
-        feedback,
-        updatedGuessHistory,
-        isGameOver,
-      } = response.data;
+      const { guessesRemaining, feedbackHistory, guessHistory, isGameOver } =
+        response.data.currentGameCache;
 
       // Update local state with the received data
-      setGuessesRemaining(updatedGuessesRemaining);
+      setGuessesRemaining(guessesRemaining);
       setIsGameOver(isGameOver);
-      setGuesses(updatedGuessHistory);
-      setFeedback(feedback);
+      setGuesses(guessHistory);
+      setFeedback(feedbackHistory);
       setCurrentGuess('');
     } catch (error: AxiosError) {
       // Log an error if there's an issue submitting the guess
@@ -172,8 +168,10 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
               className="border border-slate-500 py-2 px-4 rounded-lg text-center"
               type="text"
               value={currentGuess}
-              onChange={(e) => setCurrentGuess(e.target.value)}
-              // onChange={(e) => setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))}
+              // onChange={(e) => setCurrentGuess(e.target.value)}
+              onChange={(e) =>
+                setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+              }
             />
 
             <span>{guessesRemaining} Guesses Remaining</span>

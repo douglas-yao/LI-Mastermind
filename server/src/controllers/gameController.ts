@@ -3,11 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   getRandomSolution,
   generateFeedback,
-  gameLoggingService,
   gameDbService,
   GameCacheService,
 } from '../services/index';
-import { UpdateGameControllerResponse, GameCache } from '../types/types';
+import { GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
 
 // Cache to store current game instance's data
@@ -21,11 +20,6 @@ const gameController = {
    * NOTE TO DEV: TYPE THE RESPONSE BODY <STARTGAMECONTROLLERRESPONSE>
    */
   startGame: async (req: Request, res: Response, next: NextFunction) => {
-    // if (!validationService.validateStartGame(req)) {
-    //   // respond with 404
-    //   res.status(404).json({error: ${error}})
-    // }
-
     const { userId, difficulty } = req.body as {
       userId: string;
       difficulty: string;
@@ -61,13 +55,6 @@ const gameController = {
         gameCacheService.currentGameCache
       );
 
-      // Log start of game to the console
-      // Consider moving into its own middleware instead?
-      // gameLoggingService.logNewGameStart(
-      //   userId,
-      //   difficulty,
-      //   currentGameCache.guessesRemaining
-      // );
       console.log('generated solution: ', solution);
       // Send the game cache back to the client
       res.locals.newGameData = <GameCache>gameCacheService.currentGameCache;
@@ -112,21 +99,11 @@ const gameController = {
         gameCacheService.updateGameCacheOnCompletion(feedback);
       }
 
-      // Server logs to show game progress:
-      // Consider moving to its own middleware instead?
-      // gameLoggingService.logGameProgress(
-      //   currentGameCache,
-      //   currentGuess,
-      //   feedback
-      // );
-
       // Return data back to the client
-      res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
-        feedback: gameCacheService.currentGameCache.feedbackHistory,
-        updatedGuessesRemaining:
-          gameCacheService.currentGameCache.guessesRemaining,
-        isGameOver: gameCacheService.currentGameCache.isGameOver,
-        updatedGuessHistory: gameCacheService.currentGameCache.guessHistory,
+      res.locals.evaluatedGameData = {
+        currentGameCache: gameCacheService.currentGameCache,
+        currentGuess,
+        feedback,
       };
       return next();
     } catch (error) {
