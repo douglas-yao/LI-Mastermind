@@ -242,7 +242,6 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
   return (
     <div className="flex flex-col items-center gap-5">
-      {/* {feedback[feedback.length - 1]?.response === 'won' && <Confetti />} */}
       {feedback[feedback.length - 1]?.won === true && <Confetti />}
       {renderStartButton()}
       <input
