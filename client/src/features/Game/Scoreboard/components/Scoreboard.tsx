@@ -22,7 +22,7 @@ export default function Scoreboard() {
       const response = await axios.post(`http://localhost:8080/scores/`, {
         difficulty: selectedDifficulty,
       });
-
+      console.log(response.data);
       // Update the scores state with the fetched data
       setScores(response.data);
     } catch (error) {
@@ -43,8 +43,14 @@ export default function Scoreboard() {
     }
   };
 
+  // Function to format seconds into a human-readable time format
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  };
+
   return (
-    // Render buttons, the current difficulty selected, and corresponding table of players and scores
     <div className="max-w-screen-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">
         Top Ten Masterminds
@@ -72,6 +78,7 @@ export default function Scoreboard() {
             <tr className="bg-gray-200">
               <th className="py-2 px-4 border">Player Name</th>
               <th className="py-2 px-4 border">Guesses Taken</th>
+              <th className="py-2 px-4 border">Elapsed Time</th>
             </tr>
           </thead>
           <tbody>
@@ -79,12 +86,14 @@ export default function Scoreboard() {
               <tr key={i} className="border">
                 <td className="py-2 px-4 border">{score.userId}</td>
                 <td className="py-2 px-4 border">{score.guessesTaken}</td>
+                <td className="py-2 px-4 border">
+                  {formatTime(parseInt(score.timeTaken))}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        // Display a message if there are no scores for the current difficulty
         <p className="text-red-500">
           No scores available for {difficulties[difficultyIndex]} difficulty.
         </p>

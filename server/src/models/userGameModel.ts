@@ -58,7 +58,8 @@ class UserGameModel {
         SELECT * FROM user_games
         WHERE difficulty = '${difficulty}'
         AND completed = true
-        ORDER BY guessesTaken ASC
+        AND timeElapsed IS NOT NULL
+        ORDER BY guessesTaken ASC, timeElapsed ASC
         LIMIT ${limit};
       `;
 

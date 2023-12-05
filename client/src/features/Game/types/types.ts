@@ -23,6 +23,7 @@ export type Difficulty = {
 export type Score = {
   userId: string;
   guessesTaken: number;
+  timeTaken: number;
 };
 
 export type Scores = {
