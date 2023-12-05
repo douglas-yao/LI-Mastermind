@@ -43,61 +43,96 @@ export default function Scoreboard() {
     }
   };
 
-  // Function to format seconds into a human-readable time format
-  const formatTime = (seconds: number): string => {
+  // Function to format seconds into a readable time format
+  const formatTime = (seconds: number | undefined): string => {
+    if (typeof seconds !== 'number') {
+      return 'No time recorded';
+    }
+
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
+
+    if (minutes === 0) {
+      return `${remainingSeconds}s`;
+    } else {
+      return `${minutes}m ${remainingSeconds}s`;
+    }
   };
 
-  return (
-    <div className="max-w-screen-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Top Ten Masterminds
-      </h1>
-      <div className="flex items-center justify-between mb-4">
-        <button
-          className="bg-blue-500 text-white px-2 py-1 rounded"
-          onClick={() => handleArrowClick('prev')}
-        >
-          {'<'}
-        </button>
-        <span className="text-xl font-semibold">
-          {difficulties[difficultyIndex]}
-        </span>
-        <button
-          className="bg-blue-500 text-white px-2 py-1 rounded"
-          onClick={() => handleArrowClick('next')}
-        >
-          {'>'}
-        </button>
+  // Function to render the header and arrow buttons that dynamically change the rendered table
+  function renderHeader() {
+    return (
+      <div>
+        <h1 className="text-2xl font-bold mb-4 text-center">
+          Top Ten Masterminds
+        </h1>
+        <div className="flex items-center justify-between mb-4">
+          <button
+            className="bg-blue-500 text-white px-2 py-1 rounded"
+            onClick={() => handleArrowClick('prev')}
+          >
+            {'<'}
+          </button>
+          <span className="text-xl font-semibold">
+            {difficulties[difficultyIndex]}
+          </span>
+          <button
+            className="bg-blue-500 text-white px-2 py-1 rounded"
+            onClick={() => handleArrowClick('next')}
+          >
+            {'>'}
+          </button>
+        </div>
       </div>
-      {scores && difficulties[difficultyIndex] ? (
-        <table className="min-w-full border border-collapse border-gray-300">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="py-2 px-4 border">Player Name</th>
-              <th className="py-2 px-4 border">Guesses Taken</th>
-              <th className="py-2 px-4 border">Elapsed Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scores.map((score, i) => (
-              <tr key={i} className="border">
-                <td className="py-2 px-4 border">{score.userId}</td>
-                <td className="py-2 px-4 border">{score.guessesTaken}</td>
-                <td className="py-2 px-4 border">
-                  {formatTime(parseInt(score.timeTaken))}
-                </td>
+    );
+  }
+
+  // Render a scoreboard based on stored values in state
+  function renderScoreBoard() {
+    if (!scores.length) {
+      return (
+        <div>
+          <h1>No scores to display</h1>
+        </div>
+      );
+    }
+
+    return (
+      <div className="max-w-screen-md mx-auto p-4">
+        {scores && difficulties[difficultyIndex] ? (
+          <table className="min-w-full border border-collapse border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border">Player Name</th>
+                <th className="py-2 px-4 border">Guesses Taken</th>
+                <th className="py-2 px-4 border">Elapsed Time</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-red-500">
-          No scores available for {difficulties[difficultyIndex]} difficulty.
-        </p>
-      )}
+            </thead>
+            <tbody>
+              {scores.map((score, i) => (
+                <tr key={i} className="border">
+                  <td className="py-2 px-4 border">{score.userId}</td>
+                  <td className="py-2 px-4 border">{score.guessesTaken}</td>
+                  <td className="py-2 px-4 border">
+                    {formatTime(score.timeElapsed)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-red-500">
+            No scores available for {difficulties[difficultyIndex]} difficulty.
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-8">
+      {renderHeader()}
+      {renderScoreBoard()}
     </div>
   );
 }
