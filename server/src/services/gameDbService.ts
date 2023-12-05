@@ -1,5 +1,5 @@
 import GameModel from '../models/GameModel';
-import UserGameModel from '../models/User_GameModel';
+import UserGameModel from '../models/UserGameModel';
 import { GameCache } from '../types/types';
 
 /**
