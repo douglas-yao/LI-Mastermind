@@ -89,15 +89,11 @@ export default function Scoreboard() {
 
   // Render a scoreboard based on stored values in state
   function renderScoreBoard() {
-    if (!scores.length) {
-      return (
-        <div>
-          <h1>No scores to display</h1>
-        </div>
-      );
-    }
-
-    return (
+    return !scores.length ? (
+      <div className="text-center">
+        <h1>No scores to display</h1>
+      </div>
+    ) : (
       <div className="max-w-screen-md mx-auto p-4">
         {scores && difficulties[difficultyIndex] ? (
           <table className="min-w-full border border-collapse border-gray-300">
