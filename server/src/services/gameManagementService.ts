@@ -40,11 +40,14 @@ class GameManagementService {
       won: false,
     };
 
+    // Get the length of the solution
+    const solutionLength = solution.length;
+
     const comparisons = this.compareStrings(guess, solution);
 
-    if (comparisons.incorrect === 4) {
+    if (comparisons.incorrect === solutionLength) {
       feedback.response = 'All incorrect';
-    } else if (comparisons.directMatches === 4) {
+    } else if (comparisons.directMatches === solutionLength) {
       feedback.response = 'You are a Mastermind!';
     } else {
       feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
