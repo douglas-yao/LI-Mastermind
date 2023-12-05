@@ -3,11 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   getRandomSolution,
   generateFeedback,
-  gameLoggingService,
   gameDbService,
   GameCacheService,
 } from '../services/index';
-import { UpdateGameControllerResponse, GameCache } from '../types/types';
+import { GameCache } from '../types/types';
 import difficultySettings from '../config/difficultySettings';
 
 // Cache to store current game instance's data
