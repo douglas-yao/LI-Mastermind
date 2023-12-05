@@ -1,4 +1,4 @@
-import { getRandomSolution } from '../services/index';
+import fetchRandomNumbers from '../utils/fetchRandomNumbers';
 import difficultySettings from '../config/difficultySettings';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -18,7 +18,8 @@ class GameManagementService {
    * @returns A promise resolving to InitialGameData.
    */
   async getInitialGameData(difficulty: string): Promise<InitialGameData> {
-    const solution = await getRandomSolution(difficulty);
+    const rawSolution = await this.getRandomSolution(difficulty);
+    const solution = this.parseRandomRes(rawSolution);
     const currentDifficultySetting: DifficultySetting =
       difficultySettings[difficulty];
     const gameId = uuidv4();
@@ -33,17 +34,13 @@ class GameManagementService {
    * @returns The feedback for the guess.
    */
   getFeedback(guess: string, solution: string): Feedback {
-    const comparisons = this.compareStrings(guess, solution) || {
-      directMatches: 0,
-      indirectMatches: 0,
-      incorrect: 0,
-      won: false,
-    };
-
+    // Construct the feedback response object:
     const feedback: Feedback = {
       response: '',
       won: false,
     };
+
+    const comparisons = this.compareStrings(guess, solution);
 
     if (comparisons.incorrect === 4) {
       feedback.response = 'All incorrect';
@@ -53,28 +50,20 @@ class GameManagementService {
       feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
     }
 
+    // Set the 'won' property based on comparisons
     feedback.won = comparisons.won;
 
     return feedback;
   }
 
   /**
-   * Compares two strings and returns a Comparisons object.
+   * Compares two strings and provides feedback based on the comparison.
    * @param attempt - The user's guess.
    * @param solution - The correct solution.
-   * @returns The Comparisons object.
+   * @returns The comparisons object.
    */
-  compareStrings(attempt: string, solution: string): Comparisons | void {
-    if (
-      attempt.length !== solution.length ||
-      typeof attempt !== 'string' ||
-      typeof solution !== 'string'
-    ) {
-      console.error('Attempt and solution lengths are different!');
-      return;
-    }
-
-    const comparisons: Comparisons = {
+  compareStrings(attempt: string, solution: string): Comparisons {
+    const comparisons = {
       directMatches: 0,
       indirectMatches: 0,
       incorrect: 0,
@@ -109,6 +98,36 @@ class GameManagementService {
     comparisons.won = comparisons.directMatches === attempt.length;
 
     return comparisons;
+  }
+
+  /**
+   * Parses a string representation of a random number sequence by removing newline characters
+   * and returning a string of concatenated numbers.
+   * @param randomNumberSequence - The string representation of the random number sequence.
+   * @returns A string with newline characters removed, containing concatenated numbers.
+   * @throws Throws an error if the input is not a string.
+   */
+  parseRandomRes(randomNumberSequence: string): string {
+    // Check if the input is a string
+    if (typeof randomNumberSequence !== 'string') {
+      throw new Error('Input is not a string');
+    }
+
+    // Trim the string, split by newline, and join elements without spaces or commas
+    const parsed = randomNumberSequence.trim().split('\n').join('');
+
+    return parsed;
+  }
+
+  /**
+   * Retrieves a random solution for the given difficulty.
+   * @param difficulty - The difficulty level of the game.
+   * @returns A promise resolving to the random solution.
+   */
+  async getRandomSolution(difficulty: string): Promise<string> {
+    const randomNumberSequence = await fetchRandomNumbers(difficulty);
+    const solution = this.parseRandomRes(randomNumberSequence);
+    return solution;
   }
 }
 
