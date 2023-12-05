@@ -91,7 +91,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
     try {
       // Make a POST request to the server to update the game with the player's guess
-      const response = await axios.post('http://localhost:8080/game/update', {
+      const response = await axios.post('http://localhost:8080/game/play', {
         userId,
         currentGuess,
         solution,

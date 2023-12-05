@@ -31,11 +31,11 @@ router.post(
  * Description: Endpoint to update the game state based on a submitted guess.
  */
 router.post(
-  '/update',
+  '/play',
   // Validate user submitted guess for appropriate formatting and game difficulty constraints
   validateSubmittedGuess,
   // Handle db transactions to update new user guess and corresponding game feedback
-  gameController.updateGame,
+  gameController.playGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.evaluatedSubmission);
   }

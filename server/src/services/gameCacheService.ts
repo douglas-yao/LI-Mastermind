@@ -1,6 +1,3 @@
-// gameCacheService.ts
-
-import { v4 as uuidv4 } from 'uuid';
 import { GameCache, Feedback } from '../types/types';
 import gameStartData from '../config/gameStart';
 
