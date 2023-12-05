@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
 import {
   GameBoardProps,
@@ -15,12 +15,27 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<FeedbackResponse[]>([]);
+  const [elapsedTotalTime, setElapsedTotalTime] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<IsGameOver>({
     status: false,
     message: '',
   });
   const [userId, setUserId] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timerInterval: NodeJS.Timeout;
+
+    if (isTimerRunning) {
+      timerInterval = setInterval(() => {
+        setElapsedTotalTime((prev) => prev + 1);
+      }, 1000);
+    }
+
+    // Clear the interval when the component unmounts or the game is over
+    return () => clearInterval(timerInterval);
+  }, [isTimerRunning]);
 
   /**
    * Initiates a new game by sending a POST request to the server with the provided user ID and difficulty level.
@@ -47,6 +62,10 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
       // Log the data received from the backend
       console.log('data from backend: ', response.data);
+
+      // Start the game timer
+      setElapsedTotalTime(0);
+      setIsTimerRunning(true);
 
       // Destructure the relevant data from the response
       const {
@@ -148,7 +167,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         <div className={`flex flex-col items-center p-4 `}>
           {guesses.map((guess, i) => (
             <div
-              className="flex flex-col gap-1 items-center border-b-2 p-4"
+              className="flex flex-col w-full gap-1 items-center border-b-2 p-4"
               key={i}
             >
               <span className="text-xl">{guess}</span>
@@ -158,6 +177,16 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         </div>
       );
     }
+  }
+
+  function renderTotalTime() {
+    const minutes = Math.floor(elapsedTotalTime / 60);
+    const seconds = elapsedTotalTime % 60;
+
+    const formattedTime =
+      minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+
+    return <div className="text-lg">Total Game Time: {formattedTime}</div>;
   }
 
   function renderGuessInput() {
@@ -225,6 +254,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       />
       {renderGameHeader()}
       {renderHistory()}
+      {renderTotalTime()}
       {isFetching ? <span>Loading...</span> : renderGuessInput()}
       {!feedback[feedback.length - 1]?.won && (
         <span className="text-slate">{isGameOver.message}</span>
