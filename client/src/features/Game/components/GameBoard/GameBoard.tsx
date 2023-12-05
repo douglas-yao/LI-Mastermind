@@ -170,7 +170,9 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
               value={currentGuess}
               // onChange={(e) => setCurrentGuess(e.target.value)}
               onChange={(e) =>
-                setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+                setCurrentGuess(
+                  e.target.value.replace(/\D/, '').slice(0, solution.length)
+                )
               }
             />
 
