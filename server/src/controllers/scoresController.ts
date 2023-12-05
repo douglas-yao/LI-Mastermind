@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import UserGameModel from '../models/userGameModel';
+import UserGameModel from '../models/User_GameModel';
 
 const userGameModel = new UserGameModel();
 
