@@ -4,9 +4,13 @@
   "description": "Welcome to LI-Mastermind, a numbers guessing Mastermind game!",
   "main": "index.js",
   "scripts": {
-    "dev": "(cd client && npm run dev) & (cd server && npm run dev)"
+    "dev": "(cd client && npm run dev) & (cd server && npm run dev)",
+    "ts-coverage": "typescript-coverage-report"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript-coverage-report": "^0.8.0"
+  }
 }
