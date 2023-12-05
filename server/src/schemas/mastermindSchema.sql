@@ -22,6 +22,6 @@ CREATE TABLE IF NOT EXISTS user_games (
   won BOOLEAN DEFAULT false,
   completed BOOLEAN NOT NULL DEFAULT false,
   difficulty VARCHAR(45) NOT NULL,
-  timeElapsed VARCHAR(45) DEFAULT NULL,
+  timeElapsed INT DEFAULT NULL,
   guessesTaken INT DEFAULT NULL
 );
