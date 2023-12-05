@@ -16,6 +16,7 @@ class GameCacheService {
    * @param difficultyLevel - The difficulty level of the game.
    * @param currentSolution - The solution to the game.
    * @param guessesRemaining - The number of guesses remaining.
+   * @param timerDuration - The number of seconds a user has to make a guess.
    * @returns The initialized game cache.
    */
   initializeGameCache(
@@ -23,7 +24,8 @@ class GameCacheService {
     gameId: string,
     difficultyLevel: string,
     currentSolution: string,
-    guessesRemaining: number
+    guessesRemaining: number,
+    timerDuration?: number
   ): GameCache {
     this.currentGameCache = {
       userId: userId,

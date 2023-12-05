@@ -36,6 +36,7 @@ export type GameCache = {
   isGameOver: IsGameOver;
   guessHistory: string[];
   feedbackHistory: Feedback[];
+  timerDuration?: number;
 };
 
 export type Score = {
@@ -56,6 +57,7 @@ export type DifficultySettings = {
 export type DifficultySetting = {
   startingGuesses: number;
   solutionLength: number;
+  timerDuration: number;
 };
 
 export type InitialGameData = {
