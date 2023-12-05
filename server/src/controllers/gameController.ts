@@ -61,13 +61,6 @@ const gameController = {
         gameCacheService.currentGameCache
       );
 
-      // Log start of game to the console
-      // Consider moving into its own middleware instead?
-      // gameLoggingService.logNewGameStart(
-      //   userId,
-      //   difficulty,
-      //   currentGameCache.guessesRemaining
-      // );
       console.log('generated solution: ', solution);
       // Send the game cache back to the client
       res.locals.newGameData = <GameCache>gameCacheService.currentGameCache;
@@ -112,21 +105,11 @@ const gameController = {
         gameCacheService.updateGameCacheOnCompletion(feedback);
       }
 
-      // Server logs to show game progress:
-      // Consider moving to its own middleware instead?
-      // gameLoggingService.logGameProgress(
-      //   currentGameCache,
-      //   currentGuess,
-      //   feedback
-      // );
-
       // Return data back to the client
-      res.locals.evaluatedSubmission = <UpdateGameControllerResponse>{
-        feedback: gameCacheService.currentGameCache.feedbackHistory,
-        updatedGuessesRemaining:
-          gameCacheService.currentGameCache.guessesRemaining,
-        isGameOver: gameCacheService.currentGameCache.isGameOver,
-        updatedGuessHistory: gameCacheService.currentGameCache.guessHistory,
+      res.locals.evaluatedGameData = {
+        currentGameCache: gameCacheService.currentGameCache,
+        currentGuess,
+        feedback,
       };
       return next();
     } catch (error) {

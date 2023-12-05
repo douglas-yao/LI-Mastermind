@@ -1,5 +1,6 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import gameController from '../controllers/gameController';
+import loggingController from '../controllers/loggingController';
 import validateSubmittedGuess from '../middleware/validateSubmittedGuess';
 import validateUserId from '../middleware/validateUser';
 
@@ -17,6 +18,8 @@ router.post(
   validateUserId,
   // Start game logic and db transactions
   gameController.startGame,
+  // Log start game information to the server console
+  loggingController.logStartGame,
   (req: Request, res: Response) => {
     // check for errors
     res.status(200).json(res.locals.newGameData);
@@ -36,8 +39,10 @@ router.post(
   validateSubmittedGuess,
   // Handle db transactions to update new user guess and corresponding game feedback
   gameController.playGame,
+  // Log play game progress to the server console
+  loggingController.logPlayGame,
   (req: Request, res: Response) => {
-    res.status(200).json(res.locals.evaluatedSubmission);
+    res.status(200).json(res.locals.evaluatedGameData);
   }
 );
 
