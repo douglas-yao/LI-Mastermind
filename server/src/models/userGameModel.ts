@@ -59,7 +59,7 @@ class UserGameModel {
         WHERE difficulty = '${difficulty}'
         AND completed = true
         AND timeElapsed IS NOT NULL
-        ORDER BY guessesTaken ASC, timeElapsed ASC
+        ORDER BY timeElapsed ASC, guessesTaken ASC
         LIMIT ${limit};
       `;
 
