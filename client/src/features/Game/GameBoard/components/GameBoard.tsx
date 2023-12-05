@@ -6,6 +6,7 @@ import {
   IsGameOver,
 } from '../../types/types';
 import difficultySettings from '../../config/difficultySettings';
+import Confetti from 'react-confetti';
 
 export default function GameBoard({ difficulty }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
@@ -212,6 +213,8 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
   return (
     <div className="flex flex-col items-center gap-5">
+      {/* {feedback[feedback.length - 1]?.response === 'won' && <Confetti />} */}
+      {feedback[feedback.length - 1]?.won === true && <Confetti />}
       {renderStartButton()}
       <input
         className="border border-slate-500 rounded-md px-2 py-1"
@@ -222,7 +225,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       />
       {renderGameHeader()}
       {renderHistory()}
-      {renderGuessInput()}
+      {isFetching ? <span>Loading...</span> : renderGuessInput()}
       {!feedback[feedback.length - 1]?.won && (
         <span className="text-slate">{isGameOver.message}</span>
       )}
