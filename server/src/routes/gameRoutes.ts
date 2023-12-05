@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import gameController from '../controllers/gameController';
 import loggingController from '../controllers/loggingController';
 import validateSubmittedGuess from '../middleware/validateSubmittedGuess';
-import validateUserId from '../middleware/validateUser';
+import validateUserId from '../middleware/validateStartGame';
 
 const router = express.Router();
 
@@ -15,13 +15,13 @@ const router = express.Router();
 router.post(
   '/start',
   // Validate player name string for format and to prevent injection attacks
+  // Returns error response to client if inputs are invalid
   validateUserId,
   // Start game logic and db transactions
   gameController.startGame,
   // Log start game information to the server console
   loggingController.logStartGame,
   (req: Request, res: Response) => {
-    // check for errors
     res.status(200).json(res.locals.newGameData);
   }
 );
@@ -35,7 +35,8 @@ router.post(
  */
 router.post(
   '/play',
-  // Validate user submitted guess for appropriate formatting and game difficulty constraints
+  // Validate user submitted guess for appropriate formatting and game rule constraints
+  // Returns error response to client if inputs are invalid
   validateSubmittedGuess,
   // Handle db transactions to update new user guess and corresponding game feedback
   gameController.playGame,

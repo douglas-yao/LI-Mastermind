@@ -20,11 +20,6 @@ const gameController = {
    * NOTE TO DEV: TYPE THE RESPONSE BODY <STARTGAMECONTROLLERRESPONSE>
    */
   startGame: async (req: Request, res: Response, next: NextFunction) => {
-    // if (!validationService.validateStartGame(req)) {
-    //   // respond with 404
-    //   res.status(404).json({error: ${error}})
-    // }
-
     const { userId, difficulty } = req.body as {
       userId: string;
       difficulty: string;
