@@ -15,12 +15,13 @@ import difficultySettings from '../config/difficultySettings';
 export default async function fetchRandomNumbers(
   difficultyLevel: string
 ): Promise<string> {
-  const solutionLength = difficultySettings[difficultyLevel].solutionLength;
+  const solutionLength =
+    difficultySettings[difficultyLevel].solutionLength.toString();
 
   // Construct the URL for fetching random numbers
   const apiUrl = new URL('https://www.random.org/integers/');
   // Length of sequence generated
-  apiUrl.searchParams.set('num', solutionLength.toString());
+  apiUrl.searchParams.set('num', solutionLength);
   // Min value inclusive
   apiUrl.searchParams.set('min', '0');
   // Max value inclusive

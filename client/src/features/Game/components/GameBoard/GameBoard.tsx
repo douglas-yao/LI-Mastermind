@@ -94,6 +94,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       const response = await axios.post('http://localhost:8080/game/play', {
         userId,
         currentGuess,
+        difficulty,
         solution,
       });
 
