@@ -1,7 +1,7 @@
 import { getRandomSolution, generateFeedback } from '../services/index';
 import difficultySettings from '../config/difficultySettings';
 import { v4 as uuidv4 } from 'uuid';
-import { DifficultySetting, InitialGameData } from '../types/types';
+import { DifficultySetting, InitialGameData, Feedback } from '../types/types';
 
 class GameManagementService {
   async getInitialGameData(difficulty: string): Promise<InitialGameData> {
@@ -11,6 +11,11 @@ class GameManagementService {
     const gameId = uuidv4();
 
     return { solution, currentDifficultySetting, gameId };
+  }
+
+  getFeedback(guess: string, solution: string): Feedback {
+    const feedback = generateFeedback(guess, solution);
+    return feedback;
   }
 }
 

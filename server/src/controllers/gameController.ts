@@ -27,13 +27,9 @@ const gameController = {
     };
 
     try {
-      // Get a randomly generated sequence
+      // Get a new randomized solution, the current difficulty's settings, and a randomized gameId
       const { solution, currentDifficultySetting, gameId } =
         await gameManagementService.getInitialGameData(difficulty);
-      // Fetch a random number sequence from the Random.org API
-
-      // Get the current difficulty settings for the user selected difficulty
-      // Set number of available guesses for the user
 
       // Instantiate game cache and db with starting data
       gameCacheService.initializeGameCache(
@@ -69,7 +65,7 @@ const gameController = {
     console.log('current guess: ', currentGuess);
     try {
       // Generate feedback based on user's provided guess
-      const feedback = generateFeedback(
+      const feedback = gameManagementService.getFeedback(
         currentGuess,
         gameCacheService.currentGameCache.currentSolution
       );
