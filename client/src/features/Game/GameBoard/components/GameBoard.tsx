@@ -5,12 +5,11 @@ import {
   FeedbackResponse,
   IsGameOver,
 } from '../../types/types';
-import difficultySettings from '../../../config/difficultySettings';
+import difficultySettings from '../../config/difficultySettings';
 
 export default function GameBoard({ difficulty }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
   const [solution, setSolution] = useState<string>('');
-  const [solutionLength, setSolutionLength] = useState<number>(4);
   const [currentGuess, setCurrentGuess] = useState<string>('');
   const [guesses, setGuesses] = useState<string[]>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
@@ -199,8 +198,8 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         </div>
         <p className="flex flex-col gap-1 items-center">
           <span>
-            Guess {solutionLength} numbers. Each number can be one of 8 numbers
-            from 0 to 7 (potential repeats).
+            Guess {difficultySettings[difficulty].solutionLength} numbers. Each
+            number can be one of 8 numbers from 0 to 7 (potential repeats).
           </span>
           <span>
             You have {difficultySettings[difficulty].startingGuesses} guesses to

@@ -30,3 +30,12 @@ export type Scores = {
   Normal: Score[];
   Hard: Score[];
 };
+
+export type DifficultySettings = {
+  [key: string]: DifficultySetting;
+};
+
+export type DifficultySetting = {
+  startingGuesses: number;
+  solutionLength: number;
+};
