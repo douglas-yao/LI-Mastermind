@@ -31,11 +31,19 @@ const validateCurrentGuess = (
   // Get the configured length for the difficulty
   const difficultyLength = difficultySettings[difficulty]?.solutionLength;
   console.log('difficulty: ', difficulty);
+
   // Check if the difficulty length is configured
   if (!difficultyLength) {
     return res.status(400).json({
       error:
         "Something went wrong behind the scenes... don't worry, you're still a Mastermind.",
+    });
+  }
+
+  // Check if the input is a number
+  if (typeof currentGuess === 'number') {
+    return res.status(400).json({
+      error: `Invalid guess. It contain only numbers.`,
     });
   }
 
