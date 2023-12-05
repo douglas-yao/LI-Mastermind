@@ -4,10 +4,11 @@ import {
   getRandomSolution,
   generateFeedback,
   gameDbService,
+  gameManagementService,
   GameCacheService,
 } from '../services/index';
 import { GameCache } from '../types/types';
-import difficultySettings from '../config/difficultySettings';
+import difficultySetting from '../config/difficultySettings';
 
 // Cache to store current game instance's data
 const gameCacheService = new GameCacheService();
@@ -26,29 +27,23 @@ const gameController = {
     };
 
     try {
-      // Game manager, game service, cache service, db services to wrap logic
-      // Make it very clear what this controller is doing and what its job is
-
+      // Get a randomly generated sequence
+      const { solution, currentDifficultySetting, gameId } =
+        await gameManagementService.getInitialGameData(difficulty);
       // Fetch a random number sequence from the Random.org API
-      const solution = await getRandomSolution(difficulty);
 
       // Get the current difficulty settings for the user selected difficulty
       // Set number of available guesses for the user
-      const currentDifficultySettings = difficultySettings[difficulty];
 
-      // Wrap into a game manager service:
-      const gameId = uuidv4();
-
-      // Instantiate game cache with starting data
+      // Instantiate game cache and db with starting data
       gameCacheService.initializeGameCache(
         userId,
         gameId,
         difficulty,
         solution,
-        currentDifficultySettings.startingGuesses
+        currentDifficultySetting.startingGuesses
       );
 
-      // Save the solution and remaining guesses to the database
       await gameDbService.createNewGameAndUser(
         userId,
         solution,

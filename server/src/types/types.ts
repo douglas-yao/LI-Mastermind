@@ -48,3 +48,17 @@ export type Scores = {
   Normal: number[];
   Hard: number[];
 };
+
+export type DifficultySettings = {
+  [key: string]: DifficultySetting;
+};
+
+export type DifficultySetting = {
+  startingGuesses: number;
+};
+
+export type InitialGameData = {
+  solution: string;
+  currentDifficultySetting: DifficultySetting;
+  gameId: string;
+};

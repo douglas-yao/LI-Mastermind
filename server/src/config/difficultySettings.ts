@@ -1,8 +1,4 @@
-type DifficultySettings = {
-  [key: string]: {
-    startingGuesses: number;
-  };
-};
+import { DifficultySettings } from '../types/types';
 
 const difficultySettings: DifficultySettings = {
   Easy: {
