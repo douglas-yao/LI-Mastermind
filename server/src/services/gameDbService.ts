@@ -87,8 +87,8 @@ class GameDbService {
         currentGameCache.gameId,
         userWonGame,
         currentGameCache.difficultyLevel,
-        currentGameCache.guessesRemaining,
-        currentGameCache.guessesTaken
+        currentGameCache.guessesTaken,
+        currentGameCache.totalElapsedGameTime
       );
     } catch (error) {
       console.error('Error updating usergames db: ', error);

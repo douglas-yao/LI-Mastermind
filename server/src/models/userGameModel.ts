@@ -23,8 +23,8 @@ class UserGameModel {
     gameId: string,
     won: boolean,
     difficultyLevel: string,
-    guessesRemaining: number,
-    guessesTaken: number
+    guessesTaken: number,
+    totalGameTime?: number
   ) {
     try {
       if (gameId === null) {
@@ -33,11 +33,17 @@ class UserGameModel {
 
       const query = `
         UPDATE user_games
-        SET completed = true, won = ?, difficulty = ?, guessesTaken = ?
+        SET completed = true, won = ?, difficulty = ?, guessesTaken = ?, timeElapsed = ?
         WHERE gameId = ?
       `;
 
-      const values = [won, difficultyLevel, guessesTaken, gameId];
+      const values = [
+        won,
+        difficultyLevel,
+        guessesTaken,
+        totalGameTime,
+        gameId,
+      ];
       const [result] = await pool.execute(query, values);
       return result;
     } catch (error) {

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   gameDbService,
   gameManagementService,
+  timerService,
   GameCacheService,
 } from '../services/index';
 import { GameCache } from '../types/types';
@@ -42,7 +43,9 @@ const gameController = {
         gameCacheService.currentGameCache
       );
 
-      console.log('generated solution: ', solution);
+      // Start game timer
+      timerService.startGameTimer();
+
       // Send the game cache back to the client
       res.locals.newGameData = <GameCache>gameCacheService.currentGameCache;
       return next();
@@ -68,7 +71,13 @@ const gameController = {
       );
 
       // Update the db and game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
-      gameCacheService.updateGameCacheOnAttempt(currentGuess, feedback);
+      // Get elapsed game time
+      const elapsedSeconds = timerService.getElapsedGameTime();
+      gameCacheService.updateGameCacheOnAttempt(
+        currentGuess,
+        feedback,
+        elapsedSeconds
+      );
       await gameDbService.updatePlayGame(
         currentGuess,
         feedback.response,
@@ -80,11 +89,11 @@ const gameController = {
         gameCacheService.currentGameCache.guessesRemaining === 0 ||
         feedback.won === true
       ) {
+        gameCacheService.updateGameCacheOnCompletion(feedback);
         gameDbService.updateGameOver(
           feedback.won,
           gameCacheService.currentGameCache
         );
-        gameCacheService.updateGameCacheOnCompletion(feedback);
       }
 
       // Return data back to the client

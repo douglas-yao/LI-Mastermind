@@ -16,7 +16,8 @@ class GameCacheService {
    * @param difficultyLevel - The difficulty level of the game.
    * @param currentSolution - The solution to the game.
    * @param guessesRemaining - The number of guesses remaining.
-   * @param timerDuration - The number of seconds a user has to make a guess.
+   * @param roundTimerDuration - The number of seconds a user has to make a guess.
+   * @param totalElapsedGameTime - The number of seconds the user took to complete the game.
    * @returns The initialized game cache.
    */
   initializeGameCache(
@@ -25,7 +26,8 @@ class GameCacheService {
     difficultyLevel: string,
     currentSolution: string,
     guessesRemaining: number,
-    timerDuration?: number
+    roundTimerDuration?: number,
+    totalElapsedGameTime?: number
   ): GameCache {
     this.currentGameCache = {
       userId: userId,
@@ -53,7 +55,8 @@ class GameCacheService {
    */
   updateGameCacheOnAttempt(
     currentGuess: string,
-    feedback: Feedback
+    feedback: Feedback,
+    elapsedTime: number
   ): GameCache | null {
     if (!this.currentGameCache) {
       return null;
@@ -65,6 +68,7 @@ class GameCacheService {
       feedbackHistory: [...this.currentGameCache.feedbackHistory, feedback],
       guessesTaken: this.currentGameCache.guessesTaken + 1,
       guessesRemaining: this.currentGameCache.guessesRemaining - 1,
+      totalElapsedGameTime: elapsedTime,
     };
 
     this.currentGameCache = updatedGameCache;
@@ -76,16 +80,14 @@ class GameCacheService {
    * @param feedback - The final feedback for the completed game.
    */
   updateGameCacheOnCompletion(feedback: Feedback): void {
-    if (this.currentGameCache.guessesRemaining === 0 || feedback.won === true) {
-      this.currentGameCache.isGameOver = {
-        status: true,
-        message: `${
-          feedback.won
-            ? 'You are a Mastermind!'
-            : 'With each loss, you grow closer to becoming a Mastermind.'
-        }`,
-      };
-    }
+    this.currentGameCache.isGameOver = {
+      status: true,
+      message: `${
+        feedback.won
+          ? 'You are a Mastermind!'
+          : 'With each loss, you grow closer to becoming a Mastermind.'
+      }`,
+    };
   }
 
   /**

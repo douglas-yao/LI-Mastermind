@@ -37,6 +37,7 @@ export type GameCache = {
   guessHistory: string[];
   feedbackHistory: Feedback[];
   timerDuration?: number;
+  totalElapsedGameTime?: number;
 };
 
 export type Score = {
