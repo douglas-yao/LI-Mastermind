@@ -253,10 +253,13 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       />
       {renderGameHeader()}
       {renderHistory()}
-      {renderTotalTime()}
+      {isGameOver.status === false && renderTotalTime()}
       {isFetching ? <span>Loading...</span> : renderGuessInput()}
       {!feedback[feedback.length - 1]?.won && (
-        <span className="text-slate">{isGameOver.message}</span>
+        <div className="flex flex-col items-center gap-2">
+          <span>Out of guesses! The solution is {solution}</span>
+          <span className="text-slate">{isGameOver.message}</span>
+        </div>
       )}
     </div>
   );
