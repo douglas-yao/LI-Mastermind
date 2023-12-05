@@ -1,9 +1,23 @@
 import { GameCache, Feedback } from '../types/types';
 import gameStartData from '../config/gameStart';
 
+/**
+ * GameCacheService manages the state of the current game, including user interactions
+ * and updates to the game cache.
+ */
 class GameCacheService {
+  /** The current state of the game cache. */
   currentGameCache: GameCache = gameStartData;
 
+  /**
+   * Initializes the game cache with the provided data.
+   * @param userId - The ID of the user playing the game.
+   * @param gameId - The ID of the game instance.
+   * @param difficultyLevel - The difficulty level of the game.
+   * @param currentSolution - The solution to the game.
+   * @param guessesRemaining - The number of guesses remaining.
+   * @returns The initialized game cache.
+   */
   initializeGameCache(
     userId: string,
     gameId: string,
@@ -29,6 +43,12 @@ class GameCacheService {
     return this.currentGameCache;
   }
 
+  /**
+   * Updates the game cache based on a user's attempt.
+   * @param currentGuess - The user's current guess.
+   * @param feedback - The feedback for the current guess.
+   * @returns The updated game cache, or null if the current game cache is not available.
+   */
   updateGameCacheOnAttempt(
     currentGuess: string,
     feedback: Feedback
@@ -49,6 +69,10 @@ class GameCacheService {
     return updatedGameCache;
   }
 
+  /**
+   * Updates the game cache when the game is completed.
+   * @param feedback - The final feedback for the completed game.
+   */
   updateGameCacheOnCompletion(feedback: Feedback): void {
     if (this.currentGameCache.guessesRemaining === 0 || feedback.won === true) {
       this.currentGameCache.isGameOver = {
@@ -62,6 +86,10 @@ class GameCacheService {
     }
   }
 
+  /**
+   * Retrieves the current game cache.
+   * @returns The current game cache, or null if it's not available.
+   */
   getCurrentGameCache(): GameCache | null {
     return this.currentGameCache;
   }

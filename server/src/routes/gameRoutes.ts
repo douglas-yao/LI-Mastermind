@@ -14,7 +14,7 @@ const router = express.Router();
 router.post(
   '/start',
   // Validate player name string for format and to prevent injection attacks
-  // Returns error response to client if inputs are invalid
+  // If inputs are invalid, route short-circuits and an error response is sent to client
   validateStartGame,
   // Start game logic and data storage transactions
   gameController.startGame,
@@ -35,7 +35,7 @@ router.post(
 router.post(
   '/play',
   // Validate user submitted guess for appropriate formatting and game rule constraints
-  // Returns error response to client if inputs are invalid
+  // If inputs are invalid, route is short-circuited and detailed error response sent to client
   validateCurrentGuess,
   // Handle game logic and data storage transactions
   gameController.playGame,
