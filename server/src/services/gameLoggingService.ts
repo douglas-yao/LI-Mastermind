@@ -1,6 +1,15 @@
 import { GameCache, FeedbackResponse } from '../types/types';
 
+/**
+ * GameLoggingService handles logging game-related information to the console.
+ */
 class GameLoggingService {
+  /**
+   * Logs the progress of the game, including guesses, feedback, and game outcome.
+   * @param gameCache - The current state of the game cache.
+   * @param currentGuess - The user's current guess.
+   * @param currentFeedback - The feedback for the current guess.
+   */
   logGameProgress(
     gameCache: GameCache,
     currentGuess: string,
@@ -30,6 +39,12 @@ class GameLoggingService {
     );
   }
 
+  /**
+   * Logs information about the start of a new game.
+   * @param userId - The ID of the user starting the game.
+   * @param difficulty - The difficulty level of the game.
+   * @param totalGuesses - The total number of guesses allowed in the game.
+   */
   logNewGameStart(
     userId: string,
     difficulty: string,

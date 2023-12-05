@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  getRandomSolution,
-  generateFeedback,
   gameDbService,
+  gameManagementService,
+  timerService,
   GameCacheService,
 } from '../services/index';
 import { GameCache } from '../types/types';
-import difficultySettings from '../config/difficultySettings';
 
 // Cache to store current game instance's data
 const gameCacheService = new GameCacheService();
@@ -26,36 +24,28 @@ const gameController = {
     };
 
     try {
-      // Game manager, game service, cache service, db services to wrap logic
-      // Make it very clear what this controller is doing and what its job is
+      // Get a new randomized solution, the current difficulty's settings, and a randomized gameId
+      const { solution, currentDifficultySetting, gameId } =
+        await gameManagementService.getInitialGameData(difficulty);
 
-      // Fetch a random number sequence from the Random.org API
-      const solution = await getRandomSolution(difficulty);
-
-      // Get the current difficulty settings for the user selected difficulty
-      // Set number of available guesses for the user
-      const currentDifficultySettings = difficultySettings[difficulty];
-
-      // Wrap into a game manager service:
-      const gameId = uuidv4();
-
-      // Instantiate game cache with starting data
+      // Instantiate game cache and db with starting data
       gameCacheService.initializeGameCache(
         userId,
         gameId,
         difficulty,
         solution,
-        currentDifficultySettings.startingGuesses
+        currentDifficultySetting.startingGuesses
       );
 
-      // Save the solution and remaining guesses to the database
       await gameDbService.createNewGameAndUser(
         userId,
         solution,
         gameCacheService.currentGameCache
       );
 
-      console.log('generated solution: ', solution);
+      // Start game timer
+      timerService.startGameTimer();
+
       // Send the game cache back to the client
       res.locals.newGameData = <GameCache>gameCacheService.currentGameCache;
       return next();
@@ -72,15 +62,22 @@ const gameController = {
   playGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
     console.log('current guess: ', currentGuess);
+
     try {
       // Generate feedback based on user's provided guess
-      const feedback = generateFeedback(
+      const feedback = gameManagementService.getFeedback(
         currentGuess,
         gameCacheService.currentGameCache.currentSolution
       );
 
       // Update the db and game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
-      gameCacheService.updateGameCacheOnAttempt(currentGuess, feedback);
+      // Get elapsed game time
+      const elapsedSeconds = timerService.getElapsedGameTime();
+      gameCacheService.updateGameCacheOnAttempt(
+        currentGuess,
+        feedback,
+        elapsedSeconds
+      );
       await gameDbService.updatePlayGame(
         currentGuess,
         feedback.response,
@@ -92,11 +89,11 @@ const gameController = {
         gameCacheService.currentGameCache.guessesRemaining === 0 ||
         feedback.won === true
       ) {
+        gameCacheService.updateGameCacheOnCompletion(feedback);
         gameDbService.updateGameOver(
           feedback.won,
           gameCacheService.currentGameCache
         );
-        gameCacheService.updateGameCacheOnCompletion(feedback);
       }
 
       // Return data back to the client

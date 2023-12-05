@@ -1,26 +1,41 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
 import {
   GameBoardProps,
   FeedbackResponse,
   IsGameOver,
 } from '../../types/types';
-import difficultySettings from '../../../config/difficultySettings';
+import difficultySettings from '../../config/difficultySettings';
+import Confetti from 'react-confetti';
 
 export default function GameBoard({ difficulty }: GameBoardProps) {
   // Consider consolidating some state into one big ol' stateful object that can simply be set to the backend's DTO
   const [solution, setSolution] = useState<string>('');
-  const [solutionLength, setSolutionLength] = useState<number>(4);
   const [currentGuess, setCurrentGuess] = useState<string>('');
   const [guesses, setGuesses] = useState<string[]>([]);
   const [guessesRemaining, setGuessesRemaining] = useState<number>(10);
   const [feedback, setFeedback] = useState<FeedbackResponse[]>([]);
+  const [elapsedTotalTime, setElapsedTotalTime] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<IsGameOver>({
     status: false,
     message: '',
   });
   const [userId, setUserId] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  useEffect(() => {
+    let timerInterval: NodeJS.Timeout;
+
+    if (isTimerRunning) {
+      timerInterval = setInterval(() => {
+        setElapsedTotalTime((prev) => prev + 1);
+      }, 1000);
+    }
+
+    // Clear the interval when the component unmounts or the game is over
+    return () => clearInterval(timerInterval);
+  }, [isTimerRunning]);
 
   /**
    * Initiates a new game by sending a POST request to the server with the provided user ID and difficulty level.
@@ -47,6 +62,10 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
       // Log the data received from the backend
       console.log('data from backend: ', response.data);
+
+      // Start the game timer
+      setElapsedTotalTime(0);
+      setIsTimerRunning(true);
 
       // Destructure the relevant data from the response
       const {
@@ -94,6 +113,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       const response = await axios.post('http://localhost:8080/game/play', {
         userId,
         currentGuess,
+        difficulty,
         solution,
       });
 
@@ -147,7 +167,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         <div className={`flex flex-col items-center p-4 `}>
           {guesses.map((guess, i) => (
             <div
-              className="flex flex-col gap-1 items-center border-b-2 p-4"
+              className="flex flex-col w-full gap-1 items-center border-b-2 p-4"
               key={i}
             >
               <span className="text-xl">{guess}</span>
@@ -157,6 +177,16 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         </div>
       );
     }
+  }
+
+  function renderTotalTime() {
+    const minutes = Math.floor(elapsedTotalTime / 60);
+    const seconds = elapsedTotalTime % 60;
+
+    const formattedTime =
+      minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+
+    return <div className="text-lg">Total Game Time: {formattedTime}</div>;
   }
 
   function renderGuessInput() {
@@ -170,7 +200,9 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
               value={currentGuess}
               // onChange={(e) => setCurrentGuess(e.target.value)}
               onChange={(e) =>
-                setCurrentGuess(e.target.value.replace(/\D/, '').slice(0, 4))
+                setCurrentGuess(
+                  e.target.value.replace(/\D/, '').slice(0, solution.length)
+                )
               }
             />
 
@@ -196,8 +228,8 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         </div>
         <p className="flex flex-col gap-1 items-center">
           <span>
-            Guess {solutionLength} numbers. Each number can be one of 8 numbers
-            from 0 to 7 (potential repeats).
+            Guess {difficultySettings[difficulty].solutionLength} numbers. Each
+            number can be one of 8 numbers from 0 to 7 (potential repeats).
           </span>
           <span>
             You have {difficultySettings[difficulty].startingGuesses} guesses to
@@ -210,6 +242,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
 
   return (
     <div className="flex flex-col items-center gap-5">
+      {feedback[feedback.length - 1]?.won === true && <Confetti />}
       {renderStartButton()}
       <input
         className="border border-slate-500 rounded-md px-2 py-1"
@@ -220,7 +253,8 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
       />
       {renderGameHeader()}
       {renderHistory()}
-      {renderGuessInput()}
+      {renderTotalTime()}
+      {isFetching ? <span>Loading...</span> : renderGuessInput()}
       {!feedback[feedback.length - 1]?.won && (
         <span className="text-slate">{isGameOver.message}</span>
       )}

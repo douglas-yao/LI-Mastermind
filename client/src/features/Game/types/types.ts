@@ -23,10 +23,21 @@ export type Difficulty = {
 export type Score = {
   userId: string;
   guessesTaken: number;
+  timeElapsed: number;
 };
 
 export type Scores = {
   Easy: Score[];
   Normal: Score[];
   Hard: Score[];
+};
+
+export type DifficultySettings = {
+  [key: string]: DifficultySetting;
+};
+
+export type DifficultySetting = {
+  startingGuesses: number;
+  solutionLength: number;
+  timerDuration: number;
 };

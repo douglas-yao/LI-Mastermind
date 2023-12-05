@@ -1,7 +1,7 @@
 import './App.css';
 import { useState } from 'react';
-import GameBoard from './features/Game/components/GameBoard/GameBoard';
-import Scoreboard from './features/Game/components/Scoreboard/Scoreboard';
+import GameBoard from './features/Game/GameBoard/components/GameBoard';
+import Scoreboard from './features/Game/Scoreboard/components/Scoreboard';
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -10,7 +10,6 @@ function App() {
 
   function toggleGame() {
     setGameStarted((prevGameStarted) => !prevGameStarted);
-
   }
 
   function renderHomeScreen() {
