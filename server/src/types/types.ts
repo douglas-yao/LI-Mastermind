@@ -55,6 +55,7 @@ export type DifficultySettings = {
 
 export type DifficultySetting = {
   startingGuesses: number;
+  solutionLength: number;
 };
 
 export type InitialGameData = {
