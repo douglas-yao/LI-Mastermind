@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { gameLoggingService } from '../services';
 
-const loggingController = {
+const logger = {
   logStartGame: (req: Request, res: Response, next: NextFunction) => {
     const { userId, difficulty, guessesRemaining } = res.locals.newGameData;
 
@@ -26,4 +26,4 @@ const loggingController = {
   },
 };
 
-export default loggingController;
+export default logger;

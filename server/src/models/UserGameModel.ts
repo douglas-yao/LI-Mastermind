@@ -1,4 +1,4 @@
-import pool from '../config/dbConnect';
+import pool from '../utils/dbConnect';
 
 class UserGameModel {
   async createNewUserGame(

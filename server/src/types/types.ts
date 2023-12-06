@@ -1,6 +1,6 @@
 export type Comparisons = {
   directMatches: number;
-  indirectMatches: number;
+  overallMatches: number;
   incorrect: number;
   won: boolean;
 };

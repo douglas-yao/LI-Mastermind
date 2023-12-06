@@ -50,7 +50,7 @@ class GameManagementService {
     } else if (comparisons.directMatches === solutionLength) {
       feedback.response = 'You are a Mastermind!';
     } else {
-      feedback.response = `${comparisons.indirectMatches} correct number and ${comparisons.directMatches} correct location`;
+      feedback.response = `${comparisons.overallMatches} correct number and ${comparisons.directMatches} correct location`;
     }
 
     // Set the 'won' property based on comparisons
@@ -68,7 +68,7 @@ class GameManagementService {
   compareStrings(attempt: string, solution: string): Comparisons {
     const comparisons = {
       directMatches: 0,
-      indirectMatches: 0,
+      overallMatches: 0,
       incorrect: 0,
       won: false,
     };
@@ -81,7 +81,7 @@ class GameManagementService {
     for (let i = 0; i < attempt.length; i++) {
       if (attempt[i] === solution[i]) {
         comparisons.directMatches++;
-        comparisons.indirectMatches++;
+        comparisons.overallMatches++;
       } else {
         attemptLeftover.push(attempt[i]);
         solutionLeftoverHash[solution[i]] =
@@ -91,7 +91,7 @@ class GameManagementService {
 
     for (let i = 0; i < attemptLeftover.length; i++) {
       if (solutionLeftoverHash[attemptLeftover[i]] > 0) {
-        comparisons.indirectMatches++;
+        comparisons.overallMatches++;
         solutionLeftoverHash[attemptLeftover[i]]--;
       } else {
         comparisons.incorrect++;
@@ -99,7 +99,7 @@ class GameManagementService {
     }
 
     comparisons.won = comparisons.directMatches === attempt.length;
-
+    console.log('comparisons: ', comparisons);
     return comparisons;
   }
 

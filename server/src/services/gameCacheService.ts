@@ -97,6 +97,10 @@ class GameCacheService {
   getCurrentGameCache(): GameCache | null {
     return this.currentGameCache;
   }
+
+  reset(): void {
+    this.currentGameCache = gameStartData;
+  }
 }
 
 export default GameCacheService;
