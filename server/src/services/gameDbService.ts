@@ -44,8 +44,6 @@ class GameDbService {
         currentGameCache.gameId,
         currentGameCache.difficultyLevel
       );
-
-      console.log('New game and user game created successfully');
     } catch (error) {
       console.error('Error creating new game and user game:', error);
     }
