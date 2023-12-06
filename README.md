@@ -2,7 +2,7 @@
 
 Welcome to LI-Mastermind, a numbers guessing Mastermind game!
 
-## Instructions
+## Setting Up Your Environment
 
 To get started, follow these steps to set up your dev environment:
 
@@ -81,49 +81,52 @@ _Must have MySQL Client installed and running (also helps to have MySQL Workbenc
 
   If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `serverDbInit.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
 
-5. **Run Client and Server:**
+### Run Client and Server:
 
-   - For all systems:
+- For all systems, make sure you're in the root `LI-Mastermind` directory, and run:
 
-     ```bash
-     cd ..
-     npm run dev
-     ```
+  ```bash
+  npm run dev
+  ```
 
-     The script will run the necessary commands to start both the client and server.
+  The script will run the necessary commands to start both the client and server.
 
-6. **Interacting with the Game:**
+- Another option is to run the client and server separately by running `npm run dev` in both the client and server directories.
 
-   - Open your web browser and go to [localhost:3000](http://localhost:3000) to start playing the game.
+### Interacting with the Game
 
-     - Note: The localhost address may vary if port 3000 is already in use. Please keep an eye on the terminal output for the final port used by the client.
+- Open your web browser and go to [localhost:3000](http://localhost:3000) to start playing the game.
 
-   - Playing the game:
-     - On the home screen:
-       - Select which difficulty you would like to use. The difficulty selections of 'Easy', 'Normal', and 'Hard' set the length of the random solution to 3, 4, or 5 respectively.
-       - If no games have been completed, or if playing on the 'cacheOnly' branch, the scoreboard should only render 'No scores to display'.
-         - Otherwise, a table will display player names, the time taken to finish the game, and the total number of guesses taken. Use the arrows to navigate between difficulty scoreboards.
-       - Click the 'Play' button to go to the game component.
-     - In the game component:
-       - Enter a player name, or leave it blank (it will default to 'Anonymous')
-       - You can view the current game's parameters under the 'Player' and 'Current difficulty' displays.
-       - Click the 'New Game' button to start the game:
-         - The game timer will start.
-         - You'll see a new input field rendered to the screen, under the game timer. Please enter your guess here, then click the 'Submit' button or press 'Enter'.
-           - If the guess is invalid, you should be prompted with a message reminding you of the game parameters.
-           - If the guess is valid for the current game parameters:
-             - The submitted guess and its corresponding feedback should render to the screen.
-             - The 'Guesses Remaining' should decrement by one.
-           - If the correct answer is submitted:
-             - The submission should render to the screen normally, with the feedback: 'You are a Mastermind!'
-             - Confetti!
-           - If out of guesses:
-             - The correct answer should render to the screen, along with an encouraging message.
-       - The timer should disappear when the game is over.
-       - Click the 'New Game' button at any time to instantly start another game, under the same difficulty.
-       - Click the 'Home' button to return to home component, where you can re-select difficulty and view the scoreboard.
+  - Note: The localhost address may vary if port 3000 is already in use. Please keep an eye on the terminal output for the final port used by the client.
 
-##
+- Playing the game:
+  - On the home screen:
+    - Select which difficulty you would like to use. The difficulty selections of 'Easy', 'Normal', and 'Hard' set the length of the random solution to 3, 4, or 5 respectively.
+    - If no games have been completed, or if playing on the 'cacheOnly' branch, the scoreboard should only render 'No scores to display'.
+      - Otherwise, a table will display player names, the time taken to finish the game, and the total number of guesses taken. Use the arrows to navigate between difficulty scoreboards.
+    - Click the 'Play' button to go to the game component.
+  - In the game component:
+    - Enter a player name, or leave it blank (it will default to 'Anonymous')
+    - You can view the current game's parameters under the 'Player' and 'Current difficulty' displays.
+    - Click the 'New Game' button to start the game:
+      - The game timer will start.
+      - You'll see a new input field rendered to the screen, under the game timer. Please enter your guess here, then click the 'Submit' button or press 'Enter'.
+        - If the guess is invalid, you should be prompted with a message reminding you of the game parameters.
+        - If the guess is valid for the current game parameters:
+          - The submitted guess and its corresponding feedback should render to the screen.
+          - The 'Guesses Remaining' should decrement by one.
+        - If the correct answer is submitted:
+          - The submission should render to the screen normally, with the feedback: 'You are a Mastermind!'
+          - Confetti!
+        - If out of guesses:
+          - The correct answer should render to the screen, along with an encouraging message.
+    - The timer should disappear when the game is over.
+    - Click the 'New Game' button at any time to instantly start another game, under the same difficulty.
+    - Click the 'Home' button to return to home component, where you can re-select difficulty and view the scoreboard.
+
+## Code Structure
+
+This 
 
 ## Contributing
 
