@@ -3,6 +3,7 @@ import createServer from '../../../utils/createServer';
 
 const app = createServer();
 
+// Mock the DB instead - currently pushing actual data to the db!
 describe('Game API', () => {
   describe('POST /start', () => {
     it('should start a new game and return 200 with game data', async () => {
@@ -50,9 +51,5 @@ describe('Game API', () => {
     expect(response.status).toBe(400);
   });
 
-  beforeAll(async () => {
-
-  });
-
-
+  beforeAll(async () => {});
 });
