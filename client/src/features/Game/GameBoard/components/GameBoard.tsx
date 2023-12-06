@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 import {
   GameBoardProps,
   FeedbackResponse,
@@ -22,7 +22,6 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
     message: '',
   });
   const [userId, setUserId] = useState<string>('');
-  const [isTimerVisible, setIsTimeVisible] = useState(true);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
@@ -250,7 +249,9 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
         placeholder="Enter player name"
-        onKeyDown={(e) => (e.key === 'Enter' ? e.target.blur() : null)}
+        onKeyDown={(e) =>
+          e.key === 'Enter' ? (e.target as HTMLInputElement).blur() : null
+        }
       />
       {renderGameHeader()}
       {renderHistory()}

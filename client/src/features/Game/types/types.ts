@@ -2,7 +2,6 @@ export type Guesses = string[];
 
 export type GameBoardProps = {
   difficulty: string;
-  playerName: string;
 };
 
 export type FeedbackResponse = {
