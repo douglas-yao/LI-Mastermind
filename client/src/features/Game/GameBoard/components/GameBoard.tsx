@@ -22,6 +22,7 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
     message: '',
   });
   const [userId, setUserId] = useState<string>('');
+  const [isTimerVisible, setIsTimeVisible] = useState(true);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
