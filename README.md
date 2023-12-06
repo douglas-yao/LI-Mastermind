@@ -114,6 +114,7 @@ To get started, follow these steps to set up your dev environment:
              - Confetti!
            - If out of guesses:
              - The correct answer should render to the screen, along with an encouraging message.
+       - The timer should disappear when the game is over.
        - Click the 'New Game' button at any time to instantly start another game, under the same difficulty.
        - Click the 'Home' button to return to home component, where you can re-select difficulty and view the scoreboard.
 
