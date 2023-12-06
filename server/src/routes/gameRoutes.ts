@@ -19,7 +19,7 @@ router.post(
   // Start game logic and data storage transactions
   gameController.startGame,
   // Log start game information to the server console
-  loggingController.logStartGame,
+  // loggingController.logStartGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.newGameData);
   }
@@ -40,7 +40,7 @@ router.post(
   // Handle game logic and data storage transactions
   gameController.playGame,
   // Log play game progress to the server console
-  loggingController.logPlayGame,
+  // loggingController.logPlayGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.evaluatedGameData);
   }
