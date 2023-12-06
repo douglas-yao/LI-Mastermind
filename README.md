@@ -37,44 +37,49 @@ To get started, follow these steps to set up your dev environment:
 
 **To skip use of a database, checkout to branch `cacheOnly` and skip steps 3 and 4**
 
+_Must have MySQL Client installed and running (also helps to have MySQL Workbench)!_
+
 3. **Create a `.env` file:**
 
    - Create a `.env` file in the root directory of the `server` folder.
 
    - Open the `.env` file in a text editor.
 
-   - Add the following lines, replacing `<your-db-user>` and `<your-db-password>` with your actual MySQL database username and password:
+   - Add the following lines, replacing `<your-db-user>`, `<your-db-password>`, and, optionally, `<your-port-number>` with your actual MySQL database username, password, and port number:
+
+     - _Port number defaults to 3306 if not supplied_
 
      ```env
      DB_USER=<your-db-user>
      DB_PASSWORD=<your-db-password>
+     DB_PORT=<your-port-number> #OPTIONAL, DEFAULTS TO 3306
      ```
 
 4. **Run Database Setup:**
 
-   - While in the server directory, initialize the database. Ensure you have MySQL installed and running on your local machine:
+- While in the server directory, initialize the database.
 
-   - For Unix-like systems (Linux or macOS):
+- For Unix-like systems (Linux or macOS):
 
-     ```bash
-     sh scripts/serverDbInit.sh
-     ```
+  ```bash
+  sh scripts/serverDbInit.sh
+  ```
 
-     If you encounter a permission error, run the following command:
+  If you encounter a permission error, run the following command:
 
-     ```bash
-     chmod +x scripts/serverDbInit.sh
-     ```
+  ```bash
+  chmod +x scripts/serverDbInit.sh
+  ```
 
-     Follow the prompts to enter your MySQL username and password. Ensure you have MySQL installed and running on your local machine. The script will create the necessary database and tables.
+  Follow the prompts to enter your MySQL username and password. Ensure you have MySQL installed and running on your local machine. The script will create the necessary database and tables.
 
-   - For Windows:
+- For Windows:
 
-     ```batch
-     serverDbInit.bat
-     ```
+  ```batch
+  serverDbInit.bat
+  ```
 
-     If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `serverDbInit.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
+  If you encounter a permission error, you might need to run the script with administrative privileges. Right-click on `serverDbInit.bat` and choose "Run as administrator." Follow the prompts to enter your MySQL username and password. The script will create the necessary database and tables.
 
 5. **Run Client and Server:**
 
