@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import gameController from '../controllers/gameController';
-import loggingController from '../controllers/loggingController';
+import logger from '../middleware/logger';
 import { validateStartGame, validateCurrentGuess } from '../middleware/index';
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router.post(
   // Start game logic and data storage transactions
   gameController.startGame,
   // Log start game information to the server console
-  // loggingController.logStartGame,
+  logger.logStartGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.newGameData);
   }
@@ -40,7 +40,7 @@ router.post(
   // Handle game logic and data storage transactions
   gameController.playGame,
   // Log play game progress to the server console
-  // loggingController.logPlayGame,
+  logger.logPlayGame,
   (req: Request, res: Response) => {
     res.status(200).json(res.locals.evaluatedGameData);
   }
