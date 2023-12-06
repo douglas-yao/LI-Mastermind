@@ -9,15 +9,20 @@ export default function Scoreboard() {
   // State for the selected difficulty index and the fetched scores
   const [difficultyIndex, setDifficultyIndex] = useState<number>(1); // Start with 'Normal'
   const [scores, setScores] = useState<Score[]>([]);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // Effect to fetch scores whenever the difficulty index changes
   useEffect(() => {
+    // When the difficulty index changes, fetch scores
     getTopScores(difficulties[difficultyIndex]);
   }, [difficultyIndex]);
 
   // Function to fetch top scores for a specific difficulty
   async function getTopScores(selectedDifficulty: string) {
     try {
+      // Set isFetching to true while fetching
+      setIsFetching(true);
+
       // Fetch scores from the server
       const response = await axios.post(`http://localhost:8080/scores/`, {
         difficulty: selectedDifficulty,
@@ -25,8 +30,14 @@ export default function Scoreboard() {
       console.log(response.data);
       // Update the scores state with the fetched data
       setScores(response.data);
+
+      // Set isFetching to false after fetching
+      setIsFetching(false);
     } catch (error) {
       console.error('Error fetching top scores:', error);
+
+      // Set isFetching to false in case of an error
+      setIsFetching(false);
     }
   }
 
@@ -89,13 +100,13 @@ export default function Scoreboard() {
 
   // Render a scoreboard based on stored values in state
   function renderScoreBoard() {
-    return !scores.length ? (
-      <div className="text-center">
-        <h1>No scores to display</h1>
-      </div>
-    ) : (
-      <div className="max-w-screen-md mx-auto p-4">
-        {scores && difficulties[difficultyIndex] ? (
+    return (
+      <div className="max-w-screen-md mx-auto p-4 text-center">
+        {isFetching ? (
+          <p>Loading...</p>
+        ) : !scores.length ? (
+          <p className="text-center">No scores to display</p>
+        ) : (
           <table className="min-w-full border border-collapse border-gray-300">
             <thead>
               <tr className="bg-gray-200">
@@ -116,10 +127,6 @@ export default function Scoreboard() {
               ))}
             </tbody>
           </table>
-        ) : (
-          <p className="text-red-500">
-            No scores available for {difficulties[difficultyIndex]} difficulty.
-          </p>
         )}
       </div>
     );
