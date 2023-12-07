@@ -31,12 +31,12 @@ class GameDbService {
   ) {
     try {
       // Create a new game instance
-      await this.gameModel.createNewGameInstance(
-        solution,
-        currentGameCache.guessesRemaining,
-        currentGameCache.gameId,
-        currentGameCache.difficultyLevel
-      );
+      // await this.gameModel.createNewGameInstance(
+      //   solution,
+      //   currentGameCache.guessesRemaining,
+      //   currentGameCache.gameId,
+      //   currentGameCache.difficultyLevel
+      // );
 
       // Create a new user game
       await this.userGameModel.createNewUserGame(
@@ -45,7 +45,7 @@ class GameDbService {
         currentGameCache.difficultyLevel
       );
     } catch (error) {
-      console.error('Error creating new game and user game:', error);
+      console.error('Error creating new game:', error);
     }
   }
 
@@ -60,18 +60,18 @@ class GameDbService {
     feedbackResponse: string,
     currentGameCache: GameCache
   ) {
-    try {
-      await this.gameModel.updateGameInstance(
-        currentGuess,
-        feedbackResponse,
-        currentGameCache.gameId,
-        currentGameCache.currentSolution,
-        currentGameCache.guessesRemaining,
-        currentGameCache.difficultyLevel
-      );
-    } catch (error) {
-      console.error('Error updating game db:', error);
-    }
+    // try {
+    //   await this.gameModel.updateGameInstance(
+    //     currentGuess,
+    //     feedbackResponse,
+    //     currentGameCache.gameId,
+    //     currentGameCache.currentSolution,
+    //     currentGameCache.guessesRemaining,
+    //     currentGameCache.difficultyLevel
+    //   );
+    // } catch (error) {
+    //   console.error('Error updating game db:', error);
+    // }
   }
 
   /**

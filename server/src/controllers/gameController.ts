@@ -69,7 +69,7 @@ const gameController = {
         gameCacheService.currentGameCache.currentSolution
       );
 
-      // Update the db and game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
+      // Update game cache with the user's new guess, the corresponding feedback, guesses taken, and guesses remaining
       // Get elapsed game time
       const elapsedSeconds = timerService.getElapsedGameTime();
       gameCacheService.updateGameCacheOnAttempt(
@@ -77,11 +77,12 @@ const gameController = {
         feedback,
         elapsedSeconds
       );
-      await gameDbService.updatePlayGame(
-        currentGuess,
-        feedback.response,
-        gameCacheService.currentGameCache
-      );
+      // GameModel currently not in use. Code is available for use with newer features.
+      // await gameDbService.updatePlayGame(
+      //   currentGuess,
+      //   feedback.response,
+      //   gameCacheService.currentGameCache
+      // );
 
       // Check if a winning or losing condition has been met, and update game cache and db appropriately
       if (
