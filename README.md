@@ -52,14 +52,14 @@ _Before you begin, make sure you have Node.js installed on your machine. If not,
      npm install
      ```
 
-**To skip use of a database, checkout to branch `cacheOnly` and _skip steps 3 and 4_**
+   ### **_To skip use of a database, checkout to branch `cacheOnly` and *skip steps 3 and 4!*_**
 
-Run in your terminal:
+   Run in your terminal:
 
-```bash
-git pull --all
-checkout cacheOnly
-```
+   ```bash
+   git pull --all
+   checkout cacheOnly
+   ```
 
 **_Must have MySQL (https://dev.mysql.com/downloads/mysql/8.0.html) installed and running (also helps to have MySQL Workbench)!_**
 
