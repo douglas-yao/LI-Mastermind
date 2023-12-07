@@ -258,12 +258,13 @@ The codebase is separated into two main directories: `client` and `server`. This
       - Acts as a cache for each game instance.
       - Has methods to initiate the cache, set cache properties, and reset the cache.
     - `gameDbService.ts`
-      - Has methods to group database reading and writing for the controllers to call
+      - Has methods to group database reading and writing for the controllers to call.
     - `gameLoggingService.ts`
-      - Wraps logic to dynamically log game progress to the server console
+      - Wraps logic to dynamically log game progress to the server console.
       - This service's purpose is to plug into any modules that may handle CLI-based game play.
     - `gameManagementService.ts`
-      - Wraps all logic to start or play a game, including generating a parsable random solution and initializing the game with appropriate data (including difficulty parameters)
+      - Wraps all logic to start or play a game, including generating a parsable random solution and initializing the game with appropriate data (including difficulty parameters).
+      - **Contains the algorithmic logic to handle comparison of the user's guess vs the randomized solution (the `compareStrings` method).**
     - `timerService.ts`
       - Wraps logic to handle starting and stopping a timer feature.
   - Models
@@ -282,11 +283,15 @@ The codebase is separated into two main directories: `client` and `server`. This
 
 **Thought Process:**
 
-The goal of this application is to create an application that has all game and business critical logic handled on the backend.
+The goal of this project is to create an application that has all game and business critical logic handled on the backend.
 
 The client provides a way for the user to input a username, a difficulty setting, and a guess attempt. It then only renders information provided by the server. There is validation and error handling on the backend to prevent injection attacks or any invalid inputs from entering controller logic. The client is designed to be intuitive, with styled interactive buttons and input fields that clearly delineate their purpose to the user.
 
-The server is built to clearly outline each request lifecycle. Both MVC architecture and SOLID principles guided decision-making and design choices. Each route, controller, and middleware have singular duties. Each service helps wrap similar logic for controller and middleware legibility and debugging. Critical pieces are tested so that developers can add features with confidence, and certain pieces of infrastructure, such as the `GameModel`, are set up to provide for a wide potential of new features, such as game analytics and viewing a previously played game.
+Everything else is handled on the server.
+
+All game logic are wrapped into services in the server (`./src/services` directory), including fetching and parsing of the random numbers, comparing this fetched sequence to the user's guess algorithmically (`compareStrings` method in `./services/gameManagementService.ts`), dynamically generating a response to send the user (`getFeedback` method in `./services/gameManagementService.ts`), and recognizing a game-winning or game-losing condition. Extension features are also handled the server, including the starting/ending/recording of game time, .
+
+The server is built to clearly outline each request lifecycle. Both MVC architecture and SOLID principles guided decision-making and design choices. Each route, controller, and middleware have singular duties. Each service helps wrap similar logic for controller and middleware legibility and debugging. All moving parts are wrapped in try/catch blocks for detailed error handling, and critical pieces of logic are tested so that developers can add features with confidence. Certain pieces of infrastructure, such as the `GameModel`, are set up to provide for a wide potential of new features, such as game analytics and viewing a previously played game.
 
 ## Looking Ahead
 
