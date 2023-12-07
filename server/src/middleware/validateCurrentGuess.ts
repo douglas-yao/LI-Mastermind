@@ -30,7 +30,6 @@ const validateCurrentGuess = (
 
   // Get the configured length for the difficulty
   const difficultyLength = difficultySettings[difficulty]?.solutionLength;
-  console.log('difficulty: ', difficulty);
 
   // Check if the difficulty length is configured
   if (!difficultyLength) {

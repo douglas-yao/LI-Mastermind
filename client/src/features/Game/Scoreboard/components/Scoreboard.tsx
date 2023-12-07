@@ -3,10 +3,8 @@ import axios from 'axios';
 import { Score } from '../../types/types';
 
 export default function Scoreboard() {
-  // Array of difficulty levels
   const difficulties = ['Easy', 'Normal', 'Hard'];
 
-  // State for the selected difficulty index and the fetched scores
   const [difficultyIndex, setDifficultyIndex] = useState<number>(1); // Start with 'Normal'
   const [scores, setScores] = useState<Score[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -20,23 +18,18 @@ export default function Scoreboard() {
   // Function to fetch top scores for a specific difficulty
   async function getTopScores(selectedDifficulty: string) {
     try {
-      // Set isFetching to true while fetching
       setIsFetching(true);
 
-      // Fetch scores from the server
       const response = await axios.post(`http://localhost:8080/scores/`, {
         difficulty: selectedDifficulty,
       });
-      console.log(response.data);
-      // Update the scores state with the fetched data
+
       setScores(response.data);
 
-      // Set isFetching to false after fetching
       setIsFetching(false);
     } catch (error) {
       console.error('Error fetching top scores:', error);
 
-      // Set isFetching to false in case of an error
       setIsFetching(false);
     }
   }
