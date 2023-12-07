@@ -241,7 +241,7 @@ The codebase is separated into two main directories: `client` and `server`. This
         - Handles logic to play the game.
         - Also checks for and handles a winning or losing condition.
     - `scoresRoutes.ts`
-      - Handles all scoreboard-related requests
+      - Handles all scoreboard-related requests.
       - `/scores`
         - Handles querying the database for completed game data
   - Controllers
