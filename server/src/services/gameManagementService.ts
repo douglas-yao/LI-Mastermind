@@ -99,7 +99,6 @@ class GameManagementService {
     }
 
     comparisons.won = comparisons.directMatches === attempt.length;
-    console.log('comparisons: ', comparisons);
     return comparisons;
   }
 

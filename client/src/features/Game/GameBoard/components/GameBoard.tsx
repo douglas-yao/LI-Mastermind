@@ -60,9 +60,6 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         userId,
       });
 
-      // Log the data received from the backend
-      console.log('data from backend: ', response.data);
-
       // Start the game timer
       setElapsedTotalTime(0);
       setIsTimerRunning(true);
@@ -116,10 +113,6 @@ export default function GameBoard({ difficulty }: GameBoardProps) {
         difficulty,
         solution,
       });
-
-      // Log the solution and response data for debugging
-      console.log(solution);
-      console.log('response from submission: ', response.data);
 
       // Destructure relevant data from the response
       const { guessesRemaining, feedbackHistory, guessHistory, isGameOver } =

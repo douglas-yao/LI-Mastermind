@@ -61,7 +61,6 @@ const gameController = {
    */
   playGame: async (req: Request, res: Response, next: NextFunction) => {
     const { currentGuess } = req.body;
-    console.log('current guess: ', currentGuess);
 
     try {
       // Generate feedback based on user's provided guess
