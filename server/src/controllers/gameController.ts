@@ -37,11 +37,11 @@ const gameController = {
         currentDifficultySetting.startingGuesses
       );
 
-      await gameDbService.createNewGameAndUser(
-        userId,
-        solution,
-        gameCacheService.currentGameCache
-      );
+      // await gameDbService.createNewGameAndUser(
+      //   userId,
+      //   solution,
+      //   gameCacheService.currentGameCache
+      // );
 
       // Start game timer
       timerService.startGameTimer();
@@ -90,10 +90,10 @@ const gameController = {
         feedback.won === true
       ) {
         gameCacheService.updateGameCacheOnCompletion(feedback);
-        gameDbService.updateGameOver(
-          feedback.won,
-          gameCacheService.currentGameCache
-        );
+        // gameDbService.updateGameOver(
+        //   feedback.won,
+        //   gameCacheService.currentGameCache
+        // );
       }
 
       // Return data back to the client
