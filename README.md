@@ -247,6 +247,14 @@ The codebase is separated into two main directories: `client` and `server`. This
   - Controllers
     - `gameController.ts`
       - Handles `/start` route and `/play` route logic.
+      - `/start`
+        - Input: username, difficulty level
+        - Output: the game cache object, updated with necessary properties for the user to start playing the game (such as random solution and total number of guesses available).
+      - `/play`
+        - Input: user's guess attempt.
+        - Output: An object containing:
+          - A feedback object with the most recent feedback message and a property indicating whether or not the user has won the game.
+          - The game cache object, containing all necessary properties to continue playing the game (such as updated guesses remaining and guess/feedback history).
     - `scorescontroller.ts`
       - Handles `/scores` route logic.
   - Middleware
